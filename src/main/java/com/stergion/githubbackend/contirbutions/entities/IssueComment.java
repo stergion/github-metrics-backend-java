@@ -1,9 +1,11 @@
 package com.stergion.githubbackend.contirbutions.entities;
 
 import com.stergion.githubbackend.utilityTypes.Github;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 
 import java.time.LocalDate;
 
+@MongoEntity(collection = "issueComments")
 public non-sealed class IssueComment extends Contribution {
 //    createdAt: Date;
 //    publishedAt: Date;

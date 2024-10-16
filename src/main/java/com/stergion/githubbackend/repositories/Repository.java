@@ -4,11 +4,12 @@ import com.stergion.githubbackend.utilityTypes.Github;
 import com.stergion.githubbackend.utilityTypes.Label;
 import com.stergion.githubbackend.utilityTypes.Language;
 import com.stergion.githubbackend.utilityTypes.Topic;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-
+@MongoEntity(collection = "repositories")
 public class Repository {
     public ObjectId id;
     public String owner;

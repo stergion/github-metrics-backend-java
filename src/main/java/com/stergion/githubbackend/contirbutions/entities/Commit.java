@@ -3,10 +3,12 @@ package com.stergion.githubbackend.contirbutions.entities;
 import com.stergion.githubbackend.utilityTypes.CommitComment;
 import com.stergion.githubbackend.utilityTypes.File;
 import com.stergion.githubbackend.utilityTypes.Github;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@MongoEntity(collection = "commits")
 public non-sealed class Commit extends Contribution {
 
     public LocalDate committedDate;

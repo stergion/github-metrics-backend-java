@@ -3,10 +3,12 @@ package com.stergion.githubbackend.contirbutions.entities;
 import com.stergion.githubbackend.utilityTypes.Github;
 import com.stergion.githubbackend.utilityTypes.IssueState;
 import com.stergion.githubbackend.utilityTypes.Label;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@MongoEntity(collection = "pullRequests")
 public non-sealed class PullRequest extends Contribution {
     public LocalDate createdAt;
     public LocalDate mergedAt;
