@@ -2,6 +2,8 @@ package com.stergion.githubbackend.contirbutions.entities;
 
 import com.stergion.githubbackend.utilityTypes.Github;
 import io.quarkus.mongodb.panache.common.MongoEntity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
@@ -13,7 +15,10 @@ public non-sealed class IssueComment extends Contribution {
 //    lastEditedAt: Date | null;
 //    associatedIssue: AssociatedIssue;
 //    body: string;
+    @NotNull
+    @PastOrPresent
     public LocalDate createdAt;
+
     public LocalDate publishedAt;
     public LocalDate updatedAt;
     public LocalDate lastEditedAt;
