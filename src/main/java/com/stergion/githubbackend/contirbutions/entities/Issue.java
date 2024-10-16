@@ -23,4 +23,36 @@ public non-sealed class Issue extends Contribution {
     public int reactionsCount;
     public List<Label> labels;
     public String closer;
+
+    @Override
+    public String toString() {
+        return  "{ id: " + id +
+                ", userId: " + userId +
+                ", repositoryId: " + repositoryId +
+                ", github: " + github +
+                ", createdAt: " + createdAt +
+                ", closedAt: " + closedAt +
+                ", updatedAt: " + updatedAt +
+                ", state: " + state +
+                ", title: '" + title + '\'' +
+                ", body: '" + body + '\'' +
+                ", reactionsCount: " + reactionsCount +
+                ", labels: " + labels +
+                ", closer: '" + closer + '\'' +
+                "}";
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return (o instanceof Issue i)
+                && userId.equals(i.userId)
+                && repositoryId.equals(i.repositoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId.hashCode();
+        result = 31 * result + repositoryId.hashCode();
+        return result;
+    }
 }
