@@ -30,4 +30,36 @@ public non-sealed class PullRequestReview extends Contribution {
     public String body;
     public List<PullRequestReviewComment> comments;
 
+    @Override
+    public String toString() {
+        return  "{ id: " + id +
+                ", userId: " + userId +
+                ", repositoryId: " + repositoryId +
+                ", github: " + github +
+                ", pullRequest: " + pullRequest +
+                ", github: " + github +
+                ", createdAt: " + createdAt +
+                ", submittedAt: " + submittedAt +
+                ", updatedAt: " + updatedAt +
+                ", publishedAt: " + publishedAt +
+                ", lastEditedAt: " + lastEditedAt +
+                ", state: " + state +
+                ", body: '" + body + '\'' +
+                ", comments: " + comments +
+                '}';
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return (o instanceof PullRequestReview prr)
+                && userId.equals(prr.userId)
+                && repositoryId.equals(prr.repositoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId.hashCode();
+        result = 31 * result + repositoryId.hashCode();
+        return result;
+    }
 }
