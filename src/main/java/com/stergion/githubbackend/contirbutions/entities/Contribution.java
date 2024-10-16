@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
-public sealed class Contribution permits Commit, Issue, PullRequest, PullRequestReview,
+public sealed abstract class Contribution permits Commit, Issue, PullRequest, PullRequestReview,
         IssueComment {
     @NotNull
     public ObjectId id;
