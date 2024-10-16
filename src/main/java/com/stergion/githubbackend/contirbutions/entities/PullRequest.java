@@ -1,8 +1,8 @@
 package com.stergion.githubbackend.contirbutions.entities;
 
 import com.stergion.githubbackend.utilityTypes.Github;
-import com.stergion.githubbackend.utilityTypes.IssueState;
 import com.stergion.githubbackend.utilityTypes.Label;
+import com.stergion.githubbackend.utilityTypes.PullRequestState;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -19,7 +19,7 @@ public non-sealed class PullRequest extends Contribution {
     public LocalDate mergedAt;
     public LocalDate closedAt;
     public LocalDate updatedAt;
-    public IssueState state;
+    public PullRequestState state;
     public int reactionsCount;
     public List<Label> labels;
     public String title;
