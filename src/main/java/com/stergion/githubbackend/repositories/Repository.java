@@ -37,4 +37,57 @@ public class Repository {
     public int forkCount;
     public int stargazersCount;
     public int watchersCount;
+
+    @Override
+    public String toString() {
+        return """
+                {
+                    id: %s,
+                    owner: %s,
+                    name: %s,
+                    github: %s,
+                    labels: %s,
+                    labelsCount: %s,
+                    primaryLanguage: %s,
+                    languages: %s,
+                    languagesCount: %s,
+                    languagesSize: %s,
+                    topics: %s,
+                    topicsCount: %s,
+                    forkCount: %s,
+                    stargazersCount: %s,
+                    watchersCount: %s
+                }
+                """.formatted(
+                id,
+                owner,
+                name,
+                github,
+                labels,
+                labelsCount,
+                primaryLanguage,
+                languages,
+                languagesCount,
+                languagesSize,
+                topics,
+                topicsCount,
+                forkCount,
+                stargazersCount,
+                watchersCount
+        );
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return (o instanceof Repository r)
+                && owner.equals(r.owner)
+                && name.equals(r.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = owner.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }
