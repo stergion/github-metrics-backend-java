@@ -11,4 +11,17 @@ public class File {
     public int changes;
     public String patch;
 
+    @Override
+    public String toString() {
+        return "{ fileName: '" + fileName + '\'' +
+                ", baseName: '" + baseName + '\'' +
+                ", extension: '" + extension + '\'' +
+                ", path: '" + path + '\'' +
+                ", status: '" + status + '\'' +
+                ", additions: " + additions +
+                ", deletions: " + deletions +
+                ", changes: " + changes +
+                ", patch: '" + patch + '\'' +
+                '}';
+    }
 }

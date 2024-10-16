@@ -6,4 +6,14 @@ public class CommitComment {
     public int position;
     public String reactionsCount;
     public String body;
+
+    @Override
+    public String toString() {
+        return "{ author: '" + author + '\'' +
+                ", publishedAt: '" + publishedAt + '\'' +
+                ", position: " + position +
+                ", reactionsCount: '" + reactionsCount + '\'' +
+                ", body: '" + body + '\'' +
+                '}';
+    }
 }
