@@ -39,4 +39,44 @@ public class User {
     public String bio;
     public String twitterHandle;
     public String websiteURL;
+
+    @Override
+    public String toString() {
+        return """
+                {
+                    id: %s,
+                    login: %s,
+                    name: %s,
+                    gitHub%s,
+                    email: %s,
+                    updatedAt: %s,
+                    repositories: %s,
+                    avatarURL: %s,
+                    bio: %s,
+                    twitterHandle: %s,
+                    websiteURL: %s
+                }
+                """.formatted(id,
+                login,
+                name,
+                github,
+                email,
+                updatedAt,
+                repositories,
+                avatarURL,
+                bio,
+                twitterHandle,
+                websiteURL);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        return (o instanceof User u)
+                && login.equals(u.login);
+    }
+
+    @Override
+    public int hashCode() {
+        return login.hashCode();
+    }
 }
