@@ -17,4 +17,15 @@ public class Metric {
     @NotNull
     @BsonProperty("repository_id")
     public ObjectId repositoryId;
+
+    @Override
+    public String toString() {
+        return """
+                {
+                  id: %s,
+                  userId: %s,
+                  repositoryId: %s
+                }
+                """.formatted(id, userId, repositoryId);
+    }
 }
