@@ -84,18 +84,6 @@ public record Repository(
     }
 
     /**
-     * Represents the labels connection with total count and nodes
-     */
-    public record LabelsConnection(
-            @PositiveOrZero(message = "Total count must be non-negative")
-            int totalCount,
-
-            @NotNull(message = "Label nodes cannot be null")
-            List<RepositoryLabel> nodes
-    ) {
-    }
-
-    /**
      * Represents a repository topic node
      */
     public record TopicNode(
@@ -146,7 +134,7 @@ public record Repository(
                     List.of()
             );
         }
-        if (labels != null && labels.nodes == null) {
+        if (labels != null && labels.nodes() == null) {
             labels = new LabelsConnection(labels.totalCount(), List.of());
         }
         if (repositoryTopics != null && repositoryTopics.nodes == null) {
