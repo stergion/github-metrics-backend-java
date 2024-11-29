@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.stergion.githubbackend.client.models.helpers.RepositoryLabel;
+import com.stergion.githubbackend.client.models.helpers.LabelsConnection;
 import com.stergion.githubbackend.client.models.helpers.RepositoryOwner;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
