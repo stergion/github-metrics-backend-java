@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * Represents a label that can be applied to various GitHub entities like Issues and Pull Requests.
  */
-public record RepositoryLabel(
+public record LabelNode(
         @NotBlank(message = "Label name cannot be blank")
         String name,
 
