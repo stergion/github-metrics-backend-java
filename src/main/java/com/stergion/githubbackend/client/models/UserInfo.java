@@ -2,6 +2,7 @@ package com.stergion.githubbackend.client.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +40,7 @@ public record UserInfo(
         URI websiteUrl
 ) {
     private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
             .writerWithDefaultPrettyPrinter()
             .withoutAttribute("jacksonObjectMapper");
 

@@ -2,6 +2,7 @@ package com.stergion.githubbackend.client.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.stergion.githubbackend.client.models.helpers.GitHubNodeRef;
 import com.stergion.githubbackend.client.models.helpers.LabelsConnection;
 import com.stergion.githubbackend.client.models.helpers.Reactions;
@@ -139,6 +140,7 @@ public record PullRequest(
     }
 
     private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
             .writerWithDefaultPrettyPrinter()
             .withoutAttribute("jacksonObjectMapper");
 

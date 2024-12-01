@@ -2,6 +2,7 @@ package com.stergion.githubbackend.client.models.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -18,6 +19,7 @@ public record LabelsConnection(
         List<LabelNode> nodes
 ) {
         private static final ObjectWriter WRITER = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
                 .writerWithDefaultPrettyPrinter()
                 .withoutAttribute("jacksonObjectMapper");
 
