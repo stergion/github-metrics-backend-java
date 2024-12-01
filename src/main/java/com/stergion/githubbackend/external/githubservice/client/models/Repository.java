@@ -1,12 +1,12 @@
-package com.stergion.githubbackend.client.models;
+package com.stergion.githubbackend.external.githubservice.client.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.stergion.githubbackend.client.models.helpers.LabelsConnection;
-import com.stergion.githubbackend.client.models.helpers.RepositoryOwner;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.LabelsConnection;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.RepositoryOwner;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

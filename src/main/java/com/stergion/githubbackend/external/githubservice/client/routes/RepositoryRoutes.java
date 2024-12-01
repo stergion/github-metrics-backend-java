@@ -1,6 +1,6 @@
-package com.stergion.githubbackend.client;
+package com.stergion.githubbackend.external.githubservice.client.routes;
 
-import com.stergion.githubbackend.client.models.Repository;
+import com.stergion.githubbackend.external.githubservice.client.models.Repository;
 import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.*;

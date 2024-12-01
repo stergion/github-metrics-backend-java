@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.client.models;
+package com.stergion.githubbackend.external.githubservice.client.models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;

@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.client;
+package com.stergion.githubbackend.external.githubservice.client.routes;
 
 import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;

@@ -1,17 +1,16 @@
-package com.stergion.githubbackend.client.models.helpers;
+package com.stergion.githubbackend.external.githubservice.client.models.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 
 /**
- * Represents the owner of a repository.
- * This is used across various GitHub entities to reference repository ownership.
+ * Represents reaction counts for GitHub entities like comments, issues, and pull requests.
  */
-public record RepositoryOwner(
-        @NotBlank(message = "Owner login cannot be blank")
-        String login
+public record Reactions(
+        @PositiveOrZero(message = "Total count must be non-negative")
+        int totalCount
 ) {
     private static final ObjectWriter WRITER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -23,7 +22,7 @@ public record RepositoryOwner(
         try {
             return WRITER.writeValueAsString(this);
         } catch (Exception e) {
-            return String.format("RepositoryOwner[login=%s]", login);
+            return String.format("Reactions[totalCount=%d]", totalCount);
         }
     }
 }

@@ -1,9 +1,9 @@
-package com.stergion.githubbackend.core.externalservices.github;
+package com.stergion.githubbackend.external.githubservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.stergion.githubbackend.client.GitHubServiceClient;
-import com.stergion.githubbackend.client.TestDTO;
+import com.stergion.githubbackend.external.githubservice.client.GitHubServiceClient;
+import com.stergion.githubbackend.external.githubservice.client.models.TestDTO;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
