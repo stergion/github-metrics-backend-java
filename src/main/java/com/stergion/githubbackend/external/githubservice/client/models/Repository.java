@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.external.githubservice.client.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Represents a GitHub repository with all its associated metadata
  */
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public record Repository(
         @NotBlank(message = "Repository ID cannot be blank")
         String id,

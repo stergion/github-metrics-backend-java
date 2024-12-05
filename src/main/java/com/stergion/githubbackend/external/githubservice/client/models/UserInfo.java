@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.external.githubservice.client.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -13,6 +14,7 @@ import java.net.URI;
  * Represents a GitHub user's public information.
  * All URIs are validated at construction time.
  */
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public record UserInfo(
         @NotBlank(message = "User ID cannot be blank")
         String id,

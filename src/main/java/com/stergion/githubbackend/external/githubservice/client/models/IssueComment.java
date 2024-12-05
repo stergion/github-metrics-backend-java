@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.external.githubservice.client.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -8,12 +9,14 @@ import com.stergion.githubbackend.external.githubservice.client.models.helpers.R
 import com.stergion.githubbackend.external.githubservice.client.models.helpers.RepositoryRef;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 import java.net.URI;
 import java.time.Instant;
 
 /**
  * Represents a comment on a GitHub issue
  */
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public record IssueComment(
         @NotBlank(message = "Issue comment ID cannot be blank")
         String id,

@@ -1,11 +1,16 @@
 package com.stergion.githubbackend.external.githubservice.client.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.stergion.githubbackend.external.githubservice.client.models.helpers.*;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.Author;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.LabelsConnection;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.Reactions;
+import com.stergion.githubbackend.external.githubservice.client.models.helpers.RepositoryRef;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
@@ -13,6 +18,7 @@ import java.util.List;
 /**
  * Represents a GitHub issue with its associated metadata.
  */
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public record Issue(
         @NotBlank(message = "Issue ID cannot be blank")
         String id,
@@ -100,6 +106,7 @@ public record Issue(
         return timelineItems != null && !timelineItems.nodes().isEmpty();
     }
 
+//    @JsonIgnore
     public boolean isClosed() {
         return state == State.CLOSED;
     }

@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.external.githubservice.client.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * Represents a GitHub pull request
  */
+@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 public record PullRequest(
         @NotBlank(message = "Pull request ID cannot be blank")
         String id,
