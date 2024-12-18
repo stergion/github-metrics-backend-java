@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.external.githubservice.client.models;
+package com.stergion.githubbackend.external.githubservice.client.models.success;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;

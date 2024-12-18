@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.external.githubservice.client.models.helpers;
+package com.stergion.githubbackend.external.githubservice.client.models.success.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -6,11 +6,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Represents the owner of a repository.
- * This is used across various GitHub entities to reference repository ownership.
+ * Represents an author/user reference used across various GitHub entities.
  */
-public record RepositoryOwner(
-        @NotBlank(message = "Owner login cannot be blank")
+public record Author(
+        @NotBlank(message = "Login cannot be blank")
         String login
 ) {
     private static final ObjectWriter WRITER = new ObjectMapper()
@@ -23,7 +22,7 @@ public record RepositoryOwner(
         try {
             return WRITER.writeValueAsString(this);
         } catch (Exception e) {
-            return String.format("RepositoryOwner[login=%s]", login);
+            return String.format("Author[login=%s]", login);
         }
     }
 }

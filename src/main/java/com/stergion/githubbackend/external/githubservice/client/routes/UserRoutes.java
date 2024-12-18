@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.external.githubservice.client.routes;
 
-import com.stergion.githubbackend.external.githubservice.client.models.UserInfo;
+import com.stergion.githubbackend.external.githubservice.client.models.success.UserInfo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

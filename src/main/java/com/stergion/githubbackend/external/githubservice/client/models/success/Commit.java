@@ -1,13 +1,13 @@
-package com.stergion.githubbackend.external.githubservice.client.models;
+package com.stergion.githubbackend.external.githubservice.client.models.success;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.stergion.githubbackend.external.githubservice.client.models.helpers.Author;
-import com.stergion.githubbackend.external.githubservice.client.models.helpers.CommitFile;
-import com.stergion.githubbackend.external.githubservice.client.models.helpers.Reactions;
+import com.stergion.githubbackend.external.githubservice.client.models.success.helpers.Author;
+import com.stergion.githubbackend.external.githubservice.client.models.success.helpers.CommitFile;
+import com.stergion.githubbackend.external.githubservice.client.models.success.helpers.Reactions;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

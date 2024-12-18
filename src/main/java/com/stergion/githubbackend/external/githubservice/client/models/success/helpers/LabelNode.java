@@ -1,17 +1,18 @@
-package com.stergion.githubbackend.external.githubservice.client.models.helpers;
+package com.stergion.githubbackend.external.githubservice.client.models.success.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record RepositoryRef(
-        @NotBlank(message = "Repository name cannot be blank")
+/**
+ * Represents a label that can be applied to various GitHub entities like Issues and Pull Requests.
+ */
+public record LabelNode(
+        @NotBlank(message = "Label name cannot be blank")
         String name,
 
-        @NotNull(message = "Repository owner cannot be null")
-        RepositoryOwner owner
+        String description
 ) {
     private static final ObjectWriter WRITER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -23,7 +24,8 @@ public record RepositoryRef(
         try {
             return WRITER.writeValueAsString(this);
         } catch (Exception e) {
-            return String.format("RepositoryReference[name=%s, owner=%s]", name, owner.login());
+            return String.format("RepositoryLabel[name=%s, description=%s]",
+                    name, description != null ? description : "null");
         }
     }
 }
