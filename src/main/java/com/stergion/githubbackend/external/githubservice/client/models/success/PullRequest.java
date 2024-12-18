@@ -62,6 +62,55 @@ public record PullRequest(
 
         ClosingIssuesReferences closingIssuesReferences
 ) {
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
+
+    public PullRequest {
+        if (labels != null && labels.nodes() == null) {
+            labels = new LabelsConnection(labels.totalCount(), List.of());
+        }
+        if (commits.nodes() == null) {
+            commits = new CommitsConnection(commits.totalCount(), List.of());
+        }
+        if (closingIssuesReferences != null && closingIssuesReferences.nodes() == null) {
+            closingIssuesReferences = new ClosingIssuesReferences(
+                    closingIssuesReferences.totalCount(),
+                    List.of()
+            );
+        }
+    }
+
+    public boolean hasLabels() {
+        return labels != null && !labels.nodes().isEmpty();
+    }
+
+    public boolean hasCommits() {
+        return !commits.nodes().isEmpty();
+    }
+
+    public boolean hasClosingIssues() {
+        return closingIssuesReferences != null && !closingIssuesReferences.nodes().isEmpty();
+    }
+
+    public boolean isMerged() {
+        return state == State.MERGED;
+    }
+
+    public boolean isClosed() {
+        return state == State.CLOSED;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("PullRequest[id=%s, title=%s]", id, title);
+        }
+    }
+
     public enum State {
         OPEN, CLOSED, MERGED
     }
@@ -104,54 +153,5 @@ public record PullRequest(
             int totalCount,
             List<GitHubNodeRef> nodes
     ) {
-    }
-
-    public PullRequest {
-        if (labels != null && labels.nodes() == null) {
-            labels = new LabelsConnection(labels.totalCount(), List.of());
-        }
-        if (commits.nodes() == null) {
-            commits = new CommitsConnection(commits.totalCount(), List.of());
-        }
-        if (closingIssuesReferences != null && closingIssuesReferences.nodes() == null) {
-            closingIssuesReferences = new ClosingIssuesReferences(
-                    closingIssuesReferences.totalCount(),
-                    List.of()
-            );
-        }
-    }
-
-    public boolean hasLabels() {
-        return labels != null && !labels.nodes().isEmpty();
-    }
-
-    public boolean hasCommits() {
-        return !commits.nodes().isEmpty();
-    }
-
-    public boolean hasClosingIssues() {
-        return closingIssuesReferences != null && !closingIssuesReferences.nodes().isEmpty();
-    }
-
-    public boolean isMerged() {
-        return state == State.MERGED;
-    }
-
-    public boolean isClosed() {
-        return state == State.CLOSED;
-    }
-
-    private static final ObjectWriter WRITER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .writerWithDefaultPrettyPrinter()
-            .withoutAttribute("jacksonObjectMapper");
-
-    @Override
-    public String toString() {
-        try {
-            return WRITER.writeValueAsString(this);
-        } catch (Exception e) {
-            return String.format("PullRequest[id=%s, title=%s]", id, title);
-        }
     }
 }

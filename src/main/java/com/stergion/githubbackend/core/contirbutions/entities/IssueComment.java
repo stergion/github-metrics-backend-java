@@ -9,12 +9,6 @@ import java.time.LocalDate;
 
 @MongoEntity(collection = "issueComments")
 public non-sealed class IssueComment extends Contribution {
-//    createdAt: Date;
-//    publishedAt: Date;
-//    updatedAt: Date | null;
-//    lastEditedAt: Date | null;
-//    associatedIssue: AssociatedIssue;
-//    body: string;
     @NotNull
     @PastOrPresent
     public LocalDate createdAt;
@@ -44,7 +38,7 @@ public non-sealed class IssueComment extends Contribution {
 
     @Override
     public String toString() {
-        return  "{ id: " + id +
+        return "{ id: " + id +
                 ", userId: " + userId +
                 ", repositoryId: " + repositoryId +
                 ", github: " + github +

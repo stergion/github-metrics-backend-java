@@ -18,17 +18,18 @@ public record LabelsConnection(
         @NotNull(message = "Label nodes cannot be null")
         List<LabelNode> nodes
 ) {
-        private static final ObjectWriter WRITER = new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .writerWithDefaultPrettyPrinter()
-                .withoutAttribute("jacksonObjectMapper");
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
 
-        @Override
-        public String toString() {
-                try {
-                        return WRITER.writeValueAsString(this);
-                } catch (Exception e) {
-                        return String.format("LabelsConnection[totalCount=%s, nodes=%s]", totalCount(), nodes().toString());
-                }
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("LabelsConnection[totalCount=%s, nodes=%s]", totalCount(),
+                    nodes().toString());
         }
+    }
 }

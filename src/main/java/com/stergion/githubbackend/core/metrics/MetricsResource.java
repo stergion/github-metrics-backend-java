@@ -15,10 +15,10 @@ public class MetricsResource {
     public RestResponse<JsonObject> getMetrics(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "GET /metrics/" + login)
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "GET /metrics/" + login)
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }
@@ -27,10 +27,10 @@ public class MetricsResource {
     public RestResponse<JsonObject> generateMetrics(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "Metrics generated")
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "Metrics generated")
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }

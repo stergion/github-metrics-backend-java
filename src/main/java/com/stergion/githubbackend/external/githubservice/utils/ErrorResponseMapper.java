@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.external.githubservice.client.exceptions.*;
 import com.stergion.githubbackend.external.githubservice.client.models.error.*;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 
 @RequestScoped
 public class ErrorResponseMapper {

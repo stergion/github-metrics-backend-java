@@ -47,7 +47,7 @@ public interface RepositoryRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                                );
+                                                        );
 
     /**
      * Retrieves a stream of repositories that the user has committed to within the specified
@@ -67,6 +67,6 @@ public interface RepositoryRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                                );
+                                                      );
 
 }

@@ -20,5 +20,5 @@ public interface UserRoutes {
     UserInfo getUserInfo(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login
-    );
+                        );
 }

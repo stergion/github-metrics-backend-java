@@ -5,14 +5,13 @@ import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 /**
-    @apiNote Fetches a user's contributions from GitHub and saves them in MongoDB
+ * @apiNote Fetches a user's contributions from GitHub and saves them in MongoDB
  */
 
 @Path("/api/contributions/{login}")
@@ -29,10 +28,10 @@ public class ContributionResource {
     public RestResponse<JsonObject> getContributions(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "GET /contributions/" + login)
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "GET /contributions/" + login)
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }
@@ -41,10 +40,10 @@ public class ContributionResource {
     public RestResponse<JsonObject> createContributions(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "Contributions registered")
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "Contributions registered")
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }
@@ -53,10 +52,10 @@ public class ContributionResource {
     public RestResponse<JsonObject> updateContributions(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "Contribution updated!")
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "Contribution updated!")
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }
@@ -65,10 +64,10 @@ public class ContributionResource {
     public RestResponse<JsonObject> deleteContributions(String login) {
         // TODO: Implement route
 
-        var obj  = Json.createObjectBuilder()
-                .add("login", login)
-                .add("message", "Contribution deleted!")
-                .build();
+        var obj = Json.createObjectBuilder()
+                      .add("login", login)
+                      .add("message", "Contribution deleted!")
+                      .build();
         System.out.println(obj);
         return ResponseBuilder.ok(obj).build();
     }

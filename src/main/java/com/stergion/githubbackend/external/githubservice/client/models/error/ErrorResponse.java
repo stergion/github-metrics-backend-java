@@ -18,5 +18,6 @@ public sealed interface ErrorResponse
         permits RequestParamsValidationError, NotGithubUserError, RepositoryNotFoundError,
         InternalServerError {
     int statusCode();
+
     String message();
 }

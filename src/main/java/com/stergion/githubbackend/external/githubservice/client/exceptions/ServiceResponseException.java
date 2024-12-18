@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.external.githubservice.client.exceptions;
 
 public sealed class ServiceResponseException extends RuntimeException
-        permits RequestParamsValidationException, ResourceNotFoundException, InternalServerException {
+        permits RequestParamsValidationException, ResourceNotFoundException,
+        InternalServerException {
 
     private final int statusCode;
 

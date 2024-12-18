@@ -56,6 +56,46 @@ public record Issue(
         @NotNull(message = "Comments cannot be null")
         CommentsConnection comments
 ) {
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
+
+    /**
+     * Compact constructor for validation
+     */
+    public Issue {
+        // Ensure collections are never null
+        if (timelineItems != null && timelineItems.nodes() == null) {
+            timelineItems = new TimelineItems(List.of());
+        }
+        if (labels != null && labels.nodes() == null) {
+            labels = new LabelsConnection(labels.totalCount(), List.of());
+        }
+    }
+
+    public boolean hasLabels() {
+        return labels != null && !labels.nodes().isEmpty();
+    }
+
+    public boolean hasTimelineItems() {
+        return timelineItems != null && !timelineItems.nodes().isEmpty();
+    }
+
+    //    @JsonIgnore
+    public boolean isClosed() {
+        return state == State.CLOSED;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("Issue[id=%s, title=%s]", id, title);
+        }
+    }
+
     /**
      * Represents the state of an issue
      */
@@ -84,44 +124,4 @@ public record Issue(
             @NotNull(message = "Total count cannot be null")
             int totalCount
     ) {}
-
-    /**
-     * Compact constructor for validation
-     */
-    public Issue {
-        // Ensure collections are never null
-        if (timelineItems != null && timelineItems.nodes() == null) {
-            timelineItems = new TimelineItems(List.of());
-        }
-        if (labels != null && labels.nodes() == null) {
-            labels = new LabelsConnection(labels.totalCount(), List.of());
-        }
-    }
-
-    public boolean hasLabels() {
-        return labels != null && !labels.nodes().isEmpty();
-    }
-
-    public boolean hasTimelineItems() {
-        return timelineItems != null && !timelineItems.nodes().isEmpty();
-    }
-
-//    @JsonIgnore
-    public boolean isClosed() {
-        return state == State.CLOSED;
-    }
-
-    private static final ObjectWriter WRITER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .writerWithDefaultPrettyPrinter()
-            .withoutAttribute("jacksonObjectMapper");
-
-    @Override
-    public String toString() {
-        try {
-            return WRITER.writeValueAsString(this);
-        } catch (Exception e) {
-            return String.format("Issue[id=%s, title=%s]", id, title);
-        }
-    }
 }

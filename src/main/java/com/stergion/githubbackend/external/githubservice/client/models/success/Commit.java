@@ -54,6 +54,51 @@ public record Commit(
 
         List<CommitFile> files
 ) {
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
+
+    /**
+     * Compact constructor for validation
+     */
+    public Commit {
+        // Ensure lists are never null
+        files = files != null ? List.copyOf(files) : List.of();
+
+        if (comments.nodes() == null) {
+            comments = new CommentsConnection(List.of());
+        }
+
+        if (associatedPullRequests != null && associatedPullRequests.nodes() == null) {
+            associatedPullRequests = new AssociatedPullRequests(List.of());
+        }
+    }
+
+    @JsonIgnore
+    public boolean hasFiles() {
+        return !files.isEmpty();
+    }
+
+    @JsonIgnore
+    public boolean hasComments() {
+        return !comments.nodes().isEmpty();
+    }
+
+    @JsonIgnore
+    public boolean hasAssociatedPullRequests() {
+        return associatedPullRequests != null && !associatedPullRequests.nodes().isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("Commit[id=%s, message=%s]", id, message);
+        }
+    }
+
     /**
      * Represents a comment on a commit
      */
@@ -93,49 +138,4 @@ public record Commit(
             @NotNull(message = "Pull request nodes cannot be null")
             List<PullRequestRef> nodes
     ) {}
-
-    /**
-     * Compact constructor for validation
-     */
-    public Commit {
-        // Ensure lists are never null
-        files = files != null ? List.copyOf(files) : List.of();
-
-        if (comments.nodes() == null) {
-            comments = new CommentsConnection(List.of());
-        }
-
-        if (associatedPullRequests != null && associatedPullRequests.nodes() == null) {
-            associatedPullRequests = new AssociatedPullRequests(List.of());
-        }
-    }
-
-    @JsonIgnore
-    public boolean hasFiles() {
-        return !files.isEmpty();
-    }
-
-    @JsonIgnore
-    public boolean hasComments() {
-        return !comments.nodes().isEmpty();
-    }
-
-    @JsonIgnore
-    public boolean hasAssociatedPullRequests() {
-        return associatedPullRequests != null && !associatedPullRequests.nodes().isEmpty();
-    }
-
-    private static final ObjectWriter WRITER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .writerWithDefaultPrettyPrinter()
-            .withoutAttribute("jacksonObjectMapper");
-
-    @Override
-    public String toString() {
-        try {
-            return WRITER.writeValueAsString(this);
-        } catch (Exception e) {
-            return String.format("Commit[id=%s, message=%s]", id, message);
-        }
-    }
 }

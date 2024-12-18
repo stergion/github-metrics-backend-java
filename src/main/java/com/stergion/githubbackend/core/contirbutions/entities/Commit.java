@@ -28,7 +28,7 @@ public non-sealed class Commit extends Contribution {
 
     @Override
     public String toString() {
-        return  "{ id: " + id +
+        return "{ id: " + id +
                 ", userId: " + userId +
                 ", repositoryId: " + repositoryId +
                 ", github: " + github +

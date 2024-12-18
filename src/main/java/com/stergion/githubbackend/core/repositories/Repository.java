@@ -74,7 +74,7 @@ public class Repository {
                 forkCount,
                 stargazersCount,
                 watchersCount
-        );
+                             );
     }
 
     @Override

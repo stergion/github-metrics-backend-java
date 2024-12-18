@@ -3,7 +3,6 @@ package com.stergion.githubbackend.external.githubservice.service;
 import com.stergion.githubbackend.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.external.githubservice.client.models.success.*;
 import com.stergion.githubbackend.external.githubservice.utils.SseEventTransformer;
-import com.stergion.githubbackend.external.githubservice.client.models.*;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

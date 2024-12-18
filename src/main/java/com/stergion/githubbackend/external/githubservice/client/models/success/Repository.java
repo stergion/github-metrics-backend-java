@@ -50,6 +50,59 @@ public record Repository(
         @NotNull(message = "Watchers information cannot be null")
         WatchersConnection watchers
 ) {
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
+
+    /**
+     * Compact constructor for validation
+     */
+    public Repository {
+        // Ensure non-null collections
+        if (languages.edges == null) {
+            languages = new LanguagesConnection(
+                    languages.totalCount(),
+                    languages.totalSize(),
+                    List.of()
+            );
+        }
+        if (labels != null && labels.nodes() == null) {
+            labels = new LabelsConnection(labels.totalCount(), List.of());
+        }
+        if (repositoryTopics != null && repositoryTopics.nodes == null) {
+            repositoryTopics = new RepositoryTopicsConnection(
+                    repositoryTopics.totalCount(),
+                    List.of()
+            );
+        }
+    }
+
+    @JsonIgnore
+    public boolean hasTopics() {
+        return repositoryTopics != null && !repositoryTopics.nodes().isEmpty();
+    }
+
+    @JsonIgnore
+    public boolean hasLabels() {
+        return labels != null && !labels.nodes().isEmpty();
+    }
+
+    @JsonIgnore
+    @JsonProperty("nameWithOwner")
+    public String getNameWithOwner() {
+        return owner.login() + "/" + name;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("Repository[id=%s, nameWithOwner=%s]", id, getNameWithOwner());
+        }
+    }
+
     /**
      * Represents a single programming language with its name
      */
@@ -123,58 +176,5 @@ public record Repository(
             @PositiveOrZero(message = "Total count must be non-negative")
             int totalCount
     ) {
-    }
-
-    /**
-     * Compact constructor for validation
-     */
-    public Repository {
-        // Ensure non-null collections
-        if (languages.edges == null) {
-            languages = new LanguagesConnection(
-                    languages.totalCount(),
-                    languages.totalSize(),
-                    List.of()
-            );
-        }
-        if (labels != null && labels.nodes() == null) {
-            labels = new LabelsConnection(labels.totalCount(), List.of());
-        }
-        if (repositoryTopics != null && repositoryTopics.nodes == null) {
-            repositoryTopics = new RepositoryTopicsConnection(
-                    repositoryTopics.totalCount(),
-                    List.of()
-            );
-        }
-    }
-
-    @JsonIgnore
-    public boolean hasTopics() {
-        return repositoryTopics != null && !repositoryTopics.nodes().isEmpty();
-    }
-
-    @JsonIgnore
-    public boolean hasLabels() {
-        return labels != null && !labels.nodes().isEmpty();
-    }
-
-    @JsonIgnore
-    @JsonProperty("nameWithOwner")
-    public String getNameWithOwner() {
-        return owner.login() + "/" + name;
-    }
-
-    private static final ObjectWriter WRITER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .writerWithDefaultPrettyPrinter()
-            .withoutAttribute("jacksonObjectMapper");
-
-    @Override
-    public String toString() {
-        try {
-            return WRITER.writeValueAsString(this);
-        } catch (Exception e) {
-            return String.format("Repository[id=%s, nameWithOwner=%s]", id, getNameWithOwner());
-        }
     }
 }

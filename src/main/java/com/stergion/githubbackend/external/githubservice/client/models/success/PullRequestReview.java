@@ -52,10 +52,23 @@ public record PullRequestReview(
         @NotNull(message = "Comments cannot be null")
         CommentsConnection comments
 ) {
+    private static final ObjectWriter WRITER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .writerWithDefaultPrettyPrinter()
+            .withoutAttribute("jacksonObjectMapper");
+
+    @Override
+    public String toString() {
+        try {
+            return WRITER.writeValueAsString(this);
+        } catch (Exception e) {
+            return String.format("PullRequestReview[id=%s, state=%s]", id, state);
+        }
+    }
+
     public enum ReviewState {
         PENDING, COMMENTED, APPROVED, CHANGES_REQUESTED, DISMISSED
     }
-
 
     public record ReviewComment(
             @NotBlank(message = "Comment ID cannot be blank")
@@ -79,20 +92,6 @@ public record PullRequestReview(
     ) {
         public CommentsConnection {
             nodes = nodes != null ? List.copyOf(nodes) : List.of();
-        }
-    }
-
-    private static final ObjectWriter WRITER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .writerWithDefaultPrettyPrinter()
-            .withoutAttribute("jacksonObjectMapper");
-
-    @Override
-    public String toString() {
-        try {
-            return WRITER.writeValueAsString(this);
-        } catch (Exception e) {
-            return String.format("PullRequestReview[id=%s, state=%s]", id, state);
         }
     }
 }

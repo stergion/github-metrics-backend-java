@@ -1,6 +1,5 @@
 package com.stergion.githubbackend.external.githubservice.client.routes;
 
-import com.stergion.githubbackend.external.githubservice.client.models.success.*;
 import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.GET;
@@ -8,7 +7,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.sse.InboundSseEvent;
 import org.jboss.resteasy.reactive.RestStreamElementType;
 import org.jboss.resteasy.reactive.client.SseEvent;
 
@@ -40,7 +38,7 @@ public interface ContributionRoutes {
             @PathParam("name") String name,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                            );
+                                      );
 
     /**
      * Retrieves a stream of issues created by the user within the specified date range.
@@ -59,7 +57,7 @@ public interface ContributionRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                    );
+                                     );
 
     /**
      * Retrieves a stream of pull requests created by the user within the specified date range.
@@ -78,7 +76,7 @@ public interface ContributionRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                      );
+                                           );
 
     /**
      * Retrieves a stream of pull request reviews created by the user within the specified date
@@ -98,7 +96,7 @@ public interface ContributionRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                                  );
+                                                 );
 
     /**
      * Retrieves a stream of issue comments created by the user within the specified date range.
@@ -117,7 +115,7 @@ public interface ContributionRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                        );
+                                            );
 
     /**
      * Retrieves a stream of commit comments created by the user within the specified date range.
@@ -136,5 +134,5 @@ public interface ContributionRoutes {
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                          );
+                                             );
 }

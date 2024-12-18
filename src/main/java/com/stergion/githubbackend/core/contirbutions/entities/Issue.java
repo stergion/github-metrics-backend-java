@@ -26,7 +26,7 @@ public non-sealed class Issue extends Contribution {
 
     @Override
     public String toString() {
-        return  "{ id: " + id +
+        return "{ id: " + id +
                 ", userId: " + userId +
                 ", repositoryId: " + repositoryId +
                 ", github: " + github +
