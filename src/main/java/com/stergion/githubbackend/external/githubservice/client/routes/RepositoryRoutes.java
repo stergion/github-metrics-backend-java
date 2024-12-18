@@ -5,6 +5,8 @@ import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.jboss.resteasy.reactive.RestStreamElementType;
+import org.jboss.resteasy.reactive.client.SseEvent;
 
 import java.time.LocalDate;
 
@@ -25,10 +27,11 @@ public interface RepositoryRoutes {
             @PathParam("owner") String owner,
             @NotBlank(message = "Repository name cannot be blank")
             @PathParam("name") String name
-    );
+                            );
 
     /**
-     * Retrieves a stream of repositories that the user has contributed to within the specified date range.
+     * Retrieves a stream of repositories that the user has contributed to within the specified
+     * date range.
      *
      * @param login    the GitHub username
      * @param fromDate start date for the contribution range
@@ -38,16 +41,17 @@ public interface RepositoryRoutes {
      */
     @GET
     @Path("/user/{login}/repositories/contributed-to/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    Multi<String> getRepositoriesContributedTo(
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
+    Multi<SseEvent<String>> getRepositoriesContributedTo(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                                );
 
     /**
-     * Retrieves a stream of repositories that the user has committed to within the specified date range.
+     * Retrieves a stream of repositories that the user has committed to within the specified
+     * date range.
      *
      * @param login    the GitHub username
      * @param fromDate start date for the commits range
@@ -57,12 +61,12 @@ public interface RepositoryRoutes {
      */
     @GET
     @Path("/user/{login}/repositories/committed-to/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    Multi<String> getRepositoriesCommittedTo(
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
+    Multi<SseEvent<String>> getRepositoriesCommittedTo(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                                );
 
 }

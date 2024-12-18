@@ -1,11 +1,11 @@
 package com.stergion.githubbackend.external.githubservice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.external.githubservice.client.models.success.Repository;
 import com.stergion.githubbackend.external.githubservice.utils.SseEventTransformer;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.time.LocalDate;
@@ -15,7 +15,8 @@ public class RepositoryClient {
     @RestClient
     GitHubServiceClient client;
 
-    static final ObjectMapper mapper = new ObjectMapper();
+    @Inject
+    SseEventTransformer transformer;
 
     public Repository getRepositoryInfo(String owner, String name) {
         return client.getRepository(owner, name);
@@ -25,13 +26,13 @@ public class RepositoryClient {
                                                         LocalDate to) {
         return client.getRepositoriesCommittedTo(login, from, to)
                      .onItem()
-                     .transform(repository -> mapper.convertValue(repository, Repository.class));
+                     .transform(event -> transformer.transform(event, Repository.class));
     }
 
     public Multi<Repository> getRepositoriesContributedTo(String login, LocalDate from,
                                                           LocalDate to) {
         return client.getRepositoriesContributedTo(login, from, to)
                      .onItem()
-                     .transform(repository -> mapper.convertValue(repository, Repository.class));
+                     .transform(event -> transformer.transform(event, Repository.class));
     }
 }

@@ -3,15 +3,21 @@ package com.stergion.githubbackend.external.githubservice.client.routes;
 import com.stergion.githubbackend.external.githubservice.client.models.success.*;
 import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.sse.InboundSseEvent;
 import org.jboss.resteasy.reactive.RestStreamElementType;
+import org.jboss.resteasy.reactive.client.SseEvent;
 
 import java.time.LocalDate;
 
 public interface ContributionRoutes {
     /**
-     * Retrieves a stream of commits made by the user to a specific repository within the specified date range.
+     * Retrieves a stream of commits made by the user to a specific repository within the
+     * specified date range.
      *
      * @param login    the GitHub username
      * @param owner    the repository owner's username
@@ -19,13 +25,13 @@ public interface ContributionRoutes {
      * @param fromDate start date for the commits range
      * @param toDate   end date for the commits range
      * @return stream of commits
-     * @throws WebApplicationException if the user or repository doesn't exist or other API errors occur
+     * @throws WebApplicationException if the user or repository doesn't exist or other API
+     *                                 errors occur
      */
     @GET
     @Path("/user/{login}/contributions/commits/{owner}/{name}/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getCommits(
+    Multi<SseEvent<String>> getCommits(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @NotBlank(message = "Owner cannot be blank")
@@ -34,7 +40,7 @@ public interface ContributionRoutes {
             @PathParam("name") String name,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                            );
 
     /**
      * Retrieves a stream of issues created by the user within the specified date range.
@@ -47,14 +53,13 @@ public interface ContributionRoutes {
      */
     @GET
     @Path("/user/{login}/contributions/issues/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getIssues(
+    Multi<SseEvent<String>> getIssues(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                    );
 
     /**
      * Retrieves a stream of pull requests created by the user within the specified date range.
@@ -67,17 +72,17 @@ public interface ContributionRoutes {
      */
     @GET
     @Path("/user/{login}/contributions/pullrequests/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getPullRequests(
+    Multi<SseEvent<String>> getPullRequests(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                      );
 
     /**
-     * Retrieves a stream of pull request reviews created by the user within the specified date range.
+     * Retrieves a stream of pull request reviews created by the user within the specified date
+     * range.
      *
      * @param login    the GitHub username
      * @param fromDate start date for the pull request reviews range
@@ -87,14 +92,13 @@ public interface ContributionRoutes {
      */
     @GET
     @Path("/user/{login}/contributions/pullrequest-reviews/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getPullRequestReviews(
+    Multi<SseEvent<String>> getPullRequestReviews(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                                  );
 
     /**
      * Retrieves a stream of issue comments created by the user within the specified date range.
@@ -107,14 +111,13 @@ public interface ContributionRoutes {
      */
     @GET
     @Path("/user/{login}/contributions/issue-comments/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getIssueComments(
+    Multi<SseEvent<String>> getIssueComments(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-                                                 );
+                                        );
 
     /**
      * Retrieves a stream of commit comments created by the user within the specified date range.
@@ -127,12 +130,11 @@ public interface ContributionRoutes {
      */
     @GET
     @Path("/user/{login}/contributions/commit-comments/from/{fromDate}/to/{toDate}")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestStreamElementType(MediaType.APPLICATION_JSON)
-    Multi<String> getCommitComments(
+    Multi<SseEvent<String>> getCommitComments(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
             @PathParam("fromDate") LocalDate fromDate,
             @PathParam("toDate") LocalDate toDate
-    );
+                                          );
 }
