@@ -1,13 +1,17 @@
 package com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities;
 
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
+import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.NameWithOwner;
+import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.UserWithLogin;
 import jakarta.validation.constraints.NotNull;
+import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 public sealed abstract class Contribution permits Commit, Issue, PullRequest, PullRequestReview,
         IssueComment {
     @NotNull
+    @BsonId
     public ObjectId id;
 
     @NotNull
@@ -17,6 +21,10 @@ public sealed abstract class Contribution permits Commit, Issue, PullRequest, Pu
     @NotNull
     @BsonProperty("repository_id")
     public ObjectId repositoryId;
+
+    public UserWithLogin user;
+
+    public NameWithOwner repository;
 
     public Github github;
 }
