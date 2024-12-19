@@ -12,7 +12,7 @@ import java.util.List;
 
 public record PullRequestDTO(
         @NotNull
-        UserWithLogin user,
+        String user,
 
         @NotNull
         NameWithOwner repository,

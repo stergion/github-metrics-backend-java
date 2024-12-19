@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 public record IssueCommentDTO(
         @NotNull
-        UserWithLogin user,
+        String user,
 
         @NotNull
         NameWithOwner repository,

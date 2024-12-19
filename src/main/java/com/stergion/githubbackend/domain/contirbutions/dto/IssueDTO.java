@@ -12,7 +12,7 @@ import java.util.List;
 
 public record IssueDTO(
         @NotNull
-        UserWithLogin user,
+        String user,
 
         @NotNull
         NameWithOwner repository,

@@ -12,7 +12,7 @@ import java.util.List;
 
 public record CommitDTO(
         @NotNull
-        UserWithLogin user,
+        String user,
         @NotNull
         NameWithOwner repository,
         @NotNull

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 public sealed interface ContributionDTO permits CommitDTO, IssueDTO, PullRequestDTO, PullRequestReviewDTO,
         IssueCommentDTO {
     @NotNull
-    UserWithLogin user();
+    String user();
 
     @NotNull
     NameWithOwner repository();
