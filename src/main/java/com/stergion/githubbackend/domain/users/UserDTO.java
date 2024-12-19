@@ -42,7 +42,7 @@ public record UserDTO(
         try {
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            return "{\"user\": %s, \"name\": %s}".formatted(login, name);
+            return "{\"login\": %s, \"name\": %s}".formatted(login, name);
         }
     }
 

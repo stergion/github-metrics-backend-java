@@ -5,6 +5,6 @@ public class UserWithLogin {
 
     @Override
     public String toString() {
-        return "{\"user\": %s}".formatted(login);
+        return "{\"login\": %s}".formatted(login);
     }
 }

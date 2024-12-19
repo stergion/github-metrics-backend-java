@@ -12,7 +12,7 @@ public record PullRequestReviewComment(String login, Github github, String body)
         try {
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            return "{\"user\": %s, \"body\": %s}".formatted(login, body);
+            return "{\"login\": %s, \"body\": %s}".formatted(login, body);
         }
     }
 }

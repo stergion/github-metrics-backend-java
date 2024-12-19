@@ -19,7 +19,7 @@ public record MetricDTO(
         try {
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            return "{\"user\": %s, \"repository\": %s}".formatted(login, repository);
+            return "{\"login\": %s, \"repository\": %s}".formatted(login, repository);
         }
     }
 }
