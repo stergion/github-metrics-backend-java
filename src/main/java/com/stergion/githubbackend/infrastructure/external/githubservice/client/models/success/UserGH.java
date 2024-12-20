@@ -15,7 +15,7 @@ import java.net.URI;
  * All URIs are validated at construction time.
  */
 @JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-public record UserInfo(
+public record UserGH(
         @NotBlank(message = "User ID cannot be blank")
         String id,
 
@@ -49,7 +49,7 @@ public record UserInfo(
     /**
      * Compact constructor for validation
      */
-    public UserInfo {
+    public UserGH {
         // Additional custom validation could be added here if needed
     }
 

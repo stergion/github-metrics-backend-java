@@ -4,26 +4,27 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.Author;
+import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.GitHubNodeRef;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.LabelsConnection;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.Reactions;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.RepositoryRef;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 
 /**
- * Represents a GitHub issue with its associated metadata.
+ * Represents a GitHub pull request
  */
 @JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-public record Issue(
-        @NotBlank(message = "Issue ID cannot be blank")
+public record PullRequestGH(
+        @NotBlank(message = "Pull request ID cannot be blank")
         String id,
 
-        @NotNull(message = "Issue URL cannot be null")
+        @NotNull(message = "Pull request URL cannot be null")
         URI url,
 
         @NotNull(message = "Created date cannot be null")
@@ -31,6 +32,8 @@ public record Issue(
 
         @NotNull(message = "Updated date cannot be null")
         Instant updatedAt,
+
+        Instant mergedAt,
 
         Instant closedAt,
 
@@ -46,31 +49,36 @@ public record Issue(
         @NotNull(message = "Repository cannot be null")
         RepositoryRef repository,
 
-        TimelineItems timelineItems,
-
         @NotNull(message = "Reactions cannot be null")
         Reactions reactions,
 
         LabelsConnection labels,
 
+        @NotNull(message = "Commits cannot be null")
+        CommitsConnection commits,
+
         @NotNull(message = "Comments cannot be null")
-        CommentsConnection comments
+        CommentsConnection comments,
+
+        ClosingIssuesReferences closingIssuesReferences
 ) {
     private static final ObjectWriter WRITER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .writerWithDefaultPrettyPrinter()
             .withoutAttribute("jacksonObjectMapper");
 
-    /**
-     * Compact constructor for validation
-     */
-    public Issue {
-        // Ensure collections are never null
-        if (timelineItems != null && timelineItems.nodes() == null) {
-            timelineItems = new TimelineItems(List.of());
-        }
+    public PullRequestGH {
         if (labels != null && labels.nodes() == null) {
             labels = new LabelsConnection(labels.totalCount(), List.of());
+        }
+        if (commits.nodes() == null) {
+            commits = new CommitsConnection(commits.totalCount(), List.of());
+        }
+        if (closingIssuesReferences != null && closingIssuesReferences.nodes() == null) {
+            closingIssuesReferences = new ClosingIssuesReferences(
+                    closingIssuesReferences.totalCount(),
+                    List.of()
+            );
         }
     }
 
@@ -78,11 +86,18 @@ public record Issue(
         return labels != null && !labels.nodes().isEmpty();
     }
 
-    public boolean hasTimelineItems() {
-        return timelineItems != null && !timelineItems.nodes().isEmpty();
+    public boolean hasCommits() {
+        return !commits.nodes().isEmpty();
     }
 
-    //    @JsonIgnore
+    public boolean hasClosingIssues() {
+        return closingIssuesReferences != null && !closingIssuesReferences.nodes().isEmpty();
+    }
+
+    public boolean isMerged() {
+        return state == State.MERGED;
+    }
+
     public boolean isClosed() {
         return state == State.CLOSED;
     }
@@ -92,36 +107,51 @@ public record Issue(
         try {
             return WRITER.writeValueAsString(this);
         } catch (Exception e) {
-            return String.format("Issue[id=%s, title=%s]", id, title);
+            return String.format("PullRequest[id=%s, title=%s]", id, title);
         }
     }
 
-    /**
-     * Represents the state of an issue
-     */
     public enum State {
-        OPEN, CLOSED
+        OPEN, CLOSED, MERGED
     }
 
-    /**
-     * Represents a timeline item in an issue
-     */
-    public record TimelineItem(
-            Author actor
-    ) {}
+    public record CommitNode(PullRequestCommit commit) {
+        public record PullRequestCommit(
+                @NotBlank(message = "Commit ID cannot be blank")
+                String id,
 
-    /**
-     * Represents a collection of timeline items
-     */
-    public record TimelineItems(
-            List<TimelineItem> nodes
-    ) {}
+                @NotNull(message = "Commit URL cannot be null")
+                URI commitUrl,
 
-    /**
-     * Represents a collection of comments
-     */
+                @PositiveOrZero(message = "Changed files count must be non-negative")
+                int changedFiles,
+
+                @PositiveOrZero(message = "Additions count must be non-negative")
+                int additions,
+
+                @PositiveOrZero(message = "Deletions count must be non-negative")
+                int deletions
+        ) {
+        }
+    }
+
+    public record CommitsConnection(
+            @NotNull(message = "Total count cannot be null")
+            int totalCount,
+            List<CommitNode> nodes
+    ) {
+    }
+
     public record CommentsConnection(
             @NotNull(message = "Total count cannot be null")
             int totalCount
-    ) {}
+    ) {
+    }
+
+    public record ClosingIssuesReferences(
+            @NotNull(message = "Total count cannot be null")
+            int totalCount,
+            List<GitHubNodeRef> nodes
+    ) {
+    }
 }

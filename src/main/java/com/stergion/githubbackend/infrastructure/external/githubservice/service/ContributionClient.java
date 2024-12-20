@@ -18,41 +18,41 @@ public class ContributionClient {
     @Inject
     SseEventTransformer transformer;
 
-    public Multi<Commit> getCommits(String login, String owner, String name, LocalDate from,
-                                    LocalDate to) {
+    public Multi<CommitGH> getCommits(String login, String owner, String name, LocalDate from,
+                                      LocalDate to) {
         return client.getCommits(login, owner, name, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, Commit.class));
+                     .transform(event -> transformer.transform(event, CommitGH.class));
     }
 
-    public Multi<Issue> getIssues(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueGH> getIssues(String login, LocalDate from, LocalDate to) {
         return client.getIssues(login, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, Issue.class));
+                     .transform(event -> transformer.transform(event, IssueGH.class));
     }
 
-    public Multi<PullRequest> getPullRequests(String login, LocalDate from, LocalDate to) {
+    public Multi<PullRequestGH> getPullRequests(String login, LocalDate from, LocalDate to) {
         return client.getPullRequests(login, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, PullRequest.class));
+                     .transform(event -> transformer.transform(event, PullRequestGH.class));
     }
 
-    public Multi<PullRequestReview> getPullRequestReviews(String login, LocalDate from,
-                                                          LocalDate to) {
+    public Multi<PullRequestReviewGH> getPullRequestReviews(String login, LocalDate from,
+                                                            LocalDate to) {
         return client.getPullRequestReviews(login, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, PullRequestReview.class));
+                     .transform(event -> transformer.transform(event, PullRequestReviewGH.class));
     }
 
-    public Multi<IssueComment> getIssueComments(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueCommentGH> getIssueComments(String login, LocalDate from, LocalDate to) {
         return client.getIssueComments(login, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, IssueComment.class));
+                     .transform(event -> transformer.transform(event, IssueCommentGH.class));
     }
 
-    public Multi<CommitComment> getCommitComments(String login, LocalDate from, LocalDate to) {
+    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
         return client.getCommitComments(login, from, to)
                      .onItem()
-                     .transform(event -> transformer.transform(event, CommitComment.class));
+                     .transform(event -> transformer.transform(event, CommitCommentGH.class));
     }
 }

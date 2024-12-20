@@ -17,7 +17,7 @@ import java.time.Instant;
  * Represents a comment on a GitHub commit
  */
 @JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-public record CommitComment(
+public record CommitCommentGH(
         @NotBlank(message = "Comment ID cannot be blank")
         String id,
 

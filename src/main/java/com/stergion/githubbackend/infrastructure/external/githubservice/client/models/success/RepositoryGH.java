@@ -19,7 +19,7 @@ import java.util.List;
  * Represents a GitHub repository with all its associated metadata
  */
 @JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-public record Repository(
+public record RepositoryGH(
         @NotBlank(message = "Repository ID cannot be blank")
         String id,
 
@@ -58,7 +58,7 @@ public record Repository(
     /**
      * Compact constructor for validation
      */
-    public Repository {
+    public RepositoryGH {
         // Ensure non-null collections
         if (languages.edges == null) {
             languages = new LanguagesConnection(

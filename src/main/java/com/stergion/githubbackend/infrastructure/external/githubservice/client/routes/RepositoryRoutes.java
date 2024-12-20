@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.routes;
 
-import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.Repository;
+import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.RepositoryGH;
 import io.smallrye.mutiny.Multi;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.*;
@@ -22,12 +22,12 @@ public interface RepositoryRoutes {
     @GET
     @Path("/repository/{owner}/{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    Repository getRepository(
+    RepositoryGH getRepository(
             @NotBlank(message = "Owner cannot be blank")
             @PathParam("owner") String owner,
             @NotBlank(message = "Repository name cannot be blank")
             @PathParam("name") String name
-                            );
+                              );
 
     /**
      * Retrieves a stream of repositories that the user has contributed to within the specified

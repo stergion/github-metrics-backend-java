@@ -20,7 +20,7 @@ import java.util.List;
  * Represents a GitHub commit with its associated metadata, comments, and files.
  */
 @JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-public record Commit(
+public record CommitGH(
         @NotBlank(message = "Commit ID cannot be blank")
         String id,
 
@@ -62,7 +62,7 @@ public record Commit(
     /**
      * Compact constructor for validation
      */
-    public Commit {
+    public CommitGH {
         // Ensure lists are never null
         files = files != null ? List.copyOf(files) : List.of();
 
