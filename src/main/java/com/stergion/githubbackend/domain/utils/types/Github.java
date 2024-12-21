@@ -1,6 +1,8 @@
 package com.stergion.githubbackend.domain.utils.types;
 
-public record Github(String id, String url) {
+import java.net.URI;
+
+public record Github(String id, URI url) {
     @Override
     public String toString() {
         return "{\"id\": %s, \"url\": %s}".formatted(id, url);

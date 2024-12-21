@@ -3,14 +3,13 @@ package com.stergion.githubbackend.domain.users;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
+import com.stergion.githubbackend.domain.utils.types.Github;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,10 +29,10 @@ public record UserDTO(
         @NotNull
         List<ObjectId> repositories,
 
-        String avatarURL,
+        URI avatarURL,
         String bio,
         String twitterHandle,
-        String websiteURL
+        URI websiteURL
 ) {
     static ObjectMapper mapper = JsonObjectMapper.create();
 
