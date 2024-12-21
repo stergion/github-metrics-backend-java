@@ -2,6 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.contirbutions.enti
 
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Label;
+import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestCommit;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestState;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public non-sealed class PullRequest extends Contribution {
     public List<Label> labels;
     public String title;
     public String body;
-    public List<Commit> commits;
+    public List<PullRequestCommit> commits;
     public int commitsCount;
     public int commentsCount;
     public List<Github> closingIssuesReferences;
