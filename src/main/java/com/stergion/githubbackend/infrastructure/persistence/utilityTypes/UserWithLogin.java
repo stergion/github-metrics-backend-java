@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.utilityTypes;
 
 public class UserWithLogin {
-    String login;
+    public String login;
 
     @Override
     public String toString() {
