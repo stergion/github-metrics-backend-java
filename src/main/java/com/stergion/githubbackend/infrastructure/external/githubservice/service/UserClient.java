@@ -1,8 +1,11 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
+import com.stergion.githubbackend.domain.users.UserDTO;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
+import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.UserGHMapper;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.UserGH;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @ApplicationScoped
@@ -10,7 +13,11 @@ public class UserClient {
     @RestClient
     GitHubServiceClient client;
 
-    public UserGH getUserInfo(String login) {
-        return client.getUserInfo(login);
+    @Inject
+    UserGHMapper mapper;
+
+    public UserDTO getUserInfo(String login) {
+        UserGH user = client.getUserInfo(login);
+        return mapper.toDTO(user);
     }
 }

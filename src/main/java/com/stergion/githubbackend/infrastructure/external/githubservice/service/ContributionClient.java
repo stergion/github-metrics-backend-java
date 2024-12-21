@@ -1,6 +1,9 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
+import com.stergion.githubbackend.domain.contirbutions.dto.*;
+import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
+import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.*;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.*;
 import com.stergion.githubbackend.infrastructure.external.githubservice.utils.SseEventTransformer;
 import io.smallrye.mutiny.Multi;
@@ -18,36 +21,53 @@ public class ContributionClient {
     @Inject
     SseEventTransformer transformer;
 
-    public Multi<CommitGH> getCommits(String login, String owner, String name, LocalDate from,
-                                      LocalDate to) {
+    @Inject
+    CommitGHMapper commitMapper;
+
+    @Inject
+    IssueGHMapper issueMapper;
+
+    @Inject
+    PullRequestGHMapper pullRequestMapper;
+
+    @Inject
+    PullRequestReviewGHMapper pullRequestReviewMapper;
+
+    @Inject
+    IssueCommentGHMapper issueCommentMapper;
+
+
+    public Multi<CommitDTO> getCommits(String login, String owner, String name, LocalDate from,
+                                       LocalDate to) {
         return client.getCommits(login, owner, name, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, CommitGH.class));
+                     .map(event -> transformer.transform(event, CommitGH.class))
+                     .map(commitGH -> commitMapper.toDTO(commitGH, login,
+                             new NameWithOwner(owner, name)));
     }
 
-    public Multi<IssueGH> getIssues(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueDTO> getIssues(String login, LocalDate from, LocalDate to) {
         return client.getIssues(login, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, IssueGH.class));
+                     .map(event -> transformer.transform(event, IssueGH.class))
+                     .map(issueGH -> issueMapper.toDTO(issueGH, login));
     }
 
-    public Multi<PullRequestGH> getPullRequests(String login, LocalDate from, LocalDate to) {
+    public Multi<PullRequestDTO> getPullRequests(String login, LocalDate from, LocalDate to) {
         return client.getPullRequests(login, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, PullRequestGH.class));
+                     .map(event -> transformer.transform(event, PullRequestGH.class))
+                     .map(pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login));
     }
 
-    public Multi<PullRequestReviewGH> getPullRequestReviews(String login, LocalDate from,
-                                                            LocalDate to) {
+    public Multi<PullRequestReviewDTO> getPullRequestReviews(String login, LocalDate from,
+                                                             LocalDate to) {
         return client.getPullRequestReviews(login, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, PullRequestReviewGH.class));
+                     .map(event -> transformer.transform(event, PullRequestReviewGH.class))
+                     .map(reviewGH -> pullRequestReviewMapper.toDTO(reviewGH, login));
     }
 
-    public Multi<IssueCommentGH> getIssueComments(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueCommentDTO> getIssueComments(String login, LocalDate from, LocalDate to) {
         return client.getIssueComments(login, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, IssueCommentGH.class));
+                     .map(event -> transformer.transform(event, IssueCommentGH.class))
+                .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
     }
 
 //    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
