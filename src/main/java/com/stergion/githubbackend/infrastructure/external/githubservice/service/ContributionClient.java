@@ -50,9 +50,9 @@ public class ContributionClient {
                      .transform(event -> transformer.transform(event, IssueCommentGH.class));
     }
 
-    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
-        return client.getCommitComments(login, from, to)
-                     .onItem()
-                     .transform(event -> transformer.transform(event, CommitCommentGH.class));
-    }
+//    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
+//        return client.getCommitComments(login, from, to)
+//                     .onItem()
+//                     .transform(event -> transformer.transform(event, CommitCommentGH.class));
+//    }
 }
