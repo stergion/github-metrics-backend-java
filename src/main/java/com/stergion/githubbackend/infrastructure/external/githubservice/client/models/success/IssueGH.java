@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,12 +27,12 @@ public record IssueGH(
         URI url,
 
         @NotNull(message = "Created date cannot be null")
-        Instant createdAt,
+        LocalDate createdAt,
 
         @NotNull(message = "Updated date cannot be null")
-        Instant updatedAt,
+        LocalDate updatedAt,
 
-        Instant closedAt,
+        LocalDate closedAt,
 
         @NotNull(message = "State cannot be null")
         State state,

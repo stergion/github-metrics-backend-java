@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -31,9 +31,9 @@ public record CommitGH(
         URI commitUrl,
 
         @NotNull(message = "Committed date cannot be null")
-        Instant committedDate,
+        LocalDate committedDate,
 
-        Instant pushedDate,
+        LocalDate pushedDate,
 
         @PositiveOrZero(message = "Changed files count must be non-negative")
         int changedFiles,
@@ -103,7 +103,7 @@ public record CommitGH(
      * Represents a comment on a commit
      */
     public record CommitComment(
-            Instant publishedAt,
+            LocalDate publishedAt,
             int position,
             @NotBlank(message = "Comment body cannot be blank")
             String body,

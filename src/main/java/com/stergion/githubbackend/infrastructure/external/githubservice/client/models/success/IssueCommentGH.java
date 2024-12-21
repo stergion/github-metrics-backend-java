@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDate;
 
 /**
  * Represents a comment on a GitHub issue
@@ -25,14 +25,14 @@ public record IssueCommentGH(
         URI url,
 
         @NotNull(message = "Created date cannot be null")
-        Instant createdAt,
+        LocalDate createdAt,
 
         @NotNull(message = "Updated date cannot be null")
-        Instant updatedAt,
+        LocalDate updatedAt,
 
-        Instant publishedAt,
+        LocalDate publishedAt,
 
-        Instant lastEditedAt,
+        LocalDate lastEditedAt,
 
         @NotBlank(message = "Body cannot be blank")
         String body,

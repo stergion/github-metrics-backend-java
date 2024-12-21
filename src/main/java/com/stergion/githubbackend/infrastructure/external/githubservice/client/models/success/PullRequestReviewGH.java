@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -26,16 +26,16 @@ public record PullRequestReviewGH(
         URI url,
 
         @NotNull(message = "Review URL cannot be null")
-        Instant createdAt,
+        LocalDate createdAt,
 
         @NotNull(message = "Review URL cannot be null")
-        Instant updatedAt,
+        LocalDate updatedAt,
 
-        Instant publishedAt,
+        LocalDate publishedAt,
 
-        Instant submittedAt,
+        LocalDate submittedAt,
 
-        Instant lastEditedAt,
+        LocalDate lastEditedAt,
 
         @NotNull(message = "State cannot be null")
         ReviewState state,

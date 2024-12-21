@@ -47,13 +47,6 @@ public record UserGH(
             .withoutAttribute("jacksonObjectMapper");
 
     /**
-     * Compact constructor for validation
-     */
-    public UserGH {
-        // Additional custom validation could be added here if needed
-    }
-
-    /**
      * Returns a user's display name, falling back to 'login' if 'name' is not set
      *
      * @return the display name to use

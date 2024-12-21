@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -28,14 +28,14 @@ public record PullRequestGH(
         URI url,
 
         @NotNull(message = "Created date cannot be null")
-        Instant createdAt,
+        LocalDate createdAt,
 
         @NotNull(message = "Updated date cannot be null")
-        Instant updatedAt,
+        LocalDate updatedAt,
 
-        Instant mergedAt,
+        LocalDate mergedAt,
 
-        Instant closedAt,
+        LocalDate closedAt,
 
         @NotNull(message = "State cannot be null")
         State state,
