@@ -1,8 +1,10 @@
 package com.stergion.githubbackend.infrastructure.persistence.utilityTypes;
 
+import java.net.URI;
+
 public class Github {
     public String id;
-    public String url;
+    public URI url;
 
     @Override
     public String toString() {

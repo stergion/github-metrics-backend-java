@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class User {
     @NotNull
     public List<ObjectId> repositories;
 
-    public String avatarURL;
+    public URI avatarURL;
     public String bio;
     public String twitterHandle;
-    public String websiteURL;
+    public URI websiteURL;
 
     @Override
     public String toString() {
