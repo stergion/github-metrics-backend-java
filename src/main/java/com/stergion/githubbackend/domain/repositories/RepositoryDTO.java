@@ -31,8 +31,8 @@ public record RepositoryDTO(
         List<Topic> topics,
         int topicsCount,
         int forkCount,
-        int stargazersCount,
-        int watchersCount
+        int stargazerCount,
+        int watcherCount
 ) {
     static ObjectMapper mapper = JsonObjectMapper.create();
 
