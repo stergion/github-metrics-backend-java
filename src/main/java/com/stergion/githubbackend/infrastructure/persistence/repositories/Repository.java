@@ -35,8 +35,8 @@ public class Repository {
     public List<Topic> topics;
     public int topicsCount;
     public int forkCount;
-    public int stargazersCount;
-    public int watchersCount;
+    public int stargazerCount;
+    public int watcherCount;
 
     @Override
     public String toString() {
@@ -72,8 +72,8 @@ public class Repository {
                 topics,
                 topicsCount,
                 forkCount,
-                stargazersCount,
-                watchersCount
+                stargazerCount,
+                watcherCount
                              );
     }
 
