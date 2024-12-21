@@ -32,7 +32,7 @@ public record PullRequestDTO(
         List<Label> labels,
         String title,
         String body,
-        List<CommitDTO> commits,
+        List<PullRequestCommit> commits,
         int commitsCount,
         int commentsCount,
         List<Github> closingIssuesReferences,
