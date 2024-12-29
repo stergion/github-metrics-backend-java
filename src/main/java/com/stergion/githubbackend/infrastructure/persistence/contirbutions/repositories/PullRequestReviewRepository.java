@@ -9,21 +9,5 @@ import org.jboss.resteasy.reactive.common.NotImplementedYet;
 import java.util.List;
 
 @ApplicationScoped
-public class PullRequestReviewRepository implements PanacheMongoRepository<PullRequestReview> {
-    //    TODO
-    public List<PullRequestReview> findByUserId(ObjectId userId) {
-        throw new NotImplementedYet();
-    }
-
-    //    TODO
-    public List<PullRequestReview> findByRepositoryId(ObjectId userId) {
-        throw new NotImplementedYet();
-    }
-
-    //    TODO
-    public PullRequestReview findByUserAndRepositoryId(ObjectId userId, ObjectId repositoryId) {
-        throw new NotImplementedYet();
-    }
-
-
+public final class PullRequestReviewRepository implements ContributionRepository<PullRequestReview> {
 }
