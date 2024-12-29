@@ -41,18 +41,4 @@ public non-sealed class Issue extends Contribution {
                 ", closer: '" + closer + '\'' +
                 "}";
     }
-
-    @Override
-    public final boolean equals(Object o) {
-        return (o instanceof Issue i)
-                && userId.equals(i.userId)
-                && repositoryId.equals(i.repositoryId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + repositoryId.hashCode();
-        return result;
-    }
 }

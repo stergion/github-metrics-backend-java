@@ -27,4 +27,15 @@ public sealed abstract class Contribution permits Commit, Issue, PullRequest, Pu
     public NameWithOwner repository;
 
     public Github github;
+
+    @Override
+    public final boolean equals(Object o) {
+        return (o instanceof Commit c)
+                && id.equals(c.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

@@ -44,19 +44,4 @@ public non-sealed class Commit extends Contribution {
                 ", filesCount: " + filesCount +
                 "}";
     }
-
-    @Override
-    public final boolean equals(Object o) {
-        return (o instanceof Commit c)
-                && userId.equals(c.userId)
-                && repositoryId.equals(c.repositoryId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + repositoryId.hashCode();
-        return result;
-    }
-
 }

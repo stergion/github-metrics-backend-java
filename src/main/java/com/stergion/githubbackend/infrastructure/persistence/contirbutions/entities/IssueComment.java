@@ -50,18 +50,4 @@ public non-sealed class IssueComment extends Contribution {
                 ", body: '" + body + '\'' +
                 "}";
     }
-
-    @Override
-    public final boolean equals(Object o) {
-        return (o instanceof IssueComment ic)
-                && userId.equals(ic.userId)
-                && repositoryId.equals(ic.repositoryId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + repositoryId.hashCode();
-        return result;
-    }
 }

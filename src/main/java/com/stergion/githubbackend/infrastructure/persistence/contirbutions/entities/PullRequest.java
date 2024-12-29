@@ -53,18 +53,4 @@ public non-sealed class PullRequest extends Contribution {
                 ", closingIssuesReferencesCount: " + closingIssuesReferencesCount +
                 "}";
     }
-
-    @Override
-    public final boolean equals(Object o) {
-        return (o instanceof PullRequest pr)
-                && userId.equals(pr.userId)
-                && repositoryId.equals(pr.repositoryId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userId.hashCode();
-        result = 31 * result + repositoryId.hashCode();
-        return result;
-    }
 }
