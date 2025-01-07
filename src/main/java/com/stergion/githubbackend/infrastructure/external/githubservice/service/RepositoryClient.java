@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @ApplicationScoped
 public class RepositoryClient {
@@ -32,6 +33,7 @@ public class RepositoryClient {
                                                            LocalDate to) {
         return client.getRepositoriesCommittedTo(login, from, to)
                      .map(event -> transformer.transform(event, RepositoryGH.class))
+                     .filter(Objects::nonNull)
                      .map(mapper::toDTO);
 
     }
@@ -40,6 +42,7 @@ public class RepositoryClient {
                                                              LocalDate to) {
         return client.getRepositoriesContributedTo(login, from, to)
                      .map(event -> transformer.transform(event, RepositoryGH.class))
+                     .filter(Objects::nonNull)
                      .map(mapper::toDTO);
     }
 }

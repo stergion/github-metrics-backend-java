@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @ApplicationScoped
 public class ContributionClient {
@@ -41,6 +42,7 @@ public class ContributionClient {
                                        LocalDate to) {
         return client.getCommits(login, owner, name, from, to)
                      .map(event -> transformer.transform(event, CommitGH.class))
+                     .filter(Objects::nonNull)
                      .map(commitGH -> commitMapper.toDTO(commitGH, login,
                              new NameWithOwner(owner, name)));
     }
@@ -48,12 +50,14 @@ public class ContributionClient {
     public Multi<IssueDTO> getIssues(String login, LocalDate from, LocalDate to) {
         return client.getIssues(login, from, to)
                      .map(event -> transformer.transform(event, IssueGH.class))
+                     .filter(Objects::nonNull)
                      .map(issueGH -> issueMapper.toDTO(issueGH, login));
     }
 
     public Multi<PullRequestDTO> getPullRequests(String login, LocalDate from, LocalDate to) {
         return client.getPullRequests(login, from, to)
                      .map(event -> transformer.transform(event, PullRequestGH.class))
+                     .filter(Objects::nonNull)
                      .map(pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login));
     }
 
@@ -61,12 +65,14 @@ public class ContributionClient {
                                                              LocalDate to) {
         return client.getPullRequestReviews(login, from, to)
                      .map(event -> transformer.transform(event, PullRequestReviewGH.class))
+                     .filter(Objects::nonNull)
                      .map(reviewGH -> pullRequestReviewMapper.toDTO(reviewGH, login));
     }
 
     public Multi<IssueCommentDTO> getIssueComments(String login, LocalDate from, LocalDate to) {
         return client.getIssueComments(login, from, to)
                      .map(event -> transformer.transform(event, IssueCommentGH.class))
+                     .filter(Objects::nonNull)
                 .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
     }
 

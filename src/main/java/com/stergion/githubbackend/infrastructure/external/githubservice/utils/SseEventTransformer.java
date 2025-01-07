@@ -27,6 +27,10 @@ public class SseEventTransformer {
             return successResponseMapper.fromJson(data, eventType);
         }
 
+        if ("heartbeat".equals(eventName)) {
+            return null;
+        }
+
         throw new IllegalStateException("Unknown event type: " + eventName);
     }
 
