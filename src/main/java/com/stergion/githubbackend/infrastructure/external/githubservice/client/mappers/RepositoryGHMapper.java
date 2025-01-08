@@ -38,6 +38,7 @@ public interface RepositoryGHMapper {
             return List.of();
         }
         return labelsConnection.nodes().stream()
+                               .filter(Objects::nonNull)
                                .map(node -> new Label(node.name(), node.description()))
                                .toList();
     }
