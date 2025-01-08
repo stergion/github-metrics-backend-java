@@ -10,13 +10,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mapper(componentModel = "cdi")
 public interface RepositoryGHMapper {
     @Mapping(target = "github.id", source = "id")
     @Mapping(target = "github.url", source = "url")
     @Mapping(target = "owner", source = "owner.login")
-    @Mapping(target = "topics", source = "repositoryTopics.nodes")
+    @Mapping(target = "topics", source = "repositoryTopics")
     @Mapping(target = "topicsCount", source = "repositoryTopics.totalCount")
     @Mapping(target = "labelsCount", source = "labels.totalCount")
     @Mapping(target = "watcherCount", source = "watchers.totalCount")
@@ -25,12 +26,14 @@ public interface RepositoryGHMapper {
     RepositoryDTO toDTO(RepositoryGH repository);
 
 
-    default Topic toTopic(RepositoryGH.RepositoryTopic repositoryTopic) {
-        if (repositoryTopic == null || repositoryTopic.topic() == null) {
-            return null;
+    default List<Topic> map(RepositoryGH.RepositoryTopicsConnection topicsConnection) {
+        if (topicsConnection == null || topicsConnection.nodes() == null) {
+            return List.of();
         }
-        return new Topic(repositoryTopic.topic().name());
-
+        return topicsConnection.nodes().stream()
+                               .filter(topic -> topic != null && topic.topic() != null)
+                               .map(topic -> new Topic(topic.topic().name()))
+                               .toList();
     }
 
     default List<Label> map(LabelsConnection labelsConnection) {
