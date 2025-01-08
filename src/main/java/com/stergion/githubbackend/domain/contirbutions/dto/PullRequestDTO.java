@@ -38,6 +38,15 @@ public record PullRequestDTO(
         List<Github> closingIssuesReferences,
         int closingIssuesReferencesCount
 ) implements ContributionDTO {
+
+    public PullRequestDTO {
+        labels = labels != null ? List.copyOf(labels) : List.of();
+        commits = commits != null ? List.copyOf(commits) : List.of();
+        closingIssuesReferences = closingIssuesReferences != null ? List.copyOf(
+                closingIssuesReferences) : List.of();
+
+    }
+
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

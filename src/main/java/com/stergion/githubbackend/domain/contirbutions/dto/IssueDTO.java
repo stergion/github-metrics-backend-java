@@ -33,6 +33,9 @@ public record IssueDTO(
         List<Label> labels,
         String closer
 ) implements ContributionDTO {
+    public IssueDTO {
+        labels = labels != null ? List.copyOf(labels) : List.of();
+    }
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

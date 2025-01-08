@@ -10,6 +10,7 @@ import com.stergion.githubbackend.domain.utils.types.Topic;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record RepositoryDTO(
@@ -34,6 +35,11 @@ public record RepositoryDTO(
         int stargazerCount,
         int watcherCount
 ) {
+    public RepositoryDTO {
+        labels = labels != null ? List.copyOf(labels) : List.of();
+        languages = languages != null ? List.copyOf(languages) : List.of();
+        topics = topics != null ? List.copyOf(topics) : List.of();
+    }
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

@@ -35,6 +35,10 @@ public record PullRequestReviewDTO(
         String body,
         List<PullRequestReviewComment> comments
 ) implements ContributionDTO {
+
+    public PullRequestReviewDTO {
+        comments = comments != null ? List.copyOf(comments) : List.of();
+    }
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

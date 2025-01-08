@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.domain.utils.types.*;
+import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.CommitGH;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
@@ -30,6 +31,13 @@ public record CommitDTO(
         List<File> files,
         int filesCount
 ) implements ContributionDTO {
+    public CommitDTO {
+        // Ensure lists are never null
+        files = files != null ? List.copyOf(files) : List.of();
+        comments = comments != null ? List.copyOf(comments) : List.of();
+        associatedPullRequest = associatedPullRequest != null ? List.copyOf(associatedPullRequest) : List.of();
+    }
+
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

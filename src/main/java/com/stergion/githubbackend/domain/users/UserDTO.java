@@ -34,6 +34,9 @@ public record UserDTO(
         String twitterHandle,
         URI websiteURL
 ) {
+    public UserDTO {
+        repositories = repositories != null ? List.copyOf(repositories) : List.of();
+    }
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
