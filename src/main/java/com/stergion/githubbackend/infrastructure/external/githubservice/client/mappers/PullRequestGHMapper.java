@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
+import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.Label;
@@ -11,7 +12,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "cdi")
+@Mapper(config = MapStructConfig.class)
 public interface PullRequestGHMapper {
     @Mapping(target = "user", source = "login")
     @Mapping(target = "repository.owner", source = "pullRequest.repository.owner.login")

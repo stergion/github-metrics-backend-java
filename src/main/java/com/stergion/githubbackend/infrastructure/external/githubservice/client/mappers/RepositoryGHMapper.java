@@ -1,18 +1,18 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
+import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.domain.utils.types.Language;
 import com.stergion.githubbackend.domain.utils.types.Topic;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.RepositoryGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.LabelsConnection;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 import java.util.Objects;
 
-@Mapper(componentModel = "cdi")
+@Mapper(config = MapStructConfig.class)
 public interface RepositoryGHMapper {
     @Mapping(target = "github.id", source = "id")
     @Mapping(target = "github.url", source = "url")

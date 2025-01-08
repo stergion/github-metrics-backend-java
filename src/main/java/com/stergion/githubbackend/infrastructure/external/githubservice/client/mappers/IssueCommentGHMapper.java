@@ -1,12 +1,13 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
+import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueCommentGH;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "cdi")
+@Mapper(config = MapStructConfig.class)
 public interface IssueCommentGHMapper {
     @Mapping(target = "user", source = "login")
     @Mapping(target = "github.id", source = "issueComment.id")

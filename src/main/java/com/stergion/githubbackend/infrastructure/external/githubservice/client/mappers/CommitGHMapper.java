@@ -1,6 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 
+import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
 import com.stergion.githubbackend.domain.utils.types.CommitComment;
 import com.stergion.githubbackend.domain.utils.types.File;
@@ -13,7 +14,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "cdi")
+@Mapper(config = MapStructConfig.class)
 public interface CommitGHMapper {
     @Mapping(target = "user", source = "login")
     @Mapping(target = "github.id", source = "commit.id")
