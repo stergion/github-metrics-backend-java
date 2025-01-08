@@ -79,12 +79,12 @@ public record RepositoryGH(
     }
 
     @JsonIgnore
-    public boolean checkTopics() {
+    public boolean hasTopics() {
         return repositoryTopics != null && !repositoryTopics.nodes().isEmpty();
     }
 
     @JsonIgnore
-    public boolean checkLabels() {
+    public boolean hasLabels() {
         return labels != null && !labels.nodes().isEmpty();
     }
 
