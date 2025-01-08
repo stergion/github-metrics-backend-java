@@ -77,17 +77,17 @@ public record CommitGH(
 
     @JsonIgnore
     public boolean hasFiles() {
-        return !files.isEmpty();
+        return files!=null && !files.isEmpty();
     }
 
     @JsonIgnore
     public boolean hasComments() {
-        return !comments.nodes().isEmpty();
+        return comments!=null && comments.nodes()!=null && !comments.nodes().isEmpty();
     }
 
     @JsonIgnore
     public boolean hasAssociatedPullRequests() {
-        return associatedPullRequests != null && !associatedPullRequests.nodes().isEmpty();
+        return associatedPullRequests != null && associatedPullRequests.nodes()!=null && !associatedPullRequests.nodes().isEmpty();
     }
 
     @Override
