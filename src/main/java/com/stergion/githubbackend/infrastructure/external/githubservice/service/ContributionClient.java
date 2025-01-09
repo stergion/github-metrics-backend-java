@@ -5,6 +5,8 @@ import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.*;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.*;
+import com.stergion.githubbackend.common.batch.BatchProcessor;
+import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.infrastructure.external.githubservice.utils.SseEventTransformer;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,6 +14,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -47,6 +50,20 @@ public class ContributionClient {
                              new NameWithOwner(owner, name)));
     }
 
+    public Multi<List<CommitDTO>> getCommitsBatched(String login, String owner, String name,
+                                                    LocalDate from, LocalDate to,
+                                                    BatchProcessorConfig config) {
+        BatchProcessor batchProcessor = new BatchProcessor(config);
+        NameWithOwner repo = new NameWithOwner(owner, name);
+
+        var stream = client.getCommits(login, owner, name, from, to)
+                           .map(event -> transformer.transform(event, CommitGH.class));
+
+        return batchProcessor.processBatch(stream)
+                             .transform(commitGH -> commitMapper.toDTO(commitGH, login, repo))
+                             .toMulti();
+    }
+
     public Multi<IssueDTO> getIssues(String login, LocalDate from, LocalDate to) {
         return client.getIssues(login, from, to)
                      .map(event -> transformer.transform(event, IssueGH.class))
@@ -73,7 +90,7 @@ public class ContributionClient {
         return client.getIssueComments(login, from, to)
                      .map(event -> transformer.transform(event, IssueCommentGH.class))
                      .filter(Objects::nonNull)
-                .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
+                     .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
     }
 
 //    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
