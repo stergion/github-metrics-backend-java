@@ -1,12 +1,12 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
+import com.stergion.githubbackend.common.batch.BatchProcessor;
+import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.*;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.*;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.*;
-import com.stergion.githubbackend.common.batch.BatchProcessor;
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.infrastructure.external.githubservice.utils.SseEventTransformer;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -70,6 +70,20 @@ public class ContributionClient {
                      .filter(Objects::nonNull)
                      .map(issueGH -> issueMapper.toDTO(issueGH, login));
     }
+
+    public Multi<List<IssueDTO>> getIssuesBatched(String login, LocalDate from, LocalDate to,
+                                                  BatchProcessorConfig config) {
+        BatchProcessor batchProcessor = new BatchProcessor(config);
+
+        var stream = client.getIssues(login, from, to)
+                           .map(event -> transformer.transform(event, IssueGH.class));
+
+        return batchProcessor.processBatch(stream)
+                             .transform(issueGH -> issueMapper.toDTO(issueGH, login))
+                             .toMulti();
+
+    }
+
 
     public Multi<PullRequestDTO> getPullRequests(String login, LocalDate from, LocalDate to) {
         return client.getPullRequests(login, from, to)
