@@ -22,7 +22,7 @@ public class ErrorResponseMapper {
         }
     }
 
-    public static ServiceResponseException toServiceResponseException(ErrorResponse error) {
+    private static ServiceResponseException toServiceResponseException(ErrorResponse error) {
         return switch (error) {
             case RequestParamsValidationError e -> new RequestParamsValidationException(
                     e.message(),
@@ -48,5 +48,8 @@ public class ErrorResponseMapper {
         return toServiceResponseException(error);
     }
 
+    public ServiceResponseException toThrowable(ErrorResponse errorResponse) {
+        return toServiceResponseException(errorResponse);
+    }
 
 }
