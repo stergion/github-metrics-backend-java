@@ -92,6 +92,20 @@ public class ContributionClient {
                      .map(pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login));
     }
 
+    public Multi<List<PullRequestDTO>> getPullRequestsBatched(String login,
+                                                              LocalDate from, LocalDate to,
+                                                              BatchProcessorConfig config) {
+        BatchProcessor batchProcessor = new BatchProcessor(config);
+
+        var stream = client.getPullRequests(login, from, to)
+                           .map(event -> transformer.transform(event, PullRequestGH.class));
+
+        return batchProcessor.processBatch(stream)
+                             .transform(
+                                     pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login))
+                             .toMulti();
+    }
+
     public Multi<PullRequestReviewDTO> getPullRequestReviews(String login, LocalDate from,
                                                              LocalDate to) {
         return client.getPullRequestReviews(login, from, to)
