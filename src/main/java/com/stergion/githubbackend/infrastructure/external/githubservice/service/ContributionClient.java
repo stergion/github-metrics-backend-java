@@ -136,6 +136,20 @@ public class ContributionClient {
                      .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
     }
 
+    public Multi<List<IssueCommentDTO>> getIssueCommentsBatched(String login,
+                                                                LocalDate from, LocalDate to,
+                                                                BatchProcessorConfig config) {
+        BatchProcessor batchProcessor = new BatchProcessor(config);
+
+        var stream = client.getIssueComments(login, from, to)
+                           .map(event -> transformer.transform(event, IssueCommentGH.class));
+
+        return batchProcessor.processBatch(stream)
+                             .transform(commentGH -> issueCommentMapper.toDTO(commentGH, login))
+                             .toMulti();
+    }
+
+
 //    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
 //        return client.getCommitComments(login, from, to)
 //                     .onItem()
