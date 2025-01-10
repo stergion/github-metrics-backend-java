@@ -76,14 +76,6 @@ public final class BatchProcessorConfig {
                 .build();
     }
 
-    public static BatchProcessorConfig highThroughput() {
-        return new Builder()
-                .batchSize(150)
-                .bufferSize(512)
-                .timeout(Duration.ofSeconds(15))
-                .build();
-    }
-
     /**
      * Builder class for creating BatchConfig instances.
      * Provides default values and validation for all parameters.
