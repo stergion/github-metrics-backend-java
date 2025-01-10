@@ -14,6 +14,7 @@ import java.util.Objects;
 
 @Mapper(config = MapStructConfig.class)
 public interface RepositoryGHMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "github.id", source = "id")
     @Mapping(target = "github.url", source = "url")
     @Mapping(target = "owner", source = "owner.login")

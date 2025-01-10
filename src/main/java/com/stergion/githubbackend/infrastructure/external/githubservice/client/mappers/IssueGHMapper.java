@@ -12,6 +12,7 @@ import java.util.List;
 
 @Mapper(config = MapStructConfig.class)
 public interface IssueGHMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "login")
     @Mapping(target = "github.id", source = "issue.id")
     @Mapping(target = "github.url", source = "issue.url")

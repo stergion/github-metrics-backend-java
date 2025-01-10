@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record UserDTO(
+        ObjectId id,
         @NotBlank
         String login,
 

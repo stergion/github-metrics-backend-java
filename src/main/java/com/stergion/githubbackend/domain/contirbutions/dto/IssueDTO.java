@@ -6,11 +6,13 @@ import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.domain.utils.types.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public record IssueDTO(
+        ObjectId id,
         @NotNull
         String user,
 

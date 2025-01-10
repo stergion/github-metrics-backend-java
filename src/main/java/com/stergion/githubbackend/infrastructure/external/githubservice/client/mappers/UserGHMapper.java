@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Mapper(config = MapStructConfig.class, imports = {LocalDate.class})
 public interface UserGHMapper {
-
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "repositories", expression = "java(java.util.Collections.emptyList())")
     @Mapping(target = "github.id", source = "id")
     @Mapping(target = "github.url", source = "url")

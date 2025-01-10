@@ -65,6 +65,7 @@ class UserClientTest {
         );
 
         mockUserDTO = new UserDTO(
+                null,
                 VALID_LOGIN,
                 "Test User",
                 githubRef,
@@ -157,6 +158,7 @@ class UserClientTest {
         );
 
         UserDTO userDTOWithNulls = new UserDTO(
+                null,
                 VALID_LOGIN,
                 VALID_LOGIN,
                 githubRef,

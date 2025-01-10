@@ -9,11 +9,12 @@ import com.stergion.githubbackend.domain.utils.types.Language;
 import com.stergion.githubbackend.domain.utils.types.Topic;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public record RepositoryDTO(
+        ObjectId id,
         @NotBlank
         String owner,
 
@@ -40,6 +41,7 @@ public record RepositoryDTO(
         languages = languages != null ? List.copyOf(languages) : List.of();
         topics = topics != null ? List.copyOf(topics) : List.of();
     }
+
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

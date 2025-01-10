@@ -3,15 +3,19 @@ package com.stergion.githubbackend.domain.contirbutions.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.domain.utils.types.*;
-import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.CommitGH;
+import com.stergion.githubbackend.domain.utils.types.CommitComment;
+import com.stergion.githubbackend.domain.utils.types.File;
+import com.stergion.githubbackend.domain.utils.types.Github;
+import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public record CommitDTO(
+        ObjectId id,
         @NotNull
         String user,
         @NotNull
@@ -35,7 +39,8 @@ public record CommitDTO(
         // Ensure lists are never null
         files = files != null ? List.copyOf(files) : List.of();
         comments = comments != null ? List.copyOf(comments) : List.of();
-        associatedPullRequest = associatedPullRequest != null ? List.copyOf(associatedPullRequest) : List.of();
+        associatedPullRequest = associatedPullRequest != null ? List.copyOf(
+                associatedPullRequest) : List.of();
     }
 
     static ObjectMapper mapper = JsonObjectMapper.create();

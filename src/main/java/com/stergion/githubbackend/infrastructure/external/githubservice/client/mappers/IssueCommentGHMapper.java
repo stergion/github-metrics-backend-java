@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(config = MapStructConfig.class)
 public interface IssueCommentGHMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "login")
     @Mapping(target = "github.id", source = "issueComment.id")
     @Mapping(target = "github.url", source = "issueComment.url")

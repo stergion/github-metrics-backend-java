@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import com.stergion.githubbackend.domain.utils.types.UserWithLogin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 
 public record IssueCommentDTO(
+        ObjectId id,
         @NotNull
         String user,
 

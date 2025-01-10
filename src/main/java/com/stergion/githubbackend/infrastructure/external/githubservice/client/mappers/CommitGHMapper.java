@@ -16,6 +16,7 @@ import java.util.List;
 
 @Mapper(config = MapStructConfig.class)
 public interface CommitGHMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "login")
     @Mapping(target = "github.id", source = "commit.id")
     @Mapping(target = "github.url", source = "commit.commitUrl")
