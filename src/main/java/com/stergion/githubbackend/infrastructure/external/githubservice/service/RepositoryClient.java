@@ -63,4 +63,19 @@ public class RepositoryClient {
                      .filter(Objects::nonNull)
                      .map(mapper::toDTO);
     }
+
+    public Multi<List<RepositoryDTO>> getRepositoriesContributedToBatched(String login,
+                                                                          LocalDate from,
+                                                                          LocalDate to,
+                                                                          BatchProcessorConfig config) {
+        BatchProcessor batchProcessor = new BatchProcessor(config);
+
+        var stream = client.getRepositoriesContributedTo(login, from, to)
+                           .map(event -> transformer.transform(event, RepositoryGH.class));
+
+        return batchProcessor.processBatch(stream)
+                             .transform(mapper::toDTO)
+                             .toMulti();
+
+    }
 }
