@@ -11,14 +11,16 @@ import java.util.Objects;
  */
 public final class BatchProcessorConfig {
     private final int batchSize;
-    private final Duration timeout;
+    private final Duration batchTimeout;
+    private final Duration inactivityTimeout;
     private final boolean enableBackpressure;
     private final int maxRetries;
     private final int bufferSize;
 
     private BatchProcessorConfig(Builder builder) {
         this.batchSize = builder.batchSize;
-        this.timeout = builder.timeout;
+        this.batchTimeout = builder.batchTimeout;
+        this.inactivityTimeout = builder.inactivityTimeout;
         this.enableBackpressure = builder.enableBackpressure;
         this.maxRetries = builder.maxRetries;
         this.bufferSize = builder.bufferSize;
@@ -29,8 +31,12 @@ public final class BatchProcessorConfig {
         return batchSize;
     }
 
-    public Duration getTimeout() {
-        return timeout;
+    public Duration getBatchTimeout() {
+        return batchTimeout;
+    }
+
+    public Duration getInactivityTimeout() {
+        return inactivityTimeout;
     }
 
     public boolean isBackpressureEnabled() {
@@ -85,7 +91,8 @@ public final class BatchProcessorConfig {
     public static class Builder {
         // Default values
         private int batchSize = 100;
-        private Duration timeout = Duration.ofSeconds(30);
+        private Duration batchTimeout = Duration.ofSeconds(120);
+        private Duration inactivityTimeout = Duration.ofSeconds(60);
         private boolean enableBackpressure = true;
         private int maxRetries = 3;
         private int bufferSize = 256;
@@ -96,12 +103,21 @@ public final class BatchProcessorConfig {
             return this;
         }
 
-        public Builder timeout(Duration timeout) {
-            Objects.requireNonNull(timeout, "Timeout cannot be null");
+        public Builder batchTimeout(Duration timeout) {
+            Objects.requireNonNull(timeout, "Batch timeout cannot be null");
             if (timeout.isNegative() || timeout.isZero()) {
-                throw new IllegalArgumentException("Timeout must be positive");
+                throw new IllegalArgumentException("Batch timeout must be positive");
             }
-            this.timeout = timeout;
+            this.batchTimeout = timeout;
+            return this;
+        }
+
+        public Builder inactivityTimeout(Duration timeout) {
+            Objects.requireNonNull(timeout, "Inactivity Timeout cannot be null");
+            if (timeout.isNegative() || timeout.isZero()) {
+                throw new IllegalArgumentException("Inactivity Timeout must be positive");
+            }
+            this.inactivityTimeout = timeout;
             return this;
         }
 
@@ -177,7 +193,8 @@ public final class BatchProcessorConfig {
     public String toString() {
         return "BatchConfig{" +
                 "batchSize=" + batchSize +
-                ", timeout=" + timeout +
+                ", batchTimeout=" + batchTimeout +
+                ", inactivityTimeout=" + inactivityTimeout +
                 ", enableBackpressure=" + enableBackpressure +
                 ", maxRetries=" + maxRetries +
                 ", bufferSize=" + bufferSize +
