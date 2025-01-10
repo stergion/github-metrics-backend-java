@@ -15,7 +15,8 @@ class BatchProcessorConfigTest {
         BatchProcessorConfig config = BatchProcessorConfig.defaultConfig();
 
         assertEquals(100, config.getBatchSize());
-        assertEquals(Duration.ofSeconds(30), config.getTimeout());
+        assertEquals(Duration.ofSeconds(120), config.getBatchTimeout());
+        assertEquals(Duration.ofSeconds(60), config.getInactivityTimeout());
         assertTrue(config.isBackpressureEnabled());
         assertEquals(3, config.getMaxRetries());
         assertEquals(256, config.getBufferSize());
