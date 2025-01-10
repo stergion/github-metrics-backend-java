@@ -165,23 +165,6 @@ public final class BatchProcessorConfig {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BatchProcessorConfig that = (BatchProcessorConfig) o;
-        return batchSize == that.batchSize &&
-                enableBackpressure == that.enableBackpressure &&
-                maxRetries == that.maxRetries &&
-                bufferSize == that.bufferSize &&
-                Objects.equals(timeout, that.timeout);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(batchSize, timeout, enableBackpressure, maxRetries, bufferSize);
-    }
-
-    @Override
     public String toString() {
         return "BatchConfig{" +
                 "batchSize=" + batchSize +
