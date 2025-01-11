@@ -27,18 +27,20 @@ public class UserService {
         return user;
     }
 
-    private void createUser(UserDTO userDTO) {
-        repository.persist(mapper.toEntity(userDTO));
+    private UserDTO createUser(UserDTO userDTO) {
+        var user = mapper.toEntity(userDTO);
+        repository.persist(user);
+        return mapper.toDTO(user);
     }
 
-    public void fetchAndCreateUser(String login) {
-        try {
-            getUser(login);
-        } catch (UserNotFoundException e) {
-//            Create User only if not found
-            UserDTO userDTO = fetchUser(login);
-            createUser(userDTO);
+    public UserDTO fetchAndCreateUser(String login) {
+        if (check(login)) {
+            throw new UserAlreadyExistsException(login);
         }
+//      Create User only if not found
+        UserDTO userDTO = fetchUser(login);
+
+        return createUser(userDTO);
     }
 
     public UserDTO getUser(String login) {
