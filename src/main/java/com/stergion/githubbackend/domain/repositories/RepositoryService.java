@@ -1,13 +1,18 @@
 package com.stergion.githubbackend.domain.repositories;
 
+import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.utils.RepositoryIdCache;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.RepositoryClient;
 import com.stergion.githubbackend.infrastructure.persistence.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.repositories.RepositoryRepository;
+import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @ApplicationScoped
 public class RepositoryService {
@@ -59,18 +64,19 @@ public class RepositoryService {
         return repoMapper.toDTO(repo);
     }
 
-    public void fetchAndCreateRepository(NameWithOwner nameWithOwner) {
-        fetchAndCreateRepository(nameWithOwner.owner(), nameWithOwner.name());
+    private List<RepositoryDTO> createRepositories(List<RepositoryDTO> repoDTO) {
+        var repos = repoDTO.stream()
+                           .map(repoMapper::toEntity)
+                           .distinct()
+                           .toList();
+
+        repoRepository.persist(repos);
+
+        return repos.stream()
+                    .map(repoMapper::toDTO)
+                    .toList();
     }
 
-    public void fetchAndCreateRepository(String owner, String name) {
-        try {
-            getRepository(owner, name);
-        } catch (RepositoryNotFoundException e) {
-//          Create repository only if not found
-            RepositoryDTO repoDTO = fetchRepository(owner, name);
-            createRepository(repoDTO);
-        }
     public RepositoryDTO fetchAndCreateRepository(NameWithOwner nameWithOwner) {
         return fetchAndCreateRepository(nameWithOwner.owner(), nameWithOwner.name());
     }
@@ -80,5 +86,17 @@ public class RepositoryService {
         return createRepository(repoDTO);
     }
 
+    private Multi<List<RepositoryDTO>> fetchUserRepositories(String login, LocalDate from,
+                                                             LocalDate to,
+                                                             BatchProcessorConfig config) {
+        return repoClient.getRepositoriesContributedToBatched(login, from, to, config);
+    }
+
+    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositories(String login, LocalDate from,
+                                                                     LocalDate to) {
+        var config = BatchProcessorConfig.defaultConfig();
+        var repos = fetchUserRepositories(login, from, to, config);
+
+        return repos.map(this::createRepositories);
     }
 }
