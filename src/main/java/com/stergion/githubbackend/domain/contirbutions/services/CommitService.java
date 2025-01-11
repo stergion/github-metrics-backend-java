@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.CommitFetchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.CommitRepository;
@@ -19,8 +20,8 @@ public class CommitService extends ContributionService<CommitDTO, Commit> {
     CommitMapper commitMapper;
 
     @Inject
-    public CommitService(CommitRepository commitRepository) {
-        super(commitRepository);
+    public CommitService(CommitRepository commitRepository, CommitFetchStrategy fetchStrategy) {
+        super(commitRepository, fetchStrategy);
     }
 
 
@@ -34,22 +35,16 @@ public class CommitService extends ContributionService<CommitDTO, Commit> {
         return commitMapper.toDTO(entity);
     }
 
-    private Multi<CommitDTO> fetchCommits(String login, String owner, String name, LocalDate from,
-                                          LocalDate to) {
-        return client.getCommits(login, owner, name, from, to);
-    }
+    public Multi<List<CommitDTO>> fetchAndCreateCommits(String login,
+                                                        String owner, String name,
+                                                        LocalDate from, LocalDate to) {
 
-    private Multi<List<CommitDTO>> fetchCommits(String login, String owner, String name,
-                                                LocalDate from,
-                                                LocalDate to, BatchProcessorConfig config) {
-        return client.getCommitsBatched(login, owner, name, from, to, config);
-    }
+        var params = FetchParams.builder()
+                                .login(login)
+                                .dateRange(from, to)
+                                .repository(owner, name)
+                                .build();
 
-    public void fetchAndCreateCommits(String login, String owner, String name, LocalDate from,
-                                      LocalDate to) {
-        var config = BatchProcessorConfig.defaultConfig();
-
-        var commits = fetchCommits(login, owner, name, from, to, config);
-        createContributions(commits);
+        return fetchAndCreate(params);
     }
 }

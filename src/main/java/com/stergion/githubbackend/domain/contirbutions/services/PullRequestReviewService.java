@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestReviewDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
+import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestReviewFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReviewMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequestReview;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestReviewRepository;
@@ -20,8 +21,9 @@ public class PullRequestReviewService
     PullRequestReviewMapper pullRequestReviewMapper;
 
     @Inject
-    public PullRequestReviewService(PullRequestReviewRepository pullRequestReviewRepository) {
-        super(pullRequestReviewRepository);
+    public PullRequestReviewService(PullRequestReviewRepository pullRequestReviewRepository,
+                                    PullRequestReviewFetchStrategy fetchStrategy) {
+        super(pullRequestReviewRepository, fetchStrategy);
     }
 
     @Override
@@ -35,20 +37,13 @@ public class PullRequestReviewService
         return pullRequestReviewMapper.toDTO(entity);
     }
 
-    private Multi<PullRequestReviewDTO> fetchPullRequestReviews(String login, LocalDate from,
-                                                                LocalDate to) {
-        return client.getPullRequestReviews(login, from, to);
-    }
-
-    private Multi<List<PullRequestReviewDTO>> fetchPullRequestReviews(String login,
-                                                                      LocalDate from, LocalDate to,
-                                                                      BatchProcessorConfig config) {
-        return client.getPullRequestReviewsBatched(login, from, to, config);
-    }
-
-    public void fetchAndPullRequestReviews(String login, LocalDate from, LocalDate to) {
-        var config = BatchProcessorConfig.defaultConfig();
-        var pullRequestReviews = fetchPullRequestReviews(login, from, to, config);
-        createContributions(pullRequestReviews);
+    public Multi<List<PullRequestReviewDTO>> fetchAndCreatePullRequestReviews(String login,
+                                                                              LocalDate from,
+                                                                              LocalDate to) {
+        var params = FetchParams.builder()
+                                .login(login)
+                                .dateRange(from, to)
+                                .build();
+        return fetchAndCreate(params);
     }
 }

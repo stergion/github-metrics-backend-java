@@ -1,6 +1,9 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
+import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.ContributionDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
@@ -32,9 +35,12 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     ContributionClient client;
 
     protected final ContributionRepository<E> repository;
+    protected final FetchStrategy<D> fetchStrategy;
 
-    protected ContributionService(ContributionRepository<E> repository) {
+    protected ContributionService(ContributionRepository<E> repository,
+                                  FetchStrategy<D> fetchStrategy) {
         this.repository = repository;
+        this.fetchStrategy = fetchStrategy;
     }
 
     /**
@@ -50,7 +56,7 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
 
     /**
      * Converts DTOs to entities using the appropriate mapper.
-     * Uses the repository cache to efficiently handle repository references.
+     * Uses the nameWithOwner cache to efficiently handle nameWithOwner references.
      */
     private List<E> convertToEntities(List<D> batch) {
         return batch.stream()
@@ -69,40 +75,56 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     protected abstract D mapEntityToDto(E entity);
 
     /**
-     * Processes a stream of contributions using configured batch settings.
+     * Processes a batch of contributions:
+     * 1. Ensures referenced repositories exist
+     * 2. Converts DTOs to entities
+     * 3. Persists entities
+     * 4. Maps back to DTOs for return
      */
-    protected void createContributions(Multi<List<D>> contributionStream) {
-        contributionStream.invoke(this::ensureRepositoriesExist)
-                          .map(this::convertToEntities)
-                          .invoke(repository::persist)
-                          .subscribe().with(
-                                  items -> System.out.println("Processed batch successfully"),
-                                  error -> System.err.println("Error processing contributions: " + error.getMessage())
-                                           );
+    protected List<D> createContributions(List<D> contributions) {
+        ensureRepositoriesExist(contributions);
+        List<E> contributionsE = convertToEntities(contributions);
+        repository.persist(contributionsE);
+        return contributionsE.stream()
+                             .map(this::mapEntityToDto)
+                             .toList();
     }
 
-
+    /**
+     * Get a single contribution by ID
+     */
     public D getContribution(ObjectId id) {
         var c = repository.findById(id);
         return mapEntityToDto(c);
     }
 
+    /**
+     * Get all contributions for a user
+     */
     public List<D> getUserContributions(String login) {
         ObjectId userId = userService.getUserId(login);
-        var list_c = repository.findByUserId(userId);
-        return list_c.stream()
-                     .map(this::mapEntityToDto)
-                     .toList();
+        return repository.findByUserId(userId).stream()
+                         .map(this::mapEntityToDto)
+                         .toList();
     }
 
     public List<D> getUserContributions(String login, String owner, String name) {
         ObjectId userId = userService.getUserId(login);
         ObjectId repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
 
-        var list_c = repository.findByUserAndRepoId(userId, repoId);
-        return list_c.stream()
-                     .map(this::mapEntityToDto)
-                     .toList();
+        return repository.findByUserAndRepoId(userId, repoId).stream()
+                         .map(this::mapEntityToDto)
+                         .toList();
+    }
+
+    /**
+     * Template method for fetching and creating contributions.
+     * Uses the FetchStrategy to handle the fetching logic.
+     */
+    protected Multi<List<D>> fetchAndCreate(FetchParams params) {
+        return fetchStrategy
+                .fetchBatched(params, BatchProcessorConfig.defaultConfig())
+                .map(this::createContributions);
     }
 
 }

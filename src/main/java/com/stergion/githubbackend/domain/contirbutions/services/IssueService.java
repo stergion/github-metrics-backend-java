@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
+import com.stergion.githubbackend.domain.contirbutions.fetch.IssueFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Issue;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.IssueRepository;
@@ -19,8 +20,8 @@ public class IssueService extends ContributionService<IssueDTO, Issue> {
     IssueMapper issueMapper;
 
     @Inject
-    public IssueService(IssueRepository issueRepository) {
-        super(issueRepository);
+    public IssueService(IssueRepository issueRepository, IssueFetchStrategy fetchStrategy) {
+        super(issueRepository, fetchStrategy);
     }
 
 
@@ -34,18 +35,12 @@ public class IssueService extends ContributionService<IssueDTO, Issue> {
         return issueMapper.toDTO(entity);
     }
 
-    private Multi<IssueDTO> fetchIssues(String login, LocalDate from, LocalDate to) {
-        return client.getIssues(login, from, to);
-    }
+    public Multi<List<IssueDTO>> fetchAndCreateIssues(String login, LocalDate from, LocalDate to) {
+        var params = FetchParams.builder()
+                                .login(login)
+                                .dateRange(from, to)
+                                .build();
 
-    private Multi<List<IssueDTO>> fetchIssues(String login, LocalDate from, LocalDate to,
-                                              BatchProcessorConfig config) {
-        return client.getIssuesBatched(login, from, to, config);
-    }
-
-    public void fetchAndCreateIssues(String login, LocalDate from, LocalDate to) {
-        var config = BatchProcessorConfig.defaultConfig();
-        var issues = fetchIssues(login, from, to, config);
-        createContributions(issues);
+        return fetchAndCreate(params);
     }
 }

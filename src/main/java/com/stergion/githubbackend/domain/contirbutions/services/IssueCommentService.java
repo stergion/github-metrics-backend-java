@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
+import com.stergion.githubbackend.domain.contirbutions.fetch.IssueCommentFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.IssueComment;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.IssueCommentRepository;
@@ -19,8 +20,9 @@ public class IssueCommentService extends ContributionService<IssueCommentDTO, Is
     IssueCommentMapper issueCommentMapper;
 
     @Inject
-    public IssueCommentService(IssueCommentRepository issueCommentRepository) {
-        super(issueCommentRepository);
+    public IssueCommentService(IssueCommentRepository issueCommentRepository,
+                               IssueCommentFetchStrategy fetchStrategy) {
+        super(issueCommentRepository, fetchStrategy);
     }
 
 
@@ -34,19 +36,13 @@ public class IssueCommentService extends ContributionService<IssueCommentDTO, Is
         return issueCommentMapper.toDTO(entity);
     }
 
-    private Multi<IssueCommentDTO> fetchIssueComments(String login, LocalDate from, LocalDate to) {
-        return client.getIssueComments(login, from, to);
-    }
+    public Multi<List<IssueCommentDTO>> fetchAndCreateIssues(String login, LocalDate from,
+                                                             LocalDate to) {
+        var params = FetchParams.builder()
+                                .login(login)
+                                .dateRange(from, to)
+                                .build();
 
-    private Multi<List<IssueCommentDTO>> fetchIssueComments(String login, LocalDate from, LocalDate to,
-                                                            BatchProcessorConfig config) {
-        return client.getIssueCommentsBatched(login, from, to, config);
-    }
-
-    public void fetchAndCreateIssueComments(String login, LocalDate from, LocalDate to) {
-        var config = BatchProcessorConfig.defaultConfig();
-        var issueComments = fetchIssueComments(login, from, to, config);
-
-        createContributions(issueComments);
+        return fetchAndCreate(params);
     }
 }

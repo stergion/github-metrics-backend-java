@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
+import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestRepository;
@@ -19,8 +20,9 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
     PullRequestMapper pullRequestMapper;
 
     @Inject
-    public PullRequestService(PullRequestRepository pullRequestRepository) {
-        super(pullRequestRepository);
+    public PullRequestService(PullRequestRepository pullRequestRepository,
+                              PullRequestFetchStrategy fetchStrategy) {
+        super(pullRequestRepository, fetchStrategy);
     }
 
     @Override
@@ -33,19 +35,13 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
         return pullRequestMapper.toDTO(entity);
     }
 
-    private Multi<PullRequestDTO> fetchPullRequests(String login, LocalDate from, LocalDate to) {
-        return client.getPullRequests(login, from, to);
-    }
+    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login, LocalDate from,
+                                                                  LocalDate to) {
+        var params = FetchParams.builder()
+                                .login(login)
+                                .dateRange(from, to)
+                                .build();
 
-    private Multi<List<PullRequestDTO>> fetchPullRequests(String login,
-                                                          LocalDate from, LocalDate to,
-                                                          BatchProcessorConfig config) {
-        return client.getPullRequestsBatched(login, from, to, config);
-    }
-
-    public void fetchAndCreatePullRequests(String login, LocalDate from, LocalDate to) {
-        var config = BatchProcessorConfig.defaultConfig();
-        var pullRequests = fetchPullRequests(login, from, to, config);
-        createContributions(pullRequests);
+        return fetchAndCreate(params);
     }
 }
