@@ -52,8 +52,11 @@ public class RepositoryService {
         return repo;
     }
 
-    private void createRepository(RepositoryDTO repoDTO) {
-        repoRepository.persist(repoMapper.toEntity(repoDTO));
+    private RepositoryDTO createRepository(RepositoryDTO repoDTO) {
+        var repo = repoMapper.toEntity(repoDTO);
+        repoRepository.persist(repo);
+
+        return repoMapper.toDTO(repo);
     }
 
     public void fetchAndCreateRepository(NameWithOwner nameWithOwner) {
@@ -68,5 +71,14 @@ public class RepositoryService {
             RepositoryDTO repoDTO = fetchRepository(owner, name);
             createRepository(repoDTO);
         }
+    public RepositoryDTO fetchAndCreateRepository(NameWithOwner nameWithOwner) {
+        return fetchAndCreateRepository(nameWithOwner.owner(), nameWithOwner.name());
+    }
+
+    public RepositoryDTO fetchAndCreateRepository(String owner, String name) {
+        RepositoryDTO repoDTO = fetchRepository(owner, name);
+        return createRepository(repoDTO);
+    }
+
     }
 }
