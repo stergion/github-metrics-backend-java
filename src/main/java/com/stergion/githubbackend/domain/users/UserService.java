@@ -58,4 +58,9 @@ public class UserService {
         }
         return user.id;
     }
+
+    public boolean check(String login) {
+        return repository.findByLogin(login) != null;
+    }
+
 }
