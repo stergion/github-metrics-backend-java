@@ -3,11 +3,7 @@ package com.stergion.githubbackend.domain.contirbutions.fetch;
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
-import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Retry;
-import org.eclipse.microprofile.faulttolerance.Timeout;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public abstract class BaseFetchStrategy<T> implements FetchStrategy<T> {
@@ -18,13 +14,6 @@ public abstract class BaseFetchStrategy<T> implements FetchStrategy<T> {
     }
 
     @Override
-    @CircuitBreaker(
-            requestVolumeThreshold = 4,
-            failureRatio = 0.5,
-            delay = 1, delayUnit = ChronoUnit.SECONDS
-    )
-    @Retry(maxRetries = 3)
-    @Timeout(value = 30, unit = ChronoUnit.SECONDS)
     public Multi<T> fetch(FetchParams params) {
         validateParams(params);
         return doFetch(params)
