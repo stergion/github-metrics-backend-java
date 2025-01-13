@@ -23,8 +23,8 @@ public class RepositoryService {
 
     @Inject
     RepositoryMapper repoMapper;
-
-    RepositoryIdCache repositoryIdCache = new RepositoryIdCache(2000);
+    @Inject
+    RepositoryIdCache repositoryIdCache;
 
     public RepositoryDTO getRepository(String owner, String name) {
         Repository repo = repoRepository.findByNameAndOwner(owner, name);

@@ -1,8 +1,10 @@
 package com.stergion.githubbackend.domain.utils;
 
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.Collection;
 import java.util.Map;
@@ -11,14 +13,14 @@ import java.util.stream.Collectors;
 
 @RequestScoped
 public class RepositoryIdCache {
-    final Map<NameWithOwner, ObjectId> repoIdCache;
+    @ConfigProperty(name = "repository.cache.size", defaultValue = "1000")
+    int capacity;
 
-    public RepositoryIdCache() {
-        this.repoIdCache = new ConcurrentHashMap<>(1000);
-    }
+    private Map<NameWithOwner, ObjectId> repoIdCache;
 
-    public RepositoryIdCache(int initialCapacity) {
-        this.repoIdCache = new ConcurrentHashMap<>(initialCapacity);
+    @PostConstruct
+    void init() {
+        this.repoIdCache = new ConcurrentHashMap<>(capacity);
     }
 
     public ObjectId get(NameWithOwner nameWithOwner) {
