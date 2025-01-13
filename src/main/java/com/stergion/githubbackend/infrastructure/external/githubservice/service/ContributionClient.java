@@ -148,11 +148,4 @@ public class ContributionClient {
                              .transform(commentGH -> issueCommentMapper.toDTO(commentGH, login))
                              .toMulti();
     }
-
-
-//    public Multi<CommitCommentGH> getCommitComments(String login, LocalDate from, LocalDate to) {
-//        return client.getCommitComments(login, from, to)
-//                     .onItem()
-//                     .transform(event -> transformer.transform(event, CommitCommentGH.class));
-//    }
 }
