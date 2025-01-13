@@ -15,7 +15,7 @@ public record File(
         int changes,
         String patch
 ) {
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 
 public record PullRequestReviewComment(String login, Github github, String body) {
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {

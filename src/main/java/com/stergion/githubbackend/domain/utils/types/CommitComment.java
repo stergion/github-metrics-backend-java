@@ -11,7 +11,7 @@ public record CommitComment(
         String reactionsCount,
         String body
 ) {
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {

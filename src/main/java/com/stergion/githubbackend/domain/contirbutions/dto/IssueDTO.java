@@ -38,7 +38,7 @@ public record IssueDTO(
     public IssueDTO {
         labels = labels != null ? List.copyOf(labels) : List.of();
     }
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {

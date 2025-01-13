@@ -41,7 +41,8 @@ public record PullRequestReviewDTO(
     public PullRequestReviewDTO {
         comments = comments != null ? List.copyOf(comments) : List.of();
     }
-    static ObjectMapper mapper = JsonObjectMapper.create();
+
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {

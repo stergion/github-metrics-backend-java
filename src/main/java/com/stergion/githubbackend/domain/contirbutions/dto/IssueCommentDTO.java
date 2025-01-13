@@ -32,7 +32,7 @@ public record IssueCommentDTO(
         AssociatedIssue associatedIssue,
         String body
 ) implements ContributionDTO {
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     public record AssociatedIssue(IssueType type, Github github) {
         @Override
