@@ -3,6 +3,8 @@ package com.stergion.githubbackend.infrastructure.external.githubservice.utils;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.resteasy.reactive.client.SseEvent;
 
+import java.util.Optional;
+
 @ApplicationScoped
 public class SseEventTransformer {
     private final ErrorResponseMapper errorResponseMapper;
@@ -15,7 +17,7 @@ public class SseEventTransformer {
     }
 
 
-    public <T> T transform(SseEvent<String> event, Class<T> eventType) {
+    public <T> Optional<T> transform(SseEvent<String> event, Class<T> eventType) {
         String eventName = event.name();
         String data = event.data();
 
@@ -24,11 +26,12 @@ public class SseEventTransformer {
         }
 
         if ("success".equals(eventName)) {
-            return successResponseMapper.fromJson(data, eventType);
+            var result = successResponseMapper.fromJson(data, eventType);
+            return Optional.of(result);
         }
 
         if ("heartbeat".equals(eventName)) {
-            return null;
+            return Optional.empty();
         }
 
         throw new IllegalStateException("Unknown event type: " + eventName);
