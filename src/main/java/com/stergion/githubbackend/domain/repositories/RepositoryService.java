@@ -92,6 +92,12 @@ public class RepositoryService {
         return repoClient.getRepositoriesContributedToBatched(login, from, to, config);
     }
 
+    private Multi<List<RepositoryDTO>> fetchUserRepositoriesCommited(String login, LocalDate from,
+                                                             LocalDate to,
+                                                             BatchProcessorConfig config) {
+        return repoClient.getRepositoriesCommittedToBatched(login, from, to, config);
+    }
+
     public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositories(String login, LocalDate from,
                                                                      LocalDate to) {
         var config = BatchProcessorConfig.defaultConfig();
