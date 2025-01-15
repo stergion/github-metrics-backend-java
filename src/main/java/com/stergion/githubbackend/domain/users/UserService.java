@@ -4,6 +4,7 @@ import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
 import com.stergion.githubbackend.infrastructure.persistence.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.users.UserRepository;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
@@ -70,7 +71,13 @@ public class UserService {
     }
 
     public UserDTO updateRepositories(UserDTO userDTO, List<RepositoryDTO> repos) {
+        if (repos == null || repos.isEmpty()) {
+            Log.warn("Received null repository list for user: " + userDTO.login());
+            return userDTO;
+        }
+
         List<ObjectId> ids = repos.stream().map(RepositoryDTO::id).toList();
+
         return updateRepositoriesFromIds(userDTO, ids);
     }
 
