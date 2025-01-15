@@ -113,4 +113,10 @@ public class UserService {
         return repositoryService.getRepositories(repoIds);
     }
 
+    public void deleteUser(String login) {
+        if (!check(login)) {
+            throw new UserNotFoundException(login);
+        }
+        repository.delete(login);
+    }
 }
