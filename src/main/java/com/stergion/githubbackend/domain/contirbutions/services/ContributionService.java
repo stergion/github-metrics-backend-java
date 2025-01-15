@@ -127,4 +127,7 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
                 .map(this::createContributions);
     }
 
+    public List<ObjectId> getRepositoryIds(ObjectId userId) {
+        return repository.getRepositoryIds(userId);
+    }
 }
