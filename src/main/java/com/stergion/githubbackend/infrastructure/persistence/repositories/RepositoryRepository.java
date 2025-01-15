@@ -4,12 +4,24 @@ import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.NameWi
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Collections;
 import java.util.List;
 
 @ApplicationScoped
 public class RepositoryRepository implements PanacheMongoRepository<Repository> {
+    public List<Repository> findById(List<ObjectId> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Document> criteria = ids.stream()
+                                     .map(id -> new Document().append("id", id))
+                                     .toList();
+        return find(new Document("$or", criteria)).list();
+    }
+
+
     public Repository findByNameAndOwner(String owner, String name) {
         return find("owner = ?1 and name = ?2", owner, name).firstResult();
     }
@@ -27,5 +39,4 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
 
         return find(new Document("$or", criteria)).list();
     }
-
 }
