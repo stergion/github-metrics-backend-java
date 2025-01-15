@@ -99,4 +99,11 @@ public class RepositoryService {
 
         return repos.map(this::createRepositories);
     }
+
+    public List<RepositoryDTO> getRepositories(List<ObjectId> ids) {
+        List<Repository> repos = repoRepository.findById(ids);
+        return repos.stream()
+                .map(repoMapper::toDTO)
+                .toList();
+    }
 }
