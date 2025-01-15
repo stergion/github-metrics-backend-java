@@ -11,7 +11,6 @@ import java.time.LocalDate;
 public interface UserMapper {
     UserDTO toDTO(User user);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", expression = "java(LocalDate.now())")
     User toEntity(UserDTO userDTO);
 }
