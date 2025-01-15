@@ -9,6 +9,5 @@ import org.mapstruct.Mapping;
 public interface RepositoryMapper {
     RepositoryDTO toDTO(Repository repository);
 
-    @Mapping(target = "id", ignore = true)
     Repository toEntity(RepositoryDTO repositoryDTO);
 }
