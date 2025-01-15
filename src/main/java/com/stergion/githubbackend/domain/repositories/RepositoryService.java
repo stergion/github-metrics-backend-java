@@ -106,10 +106,19 @@ public class RepositoryService {
         return repos.map(this::createRepositories);
     }
 
+    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositoriesCommited(String login,
+                                                                             LocalDate from,
+                                                                             LocalDate to) {
+        var config = BatchProcessorConfig.defaultConfig();
+        var repos = fetchUserRepositoriesCommited(login, from, to, config);
+
+        return repos.map(this::createRepositories);
+    }
+
     public List<RepositoryDTO> getRepositories(List<ObjectId> ids) {
         List<Repository> repos = repoRepository.findById(ids);
         return repos.stream()
-                .map(repoMapper::toDTO)
-                .toList();
+                    .map(repoMapper::toDTO)
+                    .toList();
     }
 }
