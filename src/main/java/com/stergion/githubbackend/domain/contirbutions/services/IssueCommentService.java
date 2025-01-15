@@ -36,8 +36,8 @@ public class IssueCommentService extends ContributionService<IssueCommentDTO, Is
         return issueCommentMapper.toDTO(entity);
     }
 
-    public Multi<List<IssueCommentDTO>> fetchAndCreateIssues(String login, LocalDate from,
-                                                             LocalDate to) {
+    public Multi<List<IssueCommentDTO>> fetchAndCreateIssueComments(String login, LocalDate from,
+                                                                    LocalDate to) {
         var params = FetchParams.builder()
                                 .login(login)
                                 .dateRange(from, to)
