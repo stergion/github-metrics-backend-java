@@ -1,6 +1,7 @@
 package com.stergion.githubbackend.domain.users;
 
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
 import com.stergion.githubbackend.infrastructure.persistence.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.users.UserRepository;
@@ -25,6 +26,8 @@ public class UserService {
 
     @Inject
     UserRepository repository;
+    @Inject
+    RepositoryService repositoryService;
 
     private UserDTO fetchUser(String login) {
         UserDTO user = client.getUserInfo(login);
@@ -99,4 +102,15 @@ public class UserService {
 
         return mapper.toDTO(user);
     }
+
+    public List<RepositoryDTO> getUserRepositories(String login) {
+        User user = repository.findByLogin(login);
+        if (user == null) {
+            throw new UserNotFoundException(login);
+        }
+
+        List<ObjectId> repoIds = user.repositories;
+        return repositoryService.getRepositories(repoIds);
+    }
+
 }
