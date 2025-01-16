@@ -70,6 +70,8 @@ class UserClientTest {
                 "Test User",
                 githubRef,
                 "test@example.com",
+                null,
+                null,
                 List.of(),
                 AVATAR_URL,
                 "Test bio",
@@ -90,6 +92,8 @@ class UserClientTest {
         assertEquals(VALID_LOGIN, result.login());
         assertEquals("Test User", result.name());
         assertEquals("test@example.com", result.email());
+        assertNull(result.createdAt());
+        assertNull(result.updatedAt());
         assertEquals(githubRef, result.github());
         assertEquals(AVATAR_URL, result.avatarURL());
         assertEquals("Test bio", result.bio());
@@ -163,6 +167,8 @@ class UserClientTest {
                 VALID_LOGIN,
                 githubRef,
                 "test@example.com",
+                null,
+                null,
                 List.of(),
                 AVATAR_URL,
                 null,
@@ -178,6 +184,9 @@ class UserClientTest {
         assertNotNull(result);
         assertEquals(VALID_LOGIN, result.login());
         assertEquals(VALID_LOGIN, result.name());
+        assertEquals("test@example.com", result.email());
+        assertNull(result.createdAt());
+        assertNull(result.updatedAt());
         assertEquals(githubRef, result.github());
         assertEquals(AVATAR_URL, result.avatarURL());
         assertNull(result.bio());
