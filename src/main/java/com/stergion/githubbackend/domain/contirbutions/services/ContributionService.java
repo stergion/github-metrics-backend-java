@@ -31,9 +31,6 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     @Inject
     RepositoryService repositoryService;
 
-    @Inject
-    ContributionClient client;
-
     protected ContributionRepository<E> repository;
     protected FetchStrategy<D> fetchStrategy;
 
