@@ -8,6 +8,7 @@ import com.stergion.githubbackend.infrastructure.persistence.users.UserRepositor
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
 
@@ -43,6 +44,12 @@ public class UserService {
         return mapper.toDTO(user);
     }
 
+    private UserDTO updateUser(UserDTO userDTO) {
+        var user = mapper.toEntity(userDTO);
+        repository.update(user);
+        return mapper.toDTO(user);
+    }
+
     public UserDTO fetchAndCreateUser(String login) {
         if (check(login)) {
             throw new UserAlreadyExistsException(login);
@@ -51,6 +58,14 @@ public class UserService {
         UserDTO userDTO = fetchUser(login);
 
         return createUser(userDTO);
+    }
+
+    public UserDTO fetchAndUpdateUser(@NotBlank String login) {
+        if (!check(login)) {
+            throw new UserNotFoundException(login);
+        }
+        UserDTO userDTO = fetchUser(login);
+        return updateUser(userDTO);
     }
 
     public UserDTO getUser(String login) {
