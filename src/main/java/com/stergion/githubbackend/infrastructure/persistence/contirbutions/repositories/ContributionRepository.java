@@ -47,4 +47,8 @@ public sealed interface ContributionRepository<T extends Contribution>
                 .map(i -> i.repositoryId)
                 .into(new ArrayList<>());
     }
+
+    default void delete(ObjectId userId) {
+        delete("userId = ?1", userId);
+    }
 }
