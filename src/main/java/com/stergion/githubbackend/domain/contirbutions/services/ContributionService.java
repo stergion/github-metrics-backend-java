@@ -130,4 +130,8 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     public List<ObjectId> getRepositoryIds(ObjectId userId) {
         return repository.getRepositoryIds(userId);
     }
+
+    public void deleteUserContributions(ObjectId userId) {
+        repository.delete(userId);
+    }
 }
