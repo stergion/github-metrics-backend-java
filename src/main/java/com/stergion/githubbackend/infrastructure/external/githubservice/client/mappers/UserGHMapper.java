@@ -12,6 +12,8 @@ import java.time.LocalDate;
 public interface UserGHMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "repositories", expression = "java(java.util.Collections.emptyList())")
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "github.id", source = "id")
     @Mapping(target = "github.url", source = "url")
     @Mapping(target = "avatarURL", source = "avatarUrl")
