@@ -12,6 +12,10 @@ import java.util.List;
 @ApplicationScoped
 public class IssueFetchStrategy extends BaseFetchStrategy<IssueDTO> {
 
+    protected IssueFetchStrategy() {
+        super(null);
+    }
+
     @Inject
     public IssueFetchStrategy(ContributionClient client) {
         super(client);

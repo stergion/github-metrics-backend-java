@@ -34,8 +34,12 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     @Inject
     ContributionClient client;
 
-    protected final ContributionRepository<E> repository;
-    protected final FetchStrategy<D> fetchStrategy;
+    protected ContributionRepository<E> repository;
+    protected FetchStrategy<D> fetchStrategy;
+
+    protected ContributionService() {
+        // Empty constructor for CDI
+    }
 
     protected ContributionService(ContributionRepository<E> repository,
                                   FetchStrategy<D> fetchStrategy) {

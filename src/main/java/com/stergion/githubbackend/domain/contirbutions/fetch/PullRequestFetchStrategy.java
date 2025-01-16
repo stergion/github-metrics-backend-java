@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.fetch;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueDTO;
 import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
@@ -12,6 +11,10 @@ import java.util.List;
 
 @ApplicationScoped
 public class PullRequestFetchStrategy extends BaseFetchStrategy<PullRequestDTO> {
+
+    protected PullRequestFetchStrategy() {
+        super(null);
+    }
 
     @Inject
     public PullRequestFetchStrategy(ContributionClient client) {
@@ -24,12 +27,12 @@ public class PullRequestFetchStrategy extends BaseFetchStrategy<PullRequestDTO> 
                 params.login(),
                 params.from(),
                 params.to()
-                               );
+                                     );
     }
 
     @Override
     protected Multi<List<PullRequestDTO>> doFetchBatched(FetchParams params,
-                                                   BatchProcessorConfig config) {
+                                                         BatchProcessorConfig config) {
         return client.getPullRequestsBatched(
                 params.login(),
                 params.from(),

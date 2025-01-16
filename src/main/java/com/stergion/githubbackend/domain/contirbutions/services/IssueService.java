@@ -24,7 +24,6 @@ public class IssueService extends ContributionService<IssueDTO, Issue> {
         super(issueRepository, fetchStrategy);
     }
 
-
     @Override
     protected Issue mapDtoToEntity(IssueDTO dto, ObjectId userId, ObjectId repoId) {
         return issueMapper.toEntity(dto, userId, repoId);

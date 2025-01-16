@@ -16,13 +16,14 @@ import java.util.List;
 
 @ApplicationScoped
 public class PullRequestService extends ContributionService<PullRequestDTO, PullRequest> {
-    @Inject
     PullRequestMapper pullRequestMapper;
 
     @Inject
     public PullRequestService(PullRequestRepository pullRequestRepository,
-                              PullRequestFetchStrategy fetchStrategy) {
+                              PullRequestFetchStrategy fetchStrategy,
+                              PullRequestMapper pullRequestMapper) {
         super(pullRequestRepository, fetchStrategy);
+        this.pullRequestMapper = pullRequestMapper;
     }
 
     @Override

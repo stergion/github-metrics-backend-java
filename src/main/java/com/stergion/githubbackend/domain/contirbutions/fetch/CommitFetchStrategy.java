@@ -12,6 +12,10 @@ import java.util.List;
 @ApplicationScoped
 public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
 
+    protected CommitFetchStrategy() {
+        super(null);
+    }
+
     @Inject
     public CommitFetchStrategy(ContributionClient client) {
         super(client);
@@ -25,7 +29,8 @@ public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
     @Override
     protected Multi<CommitDTO> doFetch(FetchParams params) {
         var repo = params.nameWithOwner()
-                         .orElseThrow(() -> new ValidationException("Repository is required for commits"));
+                         .orElseThrow(() -> new ValidationException(
+                                 "Repository is required for commits"));
 
         return client.getCommits(
                 params.login(),
@@ -37,9 +42,11 @@ public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
     }
 
     @Override
-    protected Multi<List<CommitDTO>> doFetchBatched(FetchParams params, BatchProcessorConfig config) {
+    protected Multi<List<CommitDTO>> doFetchBatched(FetchParams params,
+                                                    BatchProcessorConfig config) {
         var repo = params.nameWithOwner()
-                         .orElseThrow(() -> new ValidationException("Repository is required for commits"));
+                         .orElseThrow(() -> new ValidationException(
+                                 "Repository is required for commits"));
 
         return client.getCommitsBatched(
                 params.login(),
