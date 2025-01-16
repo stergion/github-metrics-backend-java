@@ -7,9 +7,11 @@ import com.stergion.githubbackend.domain.utils.types.Github;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +29,12 @@ public record UserDTO(
         @Email
         String email,
 
+        @PastOrPresent
+        LocalDate createdAt,
+
+        @PastOrPresent
+        LocalDate updatedAt,
+
         @NotNull
         List<ObjectId> repositories,
 
@@ -38,6 +46,7 @@ public record UserDTO(
     public UserDTO {
         repositories = repositories != null ? List.copyOf(repositories) : List.of();
     }
+
     static ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
