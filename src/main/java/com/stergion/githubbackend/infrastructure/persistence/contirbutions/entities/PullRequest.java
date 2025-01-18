@@ -12,40 +12,42 @@ import java.util.List;
 
 @MongoEntity(collection = "pullRequests")
 public non-sealed class PullRequest implements Contribution {
-    ObjectId id;
+    public ObjectId id;
 
     @NotNull
     @BsonProperty("user_id")
-    ObjectId userId;
+    public ObjectId userId;
 
     @NotNull
     @BsonProperty("repository_id")
-    ObjectId repositoryId;
+    public ObjectId repositoryId;
 
     @NotNull
-    UserWithLogin user;
-    @NotNull
-    NameWithOwner repository;
+    public UserWithLogin user;
 
     @NotNull
-    Github github;
+    public NameWithOwner repository;
+
+    @NotNull
+    public Github github;
+
     @NotNull
     @PastOrPresent
-    LocalDate createdAt;
+    public LocalDate createdAt;
 
-    LocalDate mergedAt;
-    LocalDate closedAt;
-    LocalDate updatedAt;
-    PullRequestState state;
-    int reactionsCount;
-    List<Label> labels;
-    String title;
-    String body;
-    List<PullRequestCommit> commits;
-    int commitsCount;
-    int commentsCount;
-    List<Github> closingIssuesReferences;
-    int closingIssuesReferencesCount;
+    public LocalDate mergedAt;
+    public LocalDate closedAt;
+    public LocalDate updatedAt;
+    public PullRequestState state;
+    public int reactionsCount;
+    public List<Label> labels;
+    public String title;
+    public String body;
+    public List<PullRequestCommit> commits;
+    public int commitsCount;
+    public int commentsCount;
+    public List<Github> closingIssuesReferences;
+    public int closingIssuesReferencesCount;
 
 
     @Override

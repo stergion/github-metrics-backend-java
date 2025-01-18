@@ -13,31 +13,34 @@ import java.time.LocalDate;
 
 @MongoEntity(collection = "issueComments")
 public non-sealed class IssueComment implements Contribution {
-    ObjectId id;
+    public ObjectId id;
 
     @NotNull
     @BsonProperty("user_id")
-    ObjectId userId;
+    public ObjectId userId;
 
     @NotNull
     @BsonProperty("repository_id")
-    ObjectId repositoryId;
+    public ObjectId repositoryId;
 
     @NotNull
-    UserWithLogin user;
-    @NotNull
-    NameWithOwner repository;
+    public UserWithLogin user;
 
     @NotNull
-    Github github;
+    public NameWithOwner repository;
+
+    @NotNull
+    public Github github;
+
     @NotNull
     @PastOrPresent
-    LocalDate createdAt;
-    LocalDate publishedAt;
-    LocalDate updatedAt;
-    LocalDate lastEditedAt;
-    AssociatedIssue associatedIssue;
-    String body;
+    public LocalDate createdAt;
+
+    public LocalDate publishedAt;
+    public LocalDate updatedAt;
+    public LocalDate lastEditedAt;
+    public AssociatedIssue associatedIssue;
+    public String body;
 
     @Override
     public ObjectId id() {

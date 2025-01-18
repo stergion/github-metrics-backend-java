@@ -12,34 +12,37 @@ import java.util.List;
 
 @MongoEntity(collection = "issues")
 public non-sealed class Issue implements Contribution {
-    ObjectId id;
+    public ObjectId id;
 
     @NotNull
     @BsonProperty("user_id")
-    ObjectId userId;
+    public ObjectId userId;
 
     @NotNull
     @BsonProperty("repository_id")
-    ObjectId repositoryId;
+    public ObjectId repositoryId;
 
     @NotNull
-    UserWithLogin user;
-    @NotNull
-    NameWithOwner repository;
+    public UserWithLogin user;
 
     @NotNull
-    Github github;
+    public NameWithOwner repository;
+
+    @NotNull
+    public Github github;
+
     @NotNull
     @PastOrPresent
-    LocalDate createdAt;
-    LocalDate closedAt;
-    LocalDate updatedAt;
-    IssueState state;
-    String title;
-    String body;
-    int reactionsCount;
-    List<Label> labels;
-    String closer;
+    public LocalDate createdAt;
+
+    public LocalDate closedAt;
+    public LocalDate updatedAt;
+    public IssueState state;
+    public String title;
+    public String body;
+    public int reactionsCount;
+    public List<Label> labels;
+    public String closer;
 
     @Override
     public String toString() {

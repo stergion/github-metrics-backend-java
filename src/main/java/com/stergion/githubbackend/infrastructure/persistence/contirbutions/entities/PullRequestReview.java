@@ -12,38 +12,39 @@ import java.util.List;
 
 @MongoEntity(collection = "pullRequestReviews")
 public non-sealed class PullRequestReview implements Contribution {
-        ObjectId id;
+        public ObjectId id;
 
         @NotNull
         @BsonProperty("user_id")
-        ObjectId userId;
+        public ObjectId userId;
 
         @NotNull
         @BsonProperty("repository_id")
-        ObjectId repositoryId;
+        public ObjectId repositoryId;
 
         @NotNull
-        UserWithLogin user;
-        @NotNull
-        NameWithOwner repository;
+        public UserWithLogin user;
 
         @NotNull
-        Github github;
+        public NameWithOwner repository;
 
         @NotNull
-        Github pullRequest;
+        public Github github;
+
+        @NotNull
+        public Github pullRequest;
 
         @NotNull
         @PastOrPresent
-        LocalDate createdAt;
+        public LocalDate createdAt;
 
-        LocalDate submittedAt;
-        LocalDate updatedAt;
-        LocalDate publishedAt;
-        LocalDate lastEditedAt;
-        PullRequestReviewState state;
-        String body;
-        List<PullRequestReviewComment> comments;
+        public LocalDate submittedAt;
+        public LocalDate updatedAt;
+        public LocalDate publishedAt;
+        public LocalDate lastEditedAt;
+        public PullRequestReviewState state;
+        public String body;
+        public List<PullRequestReviewComment> comments;
 
 
     @Override
