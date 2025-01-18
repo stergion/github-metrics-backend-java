@@ -1,9 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.utilityTypes;
 
-public class Label {
-    public String name;
-    public String description;
-
+public record Label(String name, String description) {
     @Override
     public String toString() {
         return "{ name: '" + name + '\'' +
