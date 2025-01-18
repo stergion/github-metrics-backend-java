@@ -1,35 +1,52 @@
 package com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities;
 
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Label;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestCommit;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestState;
+import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.*;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @MongoEntity(collection = "pullRequests")
-public non-sealed class PullRequest extends Contribution {
+public non-sealed class PullRequest implements Contribution {
+    ObjectId id;
+
+    @NotNull
+    @BsonProperty("user_id")
+    ObjectId userId;
+
+    @NotNull
+    @BsonProperty("repository_id")
+    ObjectId repositoryId;
+
+    @NotNull
+    UserWithLogin user;
+    @NotNull
+    NameWithOwner repository;
+
+    @NotNull
+    Github github;
     @NotNull
     @PastOrPresent
-    public LocalDate createdAt;
+    LocalDate createdAt;
 
-    public LocalDate mergedAt;
-    public LocalDate closedAt;
-    public LocalDate updatedAt;
-    public PullRequestState state;
-    public int reactionsCount;
-    public List<Label> labels;
-    public String title;
-    public String body;
-    public List<PullRequestCommit> commits;
-    public int commitsCount;
-    public int commentsCount;
-    public List<Github> closingIssuesReferences;
-    public int closingIssuesReferencesCount;
+    LocalDate mergedAt;
+    LocalDate closedAt;
+    LocalDate updatedAt;
+    PullRequestState state;
+    int reactionsCount;
+    List<Label> labels;
+    String title;
+    String body;
+    List<PullRequestCommit> commits;
+    int commitsCount;
+    int commentsCount;
+    List<Github> closingIssuesReferences;
+    int closingIssuesReferencesCount;
+
 
     @Override
     public String toString() {
@@ -52,5 +69,91 @@ public non-sealed class PullRequest extends Contribution {
                 ", closingIssuesReferences: " + closingIssuesReferences +
                 ", closingIssuesReferencesCount: " + closingIssuesReferencesCount +
                 "}";
+    }
+
+    @Override
+    public ObjectId id() {
+        return id;
+    }
+
+    @Override
+    public ObjectId userId() {
+        return userId;
+    }
+
+    @Override
+    public ObjectId repositoryId() {
+        return repositoryId;
+    }
+
+    @Override
+    public UserWithLogin user() {
+        return user;
+    }
+
+    @Override
+    public NameWithOwner repository() {
+        return repository;
+    }
+
+    @Override
+    public Github github() {
+        return github;
+    }
+
+    public LocalDate createdAt() {
+        return createdAt;
+    }
+
+    public LocalDate mergedAt() {
+        return mergedAt;
+    }
+
+    public LocalDate closedAt() {
+        return closedAt;
+    }
+
+    public LocalDate updatedAt() {
+        return updatedAt;
+    }
+
+    public PullRequestState state() {
+        return state;
+    }
+
+    public int reactionsCount() {
+        return reactionsCount;
+    }
+
+    public List<Label> labels() {
+        return labels;
+    }
+
+    public String title() {
+        return title;
+    }
+
+    public String body() {
+        return body;
+    }
+
+    public List<PullRequestCommit> commits() {
+        return commits;
+    }
+
+    public int commitsCount() {
+        return commitsCount;
+    }
+
+    public int commentsCount() {
+        return commentsCount;
+    }
+
+    public List<Github> closingIssuesReferences() {
+        return closingIssuesReferences;
+    }
+
+    public int closingIssuesReferencesCount() {
+        return closingIssuesReferencesCount;
     }
 }
