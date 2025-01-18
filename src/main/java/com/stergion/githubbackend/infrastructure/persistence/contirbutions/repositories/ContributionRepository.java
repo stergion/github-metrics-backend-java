@@ -2,9 +2,9 @@ package com.stergion.githubbackend.infrastructure.persistence.contirbutions.repo
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Contribution;
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -39,13 +39,12 @@ public sealed interface ContributionRepository<T extends Contribution>
 
     default List<ObjectId> getRepositoryIds(ObjectId userId) {
         return mongoCollection().aggregate(Arrays.asList(
-                Aggregates.match(Filters.eq("userId", userId)),
-                Aggregates.group("$repositoryId"),
-                Aggregates.project(Projections.fields(
-                                Projections.include("repositoryId"),
-                                Projections.excludeId()))))
-                .map(i -> i.repositoryId)
-                .into(new ArrayList<>());
+                                                Aggregates.match(Filters.eq("user_id", userId)),
+                                                Aggregates.group("$repository_id")
+                                                        ),
+                                        Document.class)
+                                .map(document -> document.get("_id", ObjectId.class))
+                                .into(new ArrayList<>());
     }
 
     default void delete(ObjectId userId) {
