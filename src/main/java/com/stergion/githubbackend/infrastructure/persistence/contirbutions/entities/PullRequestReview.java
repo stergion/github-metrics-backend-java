@@ -1,34 +1,50 @@
 package com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities;
 
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestReviewComment;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.PullRequestReviewState;
+import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.*;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @MongoEntity(collection = "pullRequestReviews")
-public non-sealed class PullRequestReview extends Contribution {
+public non-sealed class PullRequestReview implements Contribution {
+        ObjectId id;
 
-    @NotNull
-    public Github pullRequest;
+        @NotNull
+        @BsonProperty("user_id")
+        ObjectId userId;
 
-    public Github github;
+        @NotNull
+        @BsonProperty("repository_id")
+        ObjectId repositoryId;
 
-    @NotNull
-    @PastOrPresent
-    public LocalDate createdAt;
+        @NotNull
+        UserWithLogin user;
+        @NotNull
+        NameWithOwner repository;
 
-    public LocalDate submittedAt;
-    public LocalDate updatedAt;
-    public LocalDate publishedAt;
-    public LocalDate lastEditedAt;
-    public PullRequestReviewState state;
-    public String body;
-    public List<PullRequestReviewComment> comments;
+        @NotNull
+        Github github;
+
+        @NotNull
+        Github pullRequest;
+
+        @NotNull
+        @PastOrPresent
+        LocalDate createdAt;
+
+        LocalDate submittedAt;
+        LocalDate updatedAt;
+        LocalDate publishedAt;
+        LocalDate lastEditedAt;
+        PullRequestReviewState state;
+        String body;
+        List<PullRequestReviewComment> comments;
+
 
     @Override
     public String toString() {
@@ -47,5 +63,71 @@ public non-sealed class PullRequestReview extends Contribution {
                 ", body: '" + body + '\'' +
                 ", comments: " + comments +
                 '}';
+    }
+
+    @Override
+    public ObjectId id() {
+        return id;
+    }
+
+    @Override
+    public ObjectId userId() {
+        return userId;
+    }
+
+    @Override
+    public ObjectId repositoryId() {
+        return repositoryId;
+    }
+
+    @Override
+    public UserWithLogin user() {
+        return user;
+    }
+
+    @Override
+    public NameWithOwner repository() {
+        return repository;
+    }
+
+    @Override
+    public Github github() {
+        return github;
+    }
+
+    public Github pullRequest() {
+        return pullRequest;
+    }
+
+    public LocalDate createdAt() {
+        return createdAt;
+    }
+
+    public LocalDate submittedAt() {
+        return submittedAt;
+    }
+
+    public LocalDate updatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDate publishedAt() {
+        return publishedAt;
+    }
+
+    public LocalDate lastEditedAt() {
+        return lastEditedAt;
+    }
+
+    public PullRequestReviewState state() {
+        return state;
+    }
+
+    public String body() {
+        return body;
+    }
+
+    public List<PullRequestReviewComment> comments() {
+        return comments;
     }
 }
