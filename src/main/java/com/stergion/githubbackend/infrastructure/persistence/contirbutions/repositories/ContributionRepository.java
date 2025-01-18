@@ -17,7 +17,7 @@ public sealed interface ContributionRepository<T extends Contribution>
         PullRequestReviewRepository {
 
     default T findById(ObjectId id) {
-        return find("id", id).firstResult();
+        return find("_id", id).firstResult();
     }
 
     default T findByGitHubId(String gitHubId) {
