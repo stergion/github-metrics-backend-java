@@ -42,10 +42,11 @@ public class UserRepository implements PanacheMongoRepository<User> {
         return find("login", login).firstResult();
     }
 
-    private void setTimestamps(User user) {
-        if (user.id == null) {
-            user.createdAt = LocalDate.now();
-        }
-        user.updatedAt = LocalDate.now();
+    public List<User> findByEmail(String email) {
+        return list("email", email);
+    }
+
+    public User findByGitHubId(String githubId) {
+        return find("github.id", githubId).firstResult();
     }
 }
