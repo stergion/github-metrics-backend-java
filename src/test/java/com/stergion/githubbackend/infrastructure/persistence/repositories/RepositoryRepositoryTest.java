@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,6 +67,63 @@ class RepositoryRepositoryTest {
     @Nested
     @DisplayName("Search Operations")
     class SearchOperations {
+
+        @Test
+        @DisplayName("Should find repository by GitHub ID")
+        void findByGitHubId() {
+            repositoryRepository.persist(testRepository);
+
+            Repository found = repositoryRepository.findByGitHubId(testRepository.github.id);
+            assertNotNull(found, "Found repository should not be null");
+            assertEquals(testRepository.id, found.id);
+            assertEquals(testRepository.owner, found.owner);
+            assertEquals(testRepository.name, found.name);
+            assertEquals(testRepository.github.id, found.github.id);
+        }
+
+        @Test
+        @DisplayName("Should find repositories by owner")
+        void findByOwner() {
+            // Create multiple repositories with the same owner
+            Repository repo1 = createTestRepository(null, TEST_OWNER, "repo1");
+            Repository repo2 = createTestRepository(null, TEST_OWNER, "repo2");
+            Repository otherRepo = createTestRepository(null, "other-owner", "repo3");
+
+            repositoryRepository.persist(repo1);
+            repositoryRepository.persist(repo2);
+            repositoryRepository.persist(otherRepo);
+
+            List<Repository> found = repositoryRepository.findByOwner(TEST_OWNER);
+
+            assertEquals(2, found.size(), "Should find two repositories");
+            assertTrue(found.stream().allMatch(r -> r.owner.equals(TEST_OWNER)),
+                    "All found repositories should have the test owner");
+            assertTrue(found.stream().anyMatch(r -> r.name.equals("repo1")),
+                    "Should find first repository");
+            assertTrue(found.stream().anyMatch(r -> r.name.equals("repo2")),
+                    "Should find second repository");
+        }
+
+        @Test
+        @DisplayName("Should delete repositories by owner")
+        void deleteByOwner() {
+            // Create multiple repositories with the same owner
+            Repository repo1 = createTestRepository(null, TEST_OWNER, "repo1");
+            Repository repo2 = createTestRepository(null, TEST_OWNER, "repo2");
+            Repository otherRepo = createTestRepository(null, "other-owner", "repo3");
+
+            repositoryRepository.persist(repo1);
+            repositoryRepository.persist(repo2);
+            repositoryRepository.persist(otherRepo);
+
+            repositoryRepository.deleteByOwner(TEST_OWNER);
+
+            List<Repository> remainingRepos = repositoryRepository.listAll();
+            assertEquals(1, remainingRepos.size(),
+                    "Should only have one repository remaining");
+            assertEquals("other-owner", remainingRepos.getFirst().owner,
+                    "Remaining repository should be from other owner");
+        }
 
         @Test
         @DisplayName("Should find repositories by ID list")
