@@ -2,7 +2,6 @@ package com.stergion.githubbackend.infrastructure.persistence.users;
 
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +44,10 @@ public class User {
     public String bio;
     public String twitterHandle;
     public URI websiteURL;
+
+    public User() {
+        this.repositories = new ArrayList<>();
+    }
 
     @Override
     public String toString() {
