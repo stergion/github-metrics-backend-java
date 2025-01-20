@@ -3,16 +3,16 @@ package com.stergion.githubbackend.domain.contirbutions.fetch;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public record FetchParams(
         @NotNull
         String login,
-        @NotNull 
-        LocalDate from,
-        @NotNull 
-        LocalDate to,
+        @NotNull
+        LocalDateTime from,
+        @NotNull
+        LocalDateTime to,
         Optional<NameWithOwner> nameWithOwner
 ) {
     public FetchParams {
@@ -44,8 +44,8 @@ public record FetchParams(
 
     public static class Builder {
         private String login;
-        private LocalDate from;
-        private LocalDate to;
+        private LocalDateTime from;
+        private LocalDateTime to;
         private Optional<NameWithOwner> nameWithOwner = Optional.empty();
 
         public Builder login(String login) {
@@ -53,7 +53,7 @@ public record FetchParams(
             return this;
         }
 
-        public Builder dateRange(LocalDate from, LocalDate to) {
+        public Builder dateRange(LocalDateTime from, LocalDateTime to) {
             this.from = from;
             this.to = to;
             return this;

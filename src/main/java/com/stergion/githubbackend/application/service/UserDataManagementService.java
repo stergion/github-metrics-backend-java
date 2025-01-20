@@ -8,12 +8,15 @@ import com.stergion.githubbackend.domain.users.UserDTO;
 import com.stergion.githubbackend.domain.users.UserService;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 import org.jboss.resteasy.reactive.common.NotImplementedYet;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,8 +52,8 @@ public class UserDataManagementService {
     }
 
     public void setupUser(String login) {
-        LocalDate from = LocalDate.ofYearDay(LocalDate.now().getYear() - 2, 1);
-        LocalDate to = LocalDate.now();
+        LocalDateTime from = LocalDateTime.now().minusMonths(3);
+        LocalDateTime to = LocalDateTime.now();
 
         // Check if user already exists
         Log.debug("Checking if user '" + login + "' exists");
@@ -70,7 +73,7 @@ public class UserDataManagementService {
         UserDTO user = userService.getUser(login);
 
         // Update user Repositories and Contributions
-        doUpdate(user, user.updatedAt(), LocalDate.now());
+        doUpdate(user, user.updatedAt(), LocalDateTime.now());
 
         // Update user info
         userService.fetchAndUpdateUser(user.login());
@@ -122,7 +125,7 @@ public class UserDataManagementService {
         userService.deleteUser(login);
     }
 
-    private void doUpdate(UserDTO user, LocalDate from, LocalDate to) {
+    private void doUpdate(UserDTO user, LocalDateTime from, LocalDateTime to) {
         String login = user.login();
         // Get user repositories
         Log.debug("Fetching and saving repository info of '" + user.login() + "'");
@@ -135,9 +138,13 @@ public class UserDataManagementService {
                                                                         .toList())
                                                      .await()
                                                      .indefinitely();
+        Log.debugf("Number of repositories created: %d", repos.size());
 
         Log.debug("Updating repository references of '" + login + "'");
+
         user = userService.updateRepositories(user, repos);
+
+        Log.debugf("User '%s' updated:\n%s", user.login(), user);
 
         // Get repositories user committed to
         Log.debug(
@@ -153,8 +160,12 @@ public class UserDataManagementService {
                                                     .toList())
                                  .await()
                                  .indefinitely();
+        Log.debugf("Number of committed repositories created: %d", repos.size());
+
         Log.debug("Updating repository references of '" + login + "'");
         user = userService.updateRepositories(user, reposCommited);
+
+        Log.debugf("User '%s' updated:\n%s", user.login(), user);
 
         // Update Contributions
         Multi<OperationResult<RepositoryDTO>> commitResult = performOperation(
@@ -184,18 +195,34 @@ public class UserDataManagementService {
                 repos,
                 repo -> issueCommentService.fetchAndCreateIssueComments(login, from, to));
 
-        Multi.createBy()
-             .merging()
-             .streams(commitResult, issueResult, prResult, prrResult, issueCommentResult)
-             .subscribe().with(
-                     op -> Log.debugf("Creating contributions of type %s from repository " +
-                                     "'%s/%s':\t%s",
-                             op.type,
-                             op.item.owner(),
-                             op.item.name(),
-                             op.success ? "success" : "failure"),
-                     Log::error);
+        Uni<Void> completion = Multi.createBy()
+                                    .merging()
+                                    .streams(commitResult, issueResult, prResult, prrResult,
+                                            issueCommentResult)
+                                    .invoke(op -> {
+                                        Log.debugf(
+                                                "Creating contributions of type %s from " +
+                                                        "repository '%s/%s':\t%s",
+                                                op.type,
+                                                op.item.owner(),
+                                                op.item.name(),
+                                                op.success ? "success" : "failure");
+                                        if (!op.success) {
+                                            Log.debug("Error:" + op.error);
+                                            Log.debug("Message: " + op.error.getMessage());
+                                            Log.debug("Cause: " + op.error.getCause());
+                                            Log.debug("getStackTrace: " + Arrays.toString(
+                                                    op.error.getStackTrace()));
+                                        }
+                                    })
+                                    .onFailure()
+                                    .invoke(Log::error)
+                                    .collect()
+                                    .asList()
+                                    .replaceWithVoid();
 
+
+        completion.await().indefinitely();
         Log.debug("Updating repository references of '" + login + "'");
         Set<ObjectId> reposUpd = HashSet.newHashSet(1000);
         reposUpd.addAll(commitService.getRepositoryIds(user.id()));

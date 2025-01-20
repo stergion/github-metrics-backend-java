@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.reactive.RestStreamElementType;
 import org.jboss.resteasy.reactive.client.SseEvent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface RepositoryRoutes {
     /**
@@ -45,8 +45,8 @@ public interface RepositoryRoutes {
     Multi<SseEvent<String>> getRepositoriesContributedTo(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                                         );
 
     /**
@@ -65,8 +65,8 @@ public interface RepositoryRoutes {
     Multi<SseEvent<String>> getRepositoriesCommittedTo(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                                       );
 
 }

@@ -12,7 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +32,8 @@ public class RepositoryClient {
         return mapper.toDTO(repo);
     }
 
-    public Multi<RepositoryDTO> getRepositoriesCommittedTo(String login, LocalDate from,
-                                                           LocalDate to) {
+    public Multi<RepositoryDTO> getRepositoriesCommittedTo(String login, LocalDateTime from,
+                                                           LocalDateTime to) {
         return client.getRepositoriesCommittedTo(login, from, to)
                      .map(event -> transformer.transform(event, RepositoryGH.class))
                      .filter(Optional::isPresent)
@@ -43,8 +43,8 @@ public class RepositoryClient {
     }
 
     public Multi<List<RepositoryDTO>> getRepositoriesCommittedToBatched(String login,
-                                                                        LocalDate from,
-                                                                        LocalDate to,
+                                                                        LocalDateTime from,
+                                                                        LocalDateTime to,
                                                                         BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 
@@ -57,8 +57,8 @@ public class RepositoryClient {
 
     }
 
-    public Multi<RepositoryDTO> getRepositoriesContributedTo(String login, LocalDate from,
-                                                             LocalDate to) {
+    public Multi<RepositoryDTO> getRepositoriesContributedTo(String login, LocalDateTime from,
+                                                             LocalDateTime to) {
         return client.getRepositoriesContributedTo(login, from, to)
                      .map(event -> transformer.transform(event, RepositoryGH.class))
                      .filter(Optional::isPresent)
@@ -67,8 +67,8 @@ public class RepositoryClient {
     }
 
     public Multi<List<RepositoryDTO>> getRepositoriesContributedToBatched(String login,
-                                                                          LocalDate from,
-                                                                          LocalDate to,
+                                                                          LocalDateTime from,
+                                                                          LocalDateTime to,
                                                                           BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 

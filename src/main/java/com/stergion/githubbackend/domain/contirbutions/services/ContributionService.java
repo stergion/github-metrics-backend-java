@@ -7,10 +7,11 @@ import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Contribution;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.ContributionRepository;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
@@ -48,11 +49,13 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
      * Ensures all repositories referenced by the contributions exist in the database.
      * This is common functionality used by all contribution types.
      */
-    private void ensureRepositoriesExist(List<D> batch) {
-        batch.stream()
-             .map(D::repository)
-             .distinct()
-             .forEach(repositoryService::fetchAndCreateRepository);
+    private Uni<Void> ensureRepositoriesExist(List<D> batch) {
+        return Multi.createFrom().iterable(batch)
+                    .map(D::repository)
+                    .select().distinct()
+                    .map(repository -> Uni.createFrom().item(() -> repositoryService.fetchAndCreateRepository(repository)))
+                    .collect().asList()
+                    .replaceWithVoid();
     }
 
     /**
@@ -82,13 +85,20 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
      * 3. Persists entities
      * 4. Maps back to DTOs for return
      */
-    protected List<D> createContributions(List<D> contributions) {
-        ensureRepositoriesExist(contributions);
-        List<E> contributionsE = convertToEntities(contributions);
-        repository.persist(contributionsE);
-        return contributionsE.stream()
-                             .map(this::mapEntityToDto)
-                             .toList();
+    protected Multi<List<D>> createContributions(List<D> contributions) {
+        return Multi.createFrom().item(contributions)
+                    .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
+                    .map(ignored -> convertToEntities(contributions))
+                    .onItem().transformToUniAndConcatenate(entities -> Uni.createFrom()
+                                           .item(() -> {
+                                               repository.persist(entities);
+                                               return entities;
+                                           })
+                                           .runSubscriptionOn(
+                                                   Infrastructure.getDefaultWorkerPool()))
+                .map(entities -> entities.stream()
+                                                            .map(this::mapEntityToDto)
+                                                            .toList());
     }
 
     /**
@@ -125,7 +135,8 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
     protected Multi<List<D>> fetchAndCreate(FetchParams params) {
         return fetchStrategy
                 .fetchBatched(params, BatchProcessorConfig.defaultConfig())
-                .map(this::createContributions);
+                .map(this::createContributions)
+                .concatMap(i->i);
     }
 
     public List<ObjectId> getRepositoryIds(ObjectId userId) {

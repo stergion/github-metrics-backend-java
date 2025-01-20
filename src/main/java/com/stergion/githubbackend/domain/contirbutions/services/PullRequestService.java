@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -36,8 +36,9 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
         return pullRequestMapper.toDTO(entity);
     }
 
-    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login, LocalDate from,
-                                                                  LocalDate to) {
+    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login, 
+                                                                  LocalDateTime from,
+                                                                  LocalDateTime to) {
         var params = FetchParams.builder()
                                 .login(login)
                                 .dateRange(from, to)

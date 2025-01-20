@@ -11,7 +11,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,10 +30,10 @@ public record UserDTO(
         String email,
 
         @PastOrPresent
-        LocalDate createdAt,
+        LocalDateTime createdAt,
 
         @PastOrPresent
-        LocalDate updatedAt,
+        LocalDateTime updatedAt,
 
         @NotNull
         List<ObjectId> repositories,

@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -37,7 +37,7 @@ public class CommitService extends ContributionService<CommitDTO, Commit> {
 
     public Multi<List<CommitDTO>> fetchAndCreateCommits(String login,
                                                         String owner, String name,
-                                                        LocalDate from, LocalDate to) {
+                                                        LocalDateTime from, LocalDateTime to) {
 
         var params = FetchParams.builder()
                                 .login(login)

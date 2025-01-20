@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.reactive.RestStreamElementType;
 import org.jboss.resteasy.reactive.client.SseEvent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface ContributionRoutes {
     /**
@@ -36,8 +36,8 @@ public interface ContributionRoutes {
             @PathParam("owner") String owner,
             @NotBlank(message = "Repository name cannot be blank")
             @PathParam("name") String name,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                       );
 
     /**
@@ -55,8 +55,8 @@ public interface ContributionRoutes {
     Multi<SseEvent<String>> getIssues(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                      );
 
     /**
@@ -74,8 +74,8 @@ public interface ContributionRoutes {
     Multi<SseEvent<String>> getPullRequests(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                            );
 
     /**
@@ -94,8 +94,8 @@ public interface ContributionRoutes {
     Multi<SseEvent<String>> getPullRequestReviews(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                                  );
 
     /**
@@ -113,8 +113,8 @@ public interface ContributionRoutes {
     Multi<SseEvent<String>> getIssueComments(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                             );
 
     /**
@@ -132,7 +132,7 @@ public interface ContributionRoutes {
     Multi<SseEvent<String>> getCommitComments(
             @NotBlank(message = "Login cannot be blank")
             @PathParam("login") String login,
-            @PathParam("fromDate") LocalDate fromDate,
-            @PathParam("toDate") LocalDate toDate
+            @PathParam("fromDate") LocalDateTime fromDate,
+            @PathParam("toDate") LocalDateTime toDate
                                              );
 }

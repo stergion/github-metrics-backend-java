@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -86,20 +86,20 @@ public class RepositoryService {
         return createRepository(repoDTO);
     }
 
-    private Multi<List<RepositoryDTO>> fetchUserRepositories(String login, LocalDate from,
-                                                             LocalDate to,
+    private Multi<List<RepositoryDTO>> fetchUserRepositories(String login, LocalDateTime from,
+                                                             LocalDateTime to,
                                                              BatchProcessorConfig config) {
         return repoClient.getRepositoriesContributedToBatched(login, from, to, config);
     }
 
-    private Multi<List<RepositoryDTO>> fetchUserRepositoriesCommited(String login, LocalDate from,
-                                                             LocalDate to,
+    private Multi<List<RepositoryDTO>> fetchUserRepositoriesCommited(String login, LocalDateTime from,
+                                                             LocalDateTime to,
                                                              BatchProcessorConfig config) {
         return repoClient.getRepositoriesCommittedToBatched(login, from, to, config);
     }
 
-    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositories(String login, LocalDate from,
-                                                                     LocalDate to) {
+    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositories(String login, LocalDateTime from,
+                                                                     LocalDateTime to) {
         var config = BatchProcessorConfig.defaultConfig();
         var repos = fetchUserRepositories(login, from, to, config);
 
@@ -107,8 +107,8 @@ public class RepositoryService {
     }
 
     public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositoriesCommited(String login,
-                                                                             LocalDate from,
-                                                                             LocalDate to) {
+                                                                             LocalDateTime from,
+                                                                             LocalDateTime to) {
         var config = BatchProcessorConfig.defaultConfig();
         var repos = fetchUserRepositoriesCommited(login, from, to, config);
 

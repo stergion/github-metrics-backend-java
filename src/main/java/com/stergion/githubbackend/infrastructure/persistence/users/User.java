@@ -10,7 +10,8 @@ import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
 import java.net.URI;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,10 +33,10 @@ public class User {
     public String email;
 
     @PastOrPresent
-    public LocalDate createdAt;
+    public LocalDateTime createdAt;
 
     @PastOrPresent
-    public LocalDate updatedAt;
+    public LocalDateTime updatedAt;
 
     @NotNull
     public List<ObjectId> repositories;

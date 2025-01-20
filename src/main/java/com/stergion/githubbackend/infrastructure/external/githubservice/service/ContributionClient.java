@@ -13,7 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +41,8 @@ public class ContributionClient {
     IssueCommentGHMapper issueCommentMapper;
 
 
-    public Multi<CommitDTO> getCommits(String login, String owner, String name, LocalDate from,
-                                       LocalDate to) {
+    public Multi<CommitDTO> getCommits(String login, String owner, String name, LocalDateTime from,
+                                       LocalDateTime to) {
         return client.getCommits(login, owner, name, from, to)
                      .map(event -> transformer.transform(event, CommitGH.class))
                      .filter(Optional::isPresent)
@@ -52,7 +52,7 @@ public class ContributionClient {
     }
 
     public Multi<List<CommitDTO>> getCommitsBatched(String login, String owner, String name,
-                                                    LocalDate from, LocalDate to,
+                                                    LocalDateTime from, LocalDateTime to,
                                                     BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
         NameWithOwner repo = new NameWithOwner(owner, name);
@@ -65,7 +65,7 @@ public class ContributionClient {
                              .toMulti();
     }
 
-    public Multi<IssueDTO> getIssues(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueDTO> getIssues(String login, LocalDateTime from, LocalDateTime to) {
         return client.getIssues(login, from, to)
                      .map(event -> transformer.transform(event, IssueGH.class))
                      .filter(Optional::isPresent)
@@ -73,7 +73,7 @@ public class ContributionClient {
                      .map(issueGH -> issueMapper.toDTO(issueGH, login));
     }
 
-    public Multi<List<IssueDTO>> getIssuesBatched(String login, LocalDate from, LocalDate to,
+    public Multi<List<IssueDTO>> getIssuesBatched(String login, LocalDateTime from, LocalDateTime to,
                                                   BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 
@@ -87,7 +87,7 @@ public class ContributionClient {
     }
 
 
-    public Multi<PullRequestDTO> getPullRequests(String login, LocalDate from, LocalDate to) {
+    public Multi<PullRequestDTO> getPullRequests(String login, LocalDateTime from, LocalDateTime to) {
         return client.getPullRequests(login, from, to)
                      .map(event -> transformer.transform(event, PullRequestGH.class))
                      .filter(Optional::isPresent)
@@ -96,7 +96,7 @@ public class ContributionClient {
     }
 
     public Multi<List<PullRequestDTO>> getPullRequestsBatched(String login,
-                                                              LocalDate from, LocalDate to,
+                                                              LocalDateTime from, LocalDateTime to,
                                                               BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 
@@ -109,8 +109,8 @@ public class ContributionClient {
                              .toMulti();
     }
 
-    public Multi<PullRequestReviewDTO> getPullRequestReviews(String login, LocalDate from,
-                                                             LocalDate to) {
+    public Multi<PullRequestReviewDTO> getPullRequestReviews(String login, LocalDateTime from,
+                                                             LocalDateTime to) {
         return client.getPullRequestReviews(login, from, to)
                      .map(event -> transformer.transform(event, PullRequestReviewGH.class))
                      .filter(Optional::isPresent)
@@ -119,8 +119,8 @@ public class ContributionClient {
     }
 
     public Multi<List<PullRequestReviewDTO>> getPullRequestReviewsBatched(String login,
-                                                                          LocalDate from,
-                                                                          LocalDate to,
+                                                                          LocalDateTime from,
+                                                                          LocalDateTime to,
                                                                           BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 
@@ -133,7 +133,7 @@ public class ContributionClient {
                              .toMulti();
     }
 
-    public Multi<IssueCommentDTO> getIssueComments(String login, LocalDate from, LocalDate to) {
+    public Multi<IssueCommentDTO> getIssueComments(String login, LocalDateTime from, LocalDateTime to) {
         return client.getIssueComments(login, from, to)
                      .map(event -> transformer.transform(event, IssueCommentGH.class))
                      .filter(Optional::isPresent)
@@ -142,7 +142,7 @@ public class ContributionClient {
     }
 
     public Multi<List<IssueCommentDTO>> getIssueCommentsBatched(String login,
-                                                                LocalDate from, LocalDate to,
+                                                                LocalDateTime from, LocalDateTime to,
                                                                 BatchProcessorConfig config) {
         BatchProcessor batchProcessor = new BatchProcessor(config);
 
