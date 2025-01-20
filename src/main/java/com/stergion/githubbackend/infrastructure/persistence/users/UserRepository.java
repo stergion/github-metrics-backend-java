@@ -12,6 +12,21 @@ import java.util.stream.Stream;
 
 @ApplicationScoped
 public class UserRepository implements PanacheMongoRepository<User> {
+
+    private void setTimestamps(User user) {
+        if (user.id == null) {  // New user
+            user.createdAt = LocalDateTime.now();
+            user.updatedAt = user.createdAt;
+        } else {  // Existing user
+            User originalUser = findById(user.id);
+            if (originalUser == null) {
+                throw new RuntimeException("Could not find original user.");
+            }
+            user.createdAt = originalUser.createdAt;
+            user.updatedAt = LocalDateTime.now();
+        }
+    }
+
     private void processUsersForPersistOrUpdate(Iterable<User> users) {
         users.forEach(this::setTimestamps);
     }
