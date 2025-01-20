@@ -54,8 +54,6 @@ public class RepositoryGHMapperTest {
         // Act
         RepositoryDTO dto = mapper.toDTO(repositoryGH);
 
-        System.out.println(dto);
-
         // Assert
         assertNotNull(dto);
         assertNotNull(dto.languages(), "Languages list should not be null");
