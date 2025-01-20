@@ -21,6 +21,13 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
         return list(new Document("$or", criteria));
     }
 
+    public Repository findByGitHubId(String gitHubId) {
+        return find("github.id", gitHubId).firstResult();
+    }
+
+    public List<Repository> findByOwner(String owner) {
+        return find("owner", owner).list();
+    }
 
     public Repository findByNameAndOwner(String owner, String name) {
         return find("owner = ?1 and name = ?2", owner, name).firstResult();
