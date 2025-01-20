@@ -46,4 +46,8 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
 
         return find(new Document("$or", criteria)).list();
     }
+
+    public void deleteByOwner(String owner) {
+        delete("owner", owner);
+    }
 }
