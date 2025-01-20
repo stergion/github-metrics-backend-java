@@ -16,9 +16,9 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
             return Collections.emptyList();
         }
         List<Document> criteria = ids.stream()
-                                     .map(id -> new Document().append("id", id))
+                                     .map(id -> new Document().append("_id", id))
                                      .toList();
-        return find(new Document("$or", criteria)).list();
+        return list(new Document("$or", criteria));
     }
 
 
