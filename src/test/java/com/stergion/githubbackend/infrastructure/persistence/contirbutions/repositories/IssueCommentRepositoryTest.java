@@ -15,6 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.net.URI;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,11 +30,12 @@ class IssueCommentRepositoryTest {
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
     private IssueComment testComment;
 
     @BeforeEach
     void setUp() {
-        issueCommentRepository.deleteAll();
+        issueCommentRepository.deleteAll().await().atMost(TIMEOUT);
         testComment = createTestComment(null, TEST_USER_ID, TEST_REPO_ID);
     }
 
@@ -44,11 +46,13 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should persist and retrieve comment by ID")
         void persistAndFindById() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
             assertNotNull(testComment.id(), "Comment ID should be generated");
 
-            IssueComment found = issueCommentRepository.findById(testComment.id());
+            IssueComment found = issueCommentRepository.findById(testComment.id())
+                                                       .await().atMost(TIMEOUT);
+
             assertNotNull(found, "Found comment should not be null");
             assertEquals(testComment.id(), found.id());
             assertEquals(testComment.userId(), found.userId());
@@ -60,12 +64,13 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should delete comment by user ID")
         void deleteByUserId() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            issueCommentRepository.delete(TEST_USER_ID);
+            issueCommentRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
 
-            assertNull(issueCommentRepository.findById(testComment.id()),
-                    "Comment should be deleted");
+            IssueComment found = issueCommentRepository.findById(testComment.id())
+                                                       .await().atMost(TIMEOUT);
+            assertNull(found, "Comment should be deleted");
         }
     }
 
@@ -76,9 +81,11 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should find comment by GitHub ID")
         void findByGitHubId() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment found = issueCommentRepository.findByGitHubId(testComment.github().id);
+            IssueComment found = issueCommentRepository.findByGitHubId(testComment.github().id)
+                                                       .await().atMost(TIMEOUT);
+
             assertNotNull(found, "Found comment should not be null");
             assertEquals(testComment.id(), found.id());
             assertEquals(testComment.userId(), found.userId());
@@ -90,9 +97,11 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should find comments by user ID")
         void findByUserId() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID);
+            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID)
+                                                             .collect().asList()
+                                                             .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -106,9 +115,11 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should find comments by repository ID")
         void findByRepoId() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByRepoId(TEST_REPO_ID);
+            List<IssueComment> found = issueCommentRepository.findByRepoId(TEST_REPO_ID)
+                                                             .collect().asList()
+                                                             .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -122,9 +133,11 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should find comments by user ID and repository ID")
         void findByUserAndRepoId() {
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID);
+            List<IssueComment> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
+                                                             .collect().asList()
+                                                             .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -151,7 +164,8 @@ class IssueCommentRepositoryTest {
             // Create multiple comments for testing
             persistTestComments(userId1, userId2, repoId1, repoId2);
 
-            var repositoryIds = issueCommentRepository.getRepositoryIds(userId1);
+            List<ObjectId> repositoryIds = issueCommentRepository.getRepositoryIds(userId1)
+                                                                 .await().atMost(TIMEOUT);
 
             assertEquals(2, repositoryIds.size(), "Should find two distinct repositories");
             assertTrue(repositoryIds.contains(repoId1), "Should contain first repo ID");
@@ -161,7 +175,8 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should return empty list when user has no comments")
         void getRepositoryIdsForUserWithNoComments() {
-            var repositoryIds = issueCommentRepository.getRepositoryIds(new ObjectId());
+            List<ObjectId> repositoryIds = issueCommentRepository.getRepositoryIds(new ObjectId())
+                                                                 .await().atMost(TIMEOUT);
 
             assertTrue(repositoryIds.isEmpty(),
                     "Should return empty list for user with no comments");
@@ -176,9 +191,10 @@ class IssueCommentRepositoryTest {
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
             IssueComment commentWithNulls = createTestComment(null, TEST_USER_ID, TEST_REPO_ID);
-            issueCommentRepository.persist(commentWithNulls);
+            issueCommentRepository.persist(commentWithNulls).await().atMost(TIMEOUT);
 
-            IssueComment found = issueCommentRepository.findById(commentWithNulls.id());
+            IssueComment found = issueCommentRepository.findById(commentWithNulls.id())
+                                                       .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found comment should not be null");
             assertEquals(commentWithNulls.id(), found.id());
@@ -193,10 +209,14 @@ class IssueCommentRepositoryTest {
         @DisplayName("Should handle different comment counts")
         void handleDifferentCommentCounts(int commentCount) {
             for (int i = 0; i < commentCount; i++) {
-                issueCommentRepository.persist(createTestComment(null, TEST_USER_ID, TEST_REPO_ID));
+                issueCommentRepository.persist(createTestComment(null, TEST_USER_ID, TEST_REPO_ID))
+                                      .await().atMost(TIMEOUT);
             }
 
-            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID);
+            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID)
+                                                             .collect().asList()
+                                                             .await().atMost(TIMEOUT);
+
             assertEquals(commentCount, found.size(),
                     "Should find correct number of comments");
         }
@@ -209,16 +229,18 @@ class IssueCommentRepositoryTest {
         @DisplayName("Should handle comment publication lifecycle")
         void handleCommentPublication() {
             testComment.publishedAt = null;  // Start unpublished
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment unpublished = issueCommentRepository.findById(testComment.id());
+            IssueComment unpublished = issueCommentRepository.findById(testComment.id())
+                                                             .await().atMost(TIMEOUT);
             assertNull(unpublished.publishedAt(), "New comment should be unpublished");
 
             // Simulate publication
             testComment.publishedAt = LocalDate.now();
-            issueCommentRepository.update(testComment);
+            issueCommentRepository.update(testComment).await().atMost(TIMEOUT);
 
-            IssueComment published = issueCommentRepository.findById(testComment.id());
+            IssueComment published = issueCommentRepository.findById(testComment.id())
+                                                           .await().atMost(TIMEOUT);
             assertNotNull(published.publishedAt(), "Comment should be published");
         }
 
@@ -227,9 +249,10 @@ class IssueCommentRepositoryTest {
         void handleCommentEditing() {
             testComment.lastEditedAt = null;  // Start unedited
             testComment.body = "Original content";
-            issueCommentRepository.persist(testComment);
+            issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment original = issueCommentRepository.findById(testComment.id());
+            IssueComment original = issueCommentRepository.findById(testComment.id())
+                                                          .await().atMost(TIMEOUT);
             assertNull(original.lastEditedAt(), "New comment should not be edited");
             assertEquals("Original content", original.body(), "Should have original content");
 
@@ -237,9 +260,10 @@ class IssueCommentRepositoryTest {
             testComment.lastEditedAt = LocalDate.now();
             testComment.body = "Updated content";
             testComment.updatedAt = LocalDate.now();
-            issueCommentRepository.update(testComment);
+            issueCommentRepository.update(testComment).await().atMost(TIMEOUT);
 
-            IssueComment edited = issueCommentRepository.findById(testComment.id());
+            IssueComment edited = issueCommentRepository.findById(testComment.id())
+                                                        .await().atMost(TIMEOUT);
             assertNotNull(edited.lastEditedAt(), "Comment should be marked as edited");
             assertNotNull(edited.updatedAt(), "Comment should have updated timestamp");
             assertEquals("Updated content", edited.body(), "Should have updated content");
@@ -249,11 +273,16 @@ class IssueCommentRepositoryTest {
     // Helper methods
     private void persistTestComments(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                      ObjectId repoId2) {
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId1));
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId2));
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId2));
-        issueCommentRepository.persist(createTestComment(null, userId2, repoId1));
-        issueCommentRepository.persist(createTestComment(null, userId2, repoId2));
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId1))
+                              .await().atMost(TIMEOUT);
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId2))
+                              .await().atMost(TIMEOUT);
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId2))
+                              .await().atMost(TIMEOUT);
+        issueCommentRepository.persist(createTestComment(null, userId2, repoId1))
+                              .await().atMost(TIMEOUT);
+        issueCommentRepository.persist(createTestComment(null, userId2, repoId2))
+                              .await().atMost(TIMEOUT);
     }
 
     private IssueComment createTestComment(ObjectId id, ObjectId userId, ObjectId repoId) {

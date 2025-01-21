@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,11 +27,12 @@ class PullRequestReviewRepositoryTest {
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
     private PullRequestReview testReview;
 
     @BeforeEach
     void setUp() {
-        pullRequestReviewRepository.deleteAll();
+        pullRequestReviewRepository.deleteAll().await().indefinitely();
         testReview = createTestPullRequestReview(null, TEST_USER_ID, TEST_REPO_ID);
     }
 
@@ -41,11 +43,13 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should persist and retrieve review by ID")
         void persistAndFindById() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
             assertNotNull(testReview.id(), "Review ID should be generated");
 
-            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id())
+                                                                 .await()
+                                                                 .atMost(TIMEOUT);
             assertNotNull(found, "Found review should not be null");
             assertEquals(testReview.id(), found.id());
             assertEquals(testReview.userId(), found.userId());
@@ -57,11 +61,12 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should delete review by user ID")
         void deleteByUserId() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            pullRequestReviewRepository.delete(TEST_USER_ID);
+            pullRequestReviewRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
 
-            assertNull(pullRequestReviewRepository.findById(testReview.id()),
+            assertNull(
+                    pullRequestReviewRepository.findById(testReview.id()).await().atMost(TIMEOUT),
                     "Review should be deleted");
         }
     }
@@ -73,10 +78,10 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should find review by GitHub ID")
         void findByGitHubId() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
             PullRequestReview found = pullRequestReviewRepository.findByGitHubId(
-                    testReview.github().id);
+                    testReview.github().id).await().atMost(TIMEOUT);
             assertNotNull(found, "Found review should not be null");
             assertEquals(testReview.id(), found.id());
             assertEquals(testReview.userId(), found.userId());
@@ -88,9 +93,11 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should find reviews by user ID")
         void findByUserId() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            List<PullRequestReview> found = pullRequestReviewRepository.findByUserId(TEST_USER_ID);
+            List<PullRequestReview> found = pullRequestReviewRepository.findByUserId(TEST_USER_ID)
+                                                                       .collect().asList()
+                                                                       .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one review");
             assertNotNull(found, "Found reviews should not be null");
@@ -104,9 +111,11 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should find reviews by repository ID")
         void findByRepoId() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            List<PullRequestReview> found = pullRequestReviewRepository.findByRepoId(TEST_REPO_ID);
+            List<PullRequestReview> found = pullRequestReviewRepository.findByRepoId(TEST_REPO_ID)
+                                                                       .collect().asList()
+                                                                       .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one review");
             assertNotNull(found, "Found reviews should not be null");
@@ -120,10 +129,13 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should find reviews by user ID and repository ID")
         void findByUserAndRepoId() {
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
             List<PullRequestReview> found = pullRequestReviewRepository.findByUserAndRepoId(
-                    TEST_USER_ID, TEST_REPO_ID);
+                                                                               TEST_USER_ID,
+                                                                               TEST_REPO_ID)
+                                                                       .collect().asList()
+                                                                       .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one review");
             assertNotNull(found, "Found reviews should not be null");
@@ -150,7 +162,9 @@ class PullRequestReviewRepositoryTest {
             // Create multiple reviews for testing
             persistTestReviews(userId1, userId2, repoId1, repoId2);
 
-            var repositoryIds = pullRequestReviewRepository.getRepositoryIds(userId1);
+            var repositoryIds = pullRequestReviewRepository.getRepositoryIds(userId1)
+                                                           .await()
+                                                           .atMost(TIMEOUT);
 
             assertEquals(2, repositoryIds.size(), "Should find two distinct repositories");
             assertTrue(repositoryIds.contains(repoId1), "Should contain first repo ID");
@@ -160,7 +174,9 @@ class PullRequestReviewRepositoryTest {
         @Test
         @DisplayName("Should return empty list when user has no reviews")
         void getRepositoryIdsForUserWithNoReviews() {
-            var repositoryIds = pullRequestReviewRepository.getRepositoryIds(new ObjectId());
+            var repositoryIds = pullRequestReviewRepository.getRepositoryIds(new ObjectId())
+                                                           .await()
+                                                           .atMost(TIMEOUT);
 
             assertTrue(repositoryIds.isEmpty(),
                     "Should return empty list for user with no reviews");
@@ -187,34 +203,51 @@ class PullRequestReviewRepositoryTest {
             changesReview.state = PullRequestReviewState.CHANGES_REQUESTED;
             changesReview.submittedAt = LocalDate.now();
 
-            pullRequestReviewRepository.persist(pendingReview);
-            pullRequestReviewRepository.persist(approvedReview);
-            pullRequestReviewRepository.persist(changesReview);
+            pullRequestReviewRepository.persist(pendingReview).await().atMost(TIMEOUT);
+            pullRequestReviewRepository.persist(approvedReview).await().atMost(TIMEOUT);
+            pullRequestReviewRepository.persist(changesReview).await().atMost(TIMEOUT);
 
             // Test finding each state
-            var pendingReviews = pullRequestReviewRepository.findByUserIdAndState(userId, PullRequestReviewState.PENDING);
+            var pendingReviews = pullRequestReviewRepository.findByUserIdAndState(userId,
+                                                                    PullRequestReviewState.PENDING)
+                                                            .collect().asList()
+                                                            .await().atMost(TIMEOUT);
             assertEquals(1, pendingReviews.size(), "Should find one pending review");
-            assertEquals(PullRequestReviewState.PENDING, pendingReviews.getFirst().state(), "Review should be pending");
-            assertNull(pendingReviews.getFirst().submittedAt(), "Pending review should not have submittedAt date");
+            assertEquals(PullRequestReviewState.PENDING, pendingReviews.getFirst().state(),
+                    "Review should be pending");
+            assertNull(pendingReviews.getFirst().submittedAt(),
+                    "Pending review should not have submittedAt date");
 
-            var approvedReviews = pullRequestReviewRepository.findByUserIdAndState(userId, PullRequestReviewState.APPROVED);
+            var approvedReviews = pullRequestReviewRepository.findByUserIdAndState(userId,
+                                                                     PullRequestReviewState.APPROVED)
+                                                             .collect().asList()
+                                                             .await().atMost(TIMEOUT);
             assertEquals(1, approvedReviews.size(), "Should find one approved review");
-            assertEquals(PullRequestReviewState.APPROVED, approvedReviews.getFirst().state(), "Review should be approved");
-            assertNotNull(approvedReviews.getFirst().submittedAt(), "Approved review should have submittedAt date");
+            assertEquals(PullRequestReviewState.APPROVED, approvedReviews.getFirst().state(),
+                    "Review should be approved");
+            assertNotNull(approvedReviews.getFirst().submittedAt(),
+                    "Approved review should have submittedAt date");
 
-            var changesReviews = pullRequestReviewRepository.findByUserIdAndState(userId, PullRequestReviewState.CHANGES_REQUESTED);
+            var changesReviews = pullRequestReviewRepository.findByUserIdAndState(userId,
+                                                                    PullRequestReviewState.CHANGES_REQUESTED)
+                                                            .collect().asList()
+                                                            .await().atMost(TIMEOUT);
             assertEquals(1, changesReviews.size(), "Should find one review requesting changes");
-            assertEquals(PullRequestReviewState.CHANGES_REQUESTED, changesReviews.getFirst().state(), "Review should request changes");
-            assertNotNull(changesReviews.getFirst().submittedAt(), "Review requesting changes should have submittedAt date");
+            assertEquals(PullRequestReviewState.CHANGES_REQUESTED,
+                    changesReviews.getFirst().state(), "Review should request changes");
+            assertNotNull(changesReviews.getFirst().submittedAt(),
+                    "Review requesting changes should have submittedAt date");
         }
 
         @Test
         @DisplayName("Should handle different review states")
         void handleDifferentReviewStates() {
             testReview.state = PullRequestReviewState.APPROVED;
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id())
+                                                                 .await()
+                                                                 .atMost(TIMEOUT);
             assertNotNull(found, "Found review should not be null");
             assertEquals(PullRequestReviewState.APPROVED, found.state(),
                     "Review state should match");
@@ -227,9 +260,11 @@ class PullRequestReviewRepositoryTest {
             comment.body = "Test comment";
             testReview.comments = List.of(comment);
 
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview found = pullRequestReviewRepository.findById(testReview.id())
+                                                                 .await()
+                                                                 .atMost(TIMEOUT);
             assertNotNull(found.comments(), "Comments should not be null");
             assertFalse(found.comments().isEmpty(), "Comments should not be empty");
             assertEquals("Test comment", found.comments().getFirst().body,
@@ -253,9 +288,11 @@ class PullRequestReviewRepositoryTest {
             reviewWithNulls.body = null;
             reviewWithNulls.comments = null;
 
-            pullRequestReviewRepository.persist(reviewWithNulls);
+            pullRequestReviewRepository.persist(reviewWithNulls).await().atMost(TIMEOUT);
 
-            PullRequestReview found = pullRequestReviewRepository.findById(reviewWithNulls.id());
+            PullRequestReview found = pullRequestReviewRepository.findById(reviewWithNulls.id())
+                                                                 .await()
+                                                                 .atMost(TIMEOUT);
 
             assertNotNull(found, "Found review should not be null");
             assertEquals(reviewWithNulls.id(), found.id());
@@ -277,10 +314,15 @@ class PullRequestReviewRepositoryTest {
         void handleDifferentReviewCounts(int reviewCount) {
             for (int i = 0; i < reviewCount; i++) {
                 pullRequestReviewRepository.persist(
-                        createTestPullRequestReview(null, TEST_USER_ID, TEST_REPO_ID));
+                                                   createTestPullRequestReview(null, TEST_USER_ID
+                                                           , TEST_REPO_ID))
+                                           .await()
+                                           .atMost(TIMEOUT);
             }
 
-            List<PullRequestReview> found = pullRequestReviewRepository.findByUserId(TEST_USER_ID);
+            List<PullRequestReview> found = pullRequestReviewRepository.findByUserId(TEST_USER_ID)
+                                                                       .collect().asList()
+                                                                       .await().atMost(TIMEOUT);
             assertEquals(reviewCount, found.size(),
                     "Should find correct number of reviews");
         }
@@ -295,9 +337,11 @@ class PullRequestReviewRepositoryTest {
             // Create pending review
             testReview.state = PullRequestReviewState.PENDING;
             testReview.submittedAt = null;
-            pullRequestReviewRepository.persist(testReview);
+            pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            PullRequestReview pendingReview = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview pendingReview = pullRequestReviewRepository.findById(testReview.id())
+                                                                         .await()
+                                                                         .atMost(TIMEOUT);
             assertEquals(PullRequestReviewState.PENDING, pendingReview.state(),
                     "New review should be pending");
             assertNull(pendingReview.submittedAt(),
@@ -307,9 +351,10 @@ class PullRequestReviewRepositoryTest {
             testReview.state = PullRequestReviewState.APPROVED;
             testReview.submittedAt = LocalDate.now();
             testReview.body = "Looks good!";
-            pullRequestReviewRepository.update(testReview);
+            pullRequestReviewRepository.update(testReview).await().atMost(TIMEOUT);
 
-            PullRequestReview approvedReview = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview approvedReview = pullRequestReviewRepository.findById(
+                    testReview.id()).await().atMost(TIMEOUT);
             assertEquals(PullRequestReviewState.APPROVED, approvedReview.state(),
                     "Review should be approved");
             assertNotNull(approvedReview.submittedAt(),
@@ -318,9 +363,11 @@ class PullRequestReviewRepositoryTest {
             // Change to changes requested
             testReview.state = PullRequestReviewState.CHANGES_REQUESTED;
             testReview.body = "Please make these changes";
-            pullRequestReviewRepository.update(testReview);
+            pullRequestReviewRepository.update(testReview).await().atMost(TIMEOUT);
 
-            PullRequestReview changesReview = pullRequestReviewRepository.findById(testReview.id());
+            PullRequestReview changesReview = pullRequestReviewRepository.findById(testReview.id())
+                                                                         .await()
+                                                                         .atMost(TIMEOUT);
             assertEquals(PullRequestReviewState.CHANGES_REQUESTED, changesReview.state(),
                     "Review should request changes");
             assertEquals("Please make these changes", changesReview.body(),
@@ -331,11 +378,21 @@ class PullRequestReviewRepositoryTest {
     // Helper methods
     private void persistTestReviews(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                     ObjectId repoId2) {
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId1));
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2));
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2));
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId1));
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId2));
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId1))
+                                   .await()
+                                   .atMost(TIMEOUT);
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2))
+                                   .await()
+                                   .atMost(TIMEOUT);
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2))
+                                   .await()
+                                   .atMost(TIMEOUT);
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId1))
+                                   .await()
+                                   .atMost(TIMEOUT);
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId2))
+                                   .await()
+                                   .atMost(TIMEOUT);
     }
 
     private PullRequestReview createTestPullRequestReview(ObjectId id, ObjectId userId,

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,11 +27,13 @@ class IssueRepositoryTest {
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
+
     private Issue testIssue;
 
     @BeforeEach
     void setUp() {
-        issueRepository.deleteAll();
+        issueRepository.deleteAll().await().indefinitely();
         testIssue = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID);
     }
 
@@ -41,11 +44,13 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should persist and retrieve issue by ID")
         void persistAndFindById() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
             assertNotNull(testIssue.id(), "Issue ID should be generated");
 
-            Issue found = issueRepository.findById(testIssue.id());
+            Issue found = issueRepository.findById(testIssue.id())
+                                         .await().atMost(TIMEOUT);
+
             assertNotNull(found, "Found issue should not be null");
             assertEquals(testIssue.id(), found.id());
             assertEquals(testIssue.userId(), found.userId());
@@ -57,12 +62,13 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should delete issue by user ID")
         void deleteByUserId() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            issueRepository.delete(TEST_USER_ID);
+            issueRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
 
-            assertNull(issueRepository.findById(testIssue.id()),
-                    "Issue should be deleted");
+            Issue found = issueRepository.findById(testIssue.id())
+                                         .await().atMost(TIMEOUT);
+            assertNull(found, "Issue should be deleted");
         }
     }
 
@@ -73,9 +79,11 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should find issue by GitHub ID")
         void findByGitHubId() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            Issue found = issueRepository.findByGitHubId(testIssue.github().id);
+            Issue found = issueRepository.findByGitHubId(testIssue.github().id)
+                                         .await().atMost(TIMEOUT);
+
             assertNotNull(found, "Found issue should not be null");
             assertEquals(testIssue.id(), found.id());
             assertEquals(testIssue.userId(), found.userId());
@@ -87,9 +95,11 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should find issues by user ID")
         void findByUserId() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID);
+            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID)
+                                               .collect().asList()
+                                               .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -103,9 +113,11 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should find issues by repository ID")
         void findByRepoId() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByRepoId(TEST_REPO_ID);
+            List<Issue> found = issueRepository.findByRepoId(TEST_REPO_ID)
+                                               .collect().asList()
+                                               .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -119,9 +131,11 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should find issues by user ID and repository ID")
         void findByUserAndRepoId() {
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID);
+            List<Issue> found = issueRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
+                                               .collect().asList()
+                                               .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -148,7 +162,8 @@ class IssueRepositoryTest {
             // Create multiple issues for testing
             persistTestIssues(userId1, userId2, repoId1, repoId2);
 
-            var repositoryIds = issueRepository.getRepositoryIds(userId1);
+            List<ObjectId> repositoryIds = issueRepository.getRepositoryIds(userId1)
+                                                          .await().atMost(TIMEOUT);
 
             assertEquals(2, repositoryIds.size(), "Should find two distinct repositories");
             assertTrue(repositoryIds.contains(repoId1), "Should contain first repo ID");
@@ -158,7 +173,8 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should return empty list when user has no issues")
         void getRepositoryIdsForUserWithNoIssues() {
-            var repositoryIds = issueRepository.getRepositoryIds(new ObjectId());
+            List<ObjectId> repositoryIds = issueRepository.getRepositoryIds(new ObjectId())
+                                                          .await().atMost(TIMEOUT);
 
             assertTrue(repositoryIds.isEmpty(),
                     "Should return empty list for user with no issues");
@@ -173,10 +189,12 @@ class IssueRepositoryTest {
         @DisplayName("Should find open issues")
         void findOpenIssues() {
             testIssue.state = IssueState.OPEN;
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
             List<Issue> openIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
-                    IssueState.OPEN);
+                                                            IssueState.OPEN)
+                                                    .collect().asList()
+                                                    .await().atMost(TIMEOUT);
 
             assertFalse(openIssues.isEmpty(), "Should find open issues");
             assertEquals(IssueState.OPEN, openIssues.getFirst().state());
@@ -187,10 +205,12 @@ class IssueRepositoryTest {
         void findClosedIssues() {
             testIssue.state = IssueState.CLOSED;
             testIssue.closedAt = LocalDate.now();
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
             List<Issue> closedIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
-                    IssueState.CLOSED);
+                                                              IssueState.CLOSED)
+                                                      .collect().asList()
+                                                      .await().atMost(TIMEOUT);
 
             assertFalse(closedIssues.isEmpty(), "Should find closed issues");
             assertEquals(IssueState.CLOSED, closedIssues.getFirst().state());
@@ -212,9 +232,10 @@ class IssueRepositoryTest {
             issueWithNulls.labels = null;
             issueWithNulls.closer = null;
 
-            issueRepository.persist(issueWithNulls);
+            issueRepository.persist(issueWithNulls).await().atMost(TIMEOUT);
 
-            Issue found = issueRepository.findById(issueWithNulls.id());
+            Issue found = issueRepository.findById(issueWithNulls.id())
+                                         .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found issue should not be null");
             assertEquals(issueWithNulls.id(), found.id());
@@ -233,10 +254,14 @@ class IssueRepositoryTest {
         @DisplayName("Should handle different issue counts")
         void handleDifferentIssueCounts(int issueCount) {
             for (int i = 0; i < issueCount; i++) {
-                issueRepository.persist(createTestIssue(null, TEST_USER_ID, TEST_REPO_ID));
+                issueRepository.persist(createTestIssue(null, TEST_USER_ID, TEST_REPO_ID))
+                               .await().atMost(TIMEOUT);
             }
 
-            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID);
+            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID)
+                                               .collect().asList()
+                                               .await().atMost(TIMEOUT);
+
             assertEquals(issueCount, found.size(),
                     "Should find correct number of issues");
         }
@@ -251,9 +276,10 @@ class IssueRepositoryTest {
             // Create new issue
             testIssue.state = IssueState.OPEN;
             testIssue.closedAt = null;
-            issueRepository.persist(testIssue);
+            issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            Issue newIssue = issueRepository.findById(testIssue.id());
+            Issue newIssue = issueRepository.findById(testIssue.id())
+                                            .await().atMost(TIMEOUT);
             assertEquals(IssueState.OPEN, newIssue.state(), "New issue should be open");
             assertNull(newIssue.closedAt(), "New issue should not have closed date");
 
@@ -261,9 +287,10 @@ class IssueRepositoryTest {
             testIssue.state = IssueState.CLOSED;
             testIssue.closedAt = LocalDate.now();
             testIssue.closer = "test-closer";
-            issueRepository.update(testIssue);
+            issueRepository.update(testIssue).await().atMost(TIMEOUT);
 
-            Issue closedIssue = issueRepository.findById(testIssue.id());
+            Issue closedIssue = issueRepository.findById(testIssue.id())
+                                               .await().atMost(TIMEOUT);
             assertEquals(IssueState.CLOSED, closedIssue.state(), "Issue should be closed");
             assertNotNull(closedIssue.closedAt(), "Closed issue should have closed date");
             assertEquals("test-closer", closedIssue.closer(), "Should record who closed the issue");
@@ -272,9 +299,10 @@ class IssueRepositoryTest {
             testIssue.state = IssueState.OPEN;
             testIssue.closedAt = null;
             testIssue.closer = null;
-            issueRepository.update(testIssue);
+            issueRepository.update(testIssue).await().atMost(TIMEOUT);
 
-            Issue reopenedIssue = issueRepository.findById(testIssue.id());
+            Issue reopenedIssue = issueRepository.findById(testIssue.id())
+                                                 .await().atMost(TIMEOUT);
             assertEquals(IssueState.OPEN, reopenedIssue.state(), "Issue should be reopened");
             assertNull(reopenedIssue.closedAt(), "Reopened issue should not have closed date");
             assertNull(reopenedIssue.closer(), "Reopened issue should not have closer");
@@ -284,11 +312,11 @@ class IssueRepositoryTest {
     // Helper methods
     private void persistTestIssues(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                    ObjectId repoId2) {
-        issueRepository.persist(createTestIssue(null, userId1, repoId1));
-        issueRepository.persist(createTestIssue(null, userId1, repoId2));
-        issueRepository.persist(createTestIssue(null, userId1, repoId2));
-        issueRepository.persist(createTestIssue(null, userId2, repoId1));
-        issueRepository.persist(createTestIssue(null, userId2, repoId2));
+        issueRepository.persist(createTestIssue(null, userId1, repoId1)).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId1, repoId2)).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId1, repoId2)).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId2, repoId1)).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId2, repoId2)).await().atMost(TIMEOUT);
     }
 
     private Issue createTestIssue(ObjectId id, ObjectId userId, ObjectId repoId) {
