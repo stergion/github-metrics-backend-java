@@ -126,4 +126,8 @@ public class UserRepository implements PanacheMongoRepository<User> {
     public User findByGitHubId(String githubId) {
         return find("github.id", githubId).firstResult();
     }
+
+    public void deleteByLogin(String login) {
+        delete("login", login);
+    }
 }
