@@ -7,4 +7,8 @@ public class UserNotFoundException extends RuntimeException {
         super("User not found: " + login);
         this.login = login;
     }
+
+    public String login() {
+        return login;
+    }
 }
