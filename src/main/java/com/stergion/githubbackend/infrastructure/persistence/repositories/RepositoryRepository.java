@@ -8,6 +8,8 @@ import org.bson.types.ObjectId;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class RepositoryRepository implements PanacheMongoRepository<Repository> {
@@ -49,5 +51,46 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
 
     public void deleteByOwner(String owner) {
         delete("owner", owner);
+    }
+
+    public void save(Repository repository) {
+        var found = findByNameAndOwner(repository.owner, repository.name);
+        if (found != null) {
+            repository.id = found.id;
+            update(repository);
+        } else {
+            persist(repository);
+        }
+    }
+
+    public void save(List<Repository> repositories) {
+        if (repositories.isEmpty()) {
+            return;
+        }
+
+        List<NameWithOwner> repoIds = repositories.stream()
+                                                          .map(r -> new NameWithOwner(r.owner,
+                                                                  r.name))
+                                                          .toList();
+        List<Repository> existingRepos = findByNameAndOwners(repoIds);
+
+        Map<String, Repository> existingRepoMap = existingRepos.stream()
+                                                               .collect(Collectors.toMap(
+                                                                       r -> r.owner + "/" + r.name,
+                                                                       repo -> repo
+                                                                                        ));
+        repositories.forEach(newRepo -> {
+            String key = newRepo.owner + "/" + newRepo.name;
+            Repository existingRepo = existingRepoMap.get(key);
+
+            if (existingRepo != null) {
+                // Update existing repository
+                newRepo.id = existingRepo.id;
+                update(newRepo);
+            } else {
+                // Insert new repository
+                persist(newRepo);
+            }
+        });
     }
 }
