@@ -2,7 +2,6 @@ package com.stergion.githubbackend.application.api.users;
 
 import com.stergion.githubbackend.application.mapper.RepositoryMapper;
 import com.stergion.githubbackend.application.mapper.UserMapper;
-import com.stergion.githubbackend.application.response.NameWithOwnerResponse;
 import com.stergion.githubbackend.application.response.UserResponse;
 import com.stergion.githubbackend.application.service.UserDataManagementService;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
@@ -12,10 +11,12 @@ import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
-import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.function.Function;
 
 @Path("/api/users/{login}")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,60 +34,47 @@ public class UserResource {
     UserDataManagementService userDataManagementService;
 
     @GET
-    public Object getUser(String login) {
+    public RestResponse<UserResponse> getUser(String login) {
         Log.info("Fetching user: " + login);
-        try {
-            var usr = userService.getUser(login);
-            List<RepositoryDTO> repos = repositoryService.getRepositories(usr.repositories());
-            UserResponse userResponse = userMapper.toResponse(usr, repos);
-            return ResponseBuilder.ok(userResponse).build();
-        } catch (Exception e) {
-            Log.error(e);
-            return ResponseBuilder.serverError().build();
-        }
 
+        var usr = userService.getUser(login);
+
+        List<RepositoryDTO> repos = repositoryService.getRepositories(usr.repositories());
+        UserResponse userResponse = userMapper.toResponse(usr, repos);
+
+        return RestResponse.ok(userResponse);
     }
 
     @POST
-    public RestResponse<Object> createUser(String login) {
+    public RestResponse<String> createUser(String login) {
         Log.info("Creating user: " + login);
-        try {
-            userDataManagementService.setupUser(login);
-        } catch (Exception e) {
-            Log.error(e);
-            return ResponseBuilder.serverError().build();
-        }
+        userDataManagementService.setupUser(login);
 
         Log.info("User '" + login + "' was created successfully!!!");
-        return ResponseBuilder.create(201).build();
+        return RestResponse.created(URI.create("/api/users/" + login));
     }
 
     @PUT
-    public RestResponse<Object> updateUser(String login) {
+    public RestResponse<String> updateUser(String login) {
         Log.info("Updating user: " + login);
-        try {
-            userDataManagementService.updateUser(login);
-        } catch (Exception e) {
-            Log.error(e);
-            return ResponseBuilder.serverError().build();
-        }
 
-        Log.info("User '" + login + "' was updated successfully!!!");
-        return ResponseBuilder.ok().build();
+        userDataManagementService.updateUser(login);
+
+        var msg = "User '" + login + "' updated successfully";
+        Log.info(msg);
+        return RestResponse.ok(msg);
     }
 
     @DELETE
-    public RestResponse<Object> deleteUser(String login) {
+    public RestResponse<String> deleteUser(String login) {
         Log.info("Deleting user: " + login);
-        try {
-            userDataManagementService.deleteUser(login);
-        } catch (Exception e) {
-            Log.error(e);
-            return ResponseBuilder.serverError().build();
-        }
 
-        Log.info("User '" + login + "' was deleted successfully!!!");
-        return ResponseBuilder.create(200).build();
+        userDataManagementService.deleteUser(login);
+
+
+        String msg = "User '" + login + "' was deleted successfully";
+        Log.info(msg);
+        return RestResponse.ok(msg);
     }
 
     @GET
