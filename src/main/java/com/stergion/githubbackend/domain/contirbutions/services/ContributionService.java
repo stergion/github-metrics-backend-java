@@ -53,7 +53,11 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
         return Multi.createFrom().iterable(batch)
                     .map(D::repository)
                     .select().distinct()
-                    .map(repository -> Uni.createFrom().item(() -> repositoryService.fetchAndCreateRepository(repository)))
+                    .onItem().transformToUniAndMerge(
+                        repo -> Uni.createFrom().item(repo)
+                                   .emitOn(Infrastructure.getDefaultWorkerPool())
+                                   .map(repositoryService::fetchAndCreateRepository)
+                                                    )
                     .collect().asList()
                     .replaceWithVoid();
     }
@@ -85,47 +89,47 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
      * 3. Persists entities
      * 4. Maps back to DTOs for return
      */
-    protected Multi<List<D>> createContributions(List<D> contributions) {
+    protected Uni<List<D>> createContributions(List<D> contributions) {
         return Multi.createFrom().item(contributions)
+                    .invoke(i -> System.out.println(
+                            "Before this::ensureRepositoriesExist: list.size=" + i.size()))
                     .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
-                    .map(ignored -> convertToEntities(contributions))
-                    .onItem().transformToUniAndConcatenate(entities -> Uni.createFrom()
-                                           .item(() -> {
-                                               repository.persist(entities);
-                                               return entities;
-                                           })
-                                           .runSubscriptionOn(
-                                                   Infrastructure.getDefaultWorkerPool()))
-                .map(entities -> entities.stream()
-                                                            .map(this::mapEntityToDto)
-                                                            .toList());
+                    .invoke(i -> System.out.println("After this::ensureRepositoriesExist:"))
+                    .toUni()
+                    .chain(ignored -> Uni.createFrom().item(contributions))
+                    .map(this::convertToEntities)
+                    .call(repository::persist)
+                    .invoke(entities -> entities.forEach(entity -> System.out.println(
+                            entity.id())))
+                    .map(entities -> entities.stream()
+                                             .map(this::mapEntityToDto)
+                                             .toList());
     }
 
     /**
      * Get a single contribution by ID
      */
-    public D getContribution(ObjectId id) {
-        var c = repository.findById(id);
-        return mapEntityToDto(c);
+    public Uni<D> getContribution(ObjectId id) {
+        return repository.findById(id)
+                         .map(this::mapEntityToDto);
+
     }
 
     /**
      * Get all contributions for a user
      */
-    public List<D> getUserContributions(String login) {
+    public Multi<D> getUserContributions(String login) {
         ObjectId userId = userService.getUserId(login);
-        return repository.findByUserId(userId).stream()
-                         .map(this::mapEntityToDto)
-                         .toList();
+        return repository.findByUserId(userId)
+                         .map(this::mapEntityToDto);
     }
 
-    public List<D> getUserContributions(String login, String owner, String name) {
+    public Multi<D> getUserContributions(String login, String owner, String name) {
         ObjectId userId = userService.getUserId(login);
         ObjectId repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
 
-        return repository.findByUserAndRepoId(userId, repoId).stream()
-                         .map(this::mapEntityToDto)
-                         .toList();
+        return repository.findByUserAndRepoId(userId, repoId)
+                         .map(this::mapEntityToDto);
     }
 
     /**
@@ -136,14 +140,14 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
         return fetchStrategy
                 .fetchBatched(params, BatchProcessorConfig.defaultConfig())
                 .map(this::createContributions)
-                .concatMap(i->i);
+                .flatMap(Uni::toMulti);
     }
 
-    public List<ObjectId> getRepositoryIds(ObjectId userId) {
+    public Uni<List<ObjectId>> getRepositoryIds(ObjectId userId) {
         return repository.getRepositoryIds(userId);
     }
 
-    public void deleteUserContributions(ObjectId userId) {
-        repository.delete(userId);
+    public Uni<Void> deleteUserContributions(ObjectId userId) {
+        return repository.delete(userId);
     }
 }
