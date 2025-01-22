@@ -59,7 +59,7 @@ public class RepositoryService {
 
     private RepositoryDTO createRepository(RepositoryDTO repoDTO) {
         var repo = repoMapper.toEntity(repoDTO);
-        repoRepository.persist(repo);
+        repoRepository.save(repo);
 
         return repoMapper.toDTO(repo);
     }
@@ -70,7 +70,7 @@ public class RepositoryService {
                            .distinct()
                            .toList();
 
-        repoRepository.persist(repos);
+        repoRepository.save(repos);
 
         return repos.stream()
                     .map(repoMapper::toDTO)
