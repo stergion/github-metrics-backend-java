@@ -79,18 +79,18 @@ public class UserResource {
 
     @GET
     @Path("/repositories")
-    public Object getUserRepositories(String login) {
+    public RestResponse<List<?>> getUserRepositories(String login,
+                                                     @RestQuery @DefaultValue("basic") String detail) {
         Log.info("Getting user: " + login + " repositories");
-        try {
-            List<RepositoryDTO> repos = userService.getUserRepositories(login);
-            List<NameWithOwnerResponse> nameWithOwners = repos.stream()
-                                                              .map(repositoryMapper::toNameWithOwnerResponse)
-                                                              .toList();
-            return ResponseBuilder.ok(nameWithOwners).build();
-        } catch (Exception e) {
-            Log.error(e);
-            return ResponseBuilder.serverError().build();
-        }
 
+        List<RepositoryDTO> repos = userService.getUserRepositories(login);
+
+        Function<RepositoryDTO, ?> mapper = "full".equals(detail) ?
+                repositoryMapper::toRepositoryResponse :
+                repositoryMapper::toNameWithOwnerResponse;
+
+        return RestResponse.ok(repos.stream()
+                                    .map(mapper)
+                                    .toList());
     }
 }
