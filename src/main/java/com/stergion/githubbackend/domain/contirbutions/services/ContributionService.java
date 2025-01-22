@@ -91,16 +91,11 @@ public abstract class ContributionService<D extends ContributionDTO, E extends C
      */
     protected Uni<List<D>> createContributions(List<D> contributions) {
         return Multi.createFrom().item(contributions)
-                    .invoke(i -> System.out.println(
-                            "Before this::ensureRepositoriesExist: list.size=" + i.size()))
                     .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
-                    .invoke(i -> System.out.println("After this::ensureRepositoriesExist:"))
                     .toUni()
                     .chain(ignored -> Uni.createFrom().item(contributions))
                     .map(this::convertToEntities)
                     .call(repository::persist)
-                    .invoke(entities -> entities.forEach(entity -> System.out.println(
-                            entity.id())))
                     .map(entities -> entities.stream()
                                              .map(this::mapEntityToDto)
                                              .toList());
