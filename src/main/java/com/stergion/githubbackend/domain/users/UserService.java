@@ -129,9 +129,6 @@ public class UserService {
     }
 
     public void deleteUser(String login) {
-        if (!check(login)) {
-            throw new UserNotFoundException(login);
-        }
-        repository.delete(login);
+        repository.deleteByLogin(login);
     }
 }
