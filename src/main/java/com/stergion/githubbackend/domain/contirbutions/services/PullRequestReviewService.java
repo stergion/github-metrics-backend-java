@@ -4,9 +4,13 @@ import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestReviewDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestReviewFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReviewMapper;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.PullRequestReviewSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequestReview;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestReviewRepository;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -19,6 +23,8 @@ public class PullRequestReviewService
         extends ContributionService<PullRequestReviewDTO, PullRequestReview> {
     @Inject
     PullRequestReviewMapper pullRequestReviewMapper;
+    @Inject
+    PullRequestReviewSearchStrategy searchStrategy;
 
     @Inject
     public PullRequestReviewService(PullRequestReviewRepository pullRequestReviewRepository,
@@ -45,5 +51,12 @@ public class PullRequestReviewService
                                 .dateRange(from, to)
                                 .build();
         return fetchAndCreate(params);
+    }
+
+    public Uni<PagedResponse<PullRequestReviewDTO>> search(
+            PullRequestReviewSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response,
+                                     pullRequestReviewMapper::toDTO));
     }
 }
