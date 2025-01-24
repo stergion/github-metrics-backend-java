@@ -4,9 +4,13 @@ import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.CommitFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;
+import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.CommitRepository;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -18,6 +22,8 @@ import java.util.List;
 public class CommitService extends ContributionService<CommitDTO, Commit> {
     @Inject
     CommitMapper commitMapper;
+    @Inject
+    CommitSearchStrategy searchStrategy;
 
     @Inject
     public CommitService(CommitRepository commitRepository, CommitFetchStrategy fetchStrategy) {
@@ -46,5 +52,10 @@ public class CommitService extends ContributionService<CommitDTO, Commit> {
                                 .build();
 
         return fetchAndCreate(params);
+    }
+
+    public Uni<PagedResponse<CommitDTO>> search(CommitSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response, commitMapper::toDTO));
     }
 }
