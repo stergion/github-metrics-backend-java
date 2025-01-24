@@ -4,9 +4,13 @@ import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestRepository;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -17,6 +21,7 @@ import java.util.List;
 @ApplicationScoped
 public class PullRequestService extends ContributionService<PullRequestDTO, PullRequest> {
     PullRequestMapper pullRequestMapper;
+    PullRequestSearchStrategy searchStrategy;
 
     @Inject
     public PullRequestService(PullRequestRepository pullRequestRepository,
@@ -36,7 +41,7 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
         return pullRequestMapper.toDTO(entity);
     }
 
-    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login, 
+    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login,
                                                                   LocalDateTime from,
                                                                   LocalDateTime to) {
         var params = FetchParams.builder()
@@ -45,5 +50,11 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
                                 .build();
 
         return fetchAndCreate(params);
+    }
+
+    public Uni<PagedResponse<PullRequestDTO>> search(PullRequestSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response,
+                                     pullRequestMapper::toDTO));
     }
 }
