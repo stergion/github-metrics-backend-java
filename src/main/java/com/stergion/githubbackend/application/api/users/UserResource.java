@@ -1,5 +1,6 @@
 package com.stergion.githubbackend.application.api.users;
 
+import com.stergion.githubbackend.application.api.utils.DetailLevel;
 import com.stergion.githubbackend.application.mapper.RepositoryMapper;
 import com.stergion.githubbackend.application.mapper.UserMapper;
 import com.stergion.githubbackend.application.response.UserResponse;
@@ -83,11 +84,13 @@ public class UserResource {
                                                      @RestQuery @DefaultValue("basic") String detail) {
         Log.info("Getting user: " + login + " repositories");
 
+        var detailLevel = DetailLevel.fromString(detail);
         List<RepositoryDTO> repos = userService.getUserRepositories(login);
 
-        Function<RepositoryDTO, ?> mapper = "full".equals(detail) ?
-                repositoryMapper::toRepositoryResponse :
-                repositoryMapper::toNameWithOwnerResponse;
+        Function<RepositoryDTO, ?> mapper = switch(detailLevel) {
+            case FULL -> repositoryMapper::toRepositoryResponse;
+            case BASIC -> repositoryMapper::toNameWithOwnerResponse;
+        };
 
         return RestResponse.ok(repos.stream()
                                     .map(mapper)
