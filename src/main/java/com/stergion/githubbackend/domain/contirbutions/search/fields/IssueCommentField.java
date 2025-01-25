@@ -1,8 +1,15 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum IssueCommentField implements SearchField {
+    // categorical
+
+    // time
     PUBLISHED_AT("publishedAt"),
-    UPDATED_AT("updatedAt");
+    UPDATED_AT("updatedAt"),
+    LAST_EDITED_AT("lastEditedAt"),
+
+    // range
+    ;
 
     private final String fieldName;
 
