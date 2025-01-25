@@ -1,8 +1,8 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;

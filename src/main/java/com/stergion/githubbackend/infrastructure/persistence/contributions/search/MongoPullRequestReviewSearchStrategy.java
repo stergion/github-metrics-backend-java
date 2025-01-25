@@ -1,14 +1,12 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.mongodb.client.model.Filters;
-import com.stergion.githubbackend.common.Database;
-import com.stergion.githubbackend.common.DatabaseType;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestReviewSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestReviewField;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequestReview;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestReviewRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequestReview;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.PullRequestReviewRepository;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;

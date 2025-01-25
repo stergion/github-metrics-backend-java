@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.search;
 
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
 import io.smallrye.mutiny.Uni;
 
 public interface ContributionSearchStrategy<T extends Contribution, U extends BaseSearchCriteria> {

@@ -1,6 +1,6 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.UserWithLogin;

@@ -1,12 +1,12 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.mongodb.client.model.Filters;
 import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueCommentField;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.IssueComment;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.IssueCommentRepository;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;

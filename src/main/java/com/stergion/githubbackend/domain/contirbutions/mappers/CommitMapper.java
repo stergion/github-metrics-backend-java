@@ -3,7 +3,7 @@ package com.stergion.githubbackend.domain.contirbutions.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Commit;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

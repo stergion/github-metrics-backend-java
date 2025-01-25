@@ -7,8 +7,8 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReview
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestReviewSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequestReview;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.PullRequestReviewRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequestReview;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.PullRequestReviewRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;

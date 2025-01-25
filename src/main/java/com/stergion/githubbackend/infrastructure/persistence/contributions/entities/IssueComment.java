@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.entities;
 
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.NameWithOwner;

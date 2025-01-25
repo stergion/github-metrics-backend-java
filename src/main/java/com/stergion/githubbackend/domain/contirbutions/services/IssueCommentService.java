@@ -7,8 +7,8 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMappe
 import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.IssueComment;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.IssueCommentRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;

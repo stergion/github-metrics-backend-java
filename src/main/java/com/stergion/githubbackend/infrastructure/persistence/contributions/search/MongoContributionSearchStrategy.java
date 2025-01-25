@@ -1,12 +1,12 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Facet;
 import com.stergion.githubbackend.domain.contirbutions.search.ContributionSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Contribution;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.ContributionRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.ContributionRepository;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import org.bson.Document;

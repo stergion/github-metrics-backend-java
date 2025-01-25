@@ -1,9 +1,9 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.stergion.githubbackend.common.Database;
 import com.stergion.githubbackend.common.DatabaseType;
 import com.stergion.githubbackend.domain.contirbutions.search.*;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.*;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

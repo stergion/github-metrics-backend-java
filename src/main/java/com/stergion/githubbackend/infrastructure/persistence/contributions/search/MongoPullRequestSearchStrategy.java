@@ -1,29 +1,27 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.mongodb.client.model.Filters;
-import com.stergion.githubbackend.common.Database;
-import com.stergion.githubbackend.common.DatabaseType;
-import com.stergion.githubbackend.domain.contirbutions.search.IssueSearchStrategy;
-import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
+import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
-import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueField;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Issue;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.IssueRepository;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestField;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.PullRequestRepository;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MongoIssueSearchStrategy
-        extends MongoContributionSearchStrategy<Issue, IssueSearchCriteria>
-        implements IssueSearchStrategy {
+public class MongoPullRequestSearchStrategy
+        extends MongoContributionSearchStrategy<PullRequest, PullRequestSearchCriteria>
+        implements PullRequestSearchStrategy {
 
-    public MongoIssueSearchStrategy(IssueRepository repository) {
+    public MongoPullRequestSearchStrategy(PullRequestRepository repository) {
         super(repository);
     }
 
     @Override
-    public Bson createQuery(IssueSearchCriteria criteria) {
+    public Bson createQuery(PullRequestSearchCriteria criteria) {
         List<Bson> conditions = new ArrayList<>();
         conditions.add(
                 Filters.eq(CommonField.USER_LOGIN.fieldName(), criteria.getUserLogin()));
@@ -35,7 +33,7 @@ public class MongoIssueSearchStrategy
                 conditions.add(Filters.eq(CommonField.NAME.fieldName(), name)));
 
         criteria.getState().ifPresent(state ->
-                conditions.add(Filters.eq(IssueField.STATE.fieldName(), state)));
+                conditions.add(Filters.eq(PullRequestField.STATE.fieldName(), state)));
 
         criteria.getSince().ifPresent(since ->
                 conditions.add(Filters.gte(CommonField.CREATED_AT.fieldName(), since)));

@@ -1,6 +1,6 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.*;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

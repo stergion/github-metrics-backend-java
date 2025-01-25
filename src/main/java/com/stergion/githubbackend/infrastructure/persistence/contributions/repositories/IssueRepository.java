@@ -1,6 +1,6 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Issue;
 import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.IssueState;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;

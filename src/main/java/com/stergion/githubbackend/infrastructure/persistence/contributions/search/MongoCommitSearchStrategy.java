@@ -1,12 +1,12 @@
-package com.stergion.githubbackend.infrastructure.persistence.contirbutions.search;
+package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
 import com.mongodb.client.model.Filters;
 import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.entities.Commit;
-import com.stergion.githubbackend.infrastructure.persistence.contirbutions.repositories.CommitRepository;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.CommitRepository;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
