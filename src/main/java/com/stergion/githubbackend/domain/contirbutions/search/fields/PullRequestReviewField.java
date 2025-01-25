@@ -1,9 +1,16 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum PullRequestReviewField implements SearchField {
+    // categorical
     STATE("STATE"),
+
+    // time
     UPDATED_AT("updatedAt"),
-    PUBLISHED_AT("publishedAt");
+    PUBLISHED_AT("publishedAt"),
+    LAST_EDITED_AT("lastEditedAt"),
+
+    // range
+    ;
 
     private final String fieldName;
 

@@ -1,10 +1,16 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum IssueField implements SearchField {
+    // categorical
     STATE("STATE"),
+    CLOSER("closer"),
+
+    // time
     UPDATED_AT("updatedAt"),
     CLOSED_AT("closedAt"),
-    CLOSER("closer");
+
+    // range
+    REACTIONS("reactionsCount");
 
     private final String fieldName;
 

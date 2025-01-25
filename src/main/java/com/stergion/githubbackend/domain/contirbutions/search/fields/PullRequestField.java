@@ -1,10 +1,20 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum PullRequestField implements SearchField {
+    // categorical
     STATE("STATE"),
+
+    // time
     MERGED_AT("mergedAt"),
     UPDATED_AT("updatedAt"),
-    CLOSED_AT("closedAt");
+    CLOSED_AT("closedAt"),
+
+    // range
+    COMMITS("commitsCount"),
+    COMMENTS("comments"),
+    REACTIONS("reactionsCount"),
+    CLOSING_ISSUES("closingIssuesReferencesCount");
+
 
     private final String fieldName;
 
