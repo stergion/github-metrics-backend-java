@@ -1,24 +1,24 @@
 package com.stergion.githubbackend.domain.contirbutions.search.criteria;
 
+import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitRangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitTimeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestRangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestTimeField;
 import com.stergion.githubbackend.domain.utils.types.PullRequestState;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class PullRequestSearchCriteria extends BaseSearchCriteria {
-    private final PullRequestState state;
+public class PullRequestSearchCriteria extends BaseSearchCriteria<PullRequestRangeField, PullRequestTimeField> {
     private final String owner;
     private final String name;
-    private final LocalDateTime since;
-    private final LocalDateTime until;
+    private final PullRequestState state;
 
     private PullRequestSearchCriteria(Builder builder) {
         super(builder);
         this.state = builder.state;
         this.owner = builder.owner;
         this.name = builder.name;
-        this.since = builder.since;
-        this.until = builder.until;
         validate();
     }
 
@@ -27,9 +27,6 @@ public class PullRequestSearchCriteria extends BaseSearchCriteria {
     }
 
     private void validate() {
-        if (until != null && since != null && until.isBefore(since)) {
-            throw new IllegalArgumentException("until must be after since");
-        }
     }
 
     public Optional<PullRequestState> getState() {
@@ -44,20 +41,11 @@ public class PullRequestSearchCriteria extends BaseSearchCriteria {
         return Optional.ofNullable(name);
     }
 
-    public Optional<LocalDateTime> getSince() {
-        return Optional.ofNullable(since);
-    }
 
-    public Optional<LocalDateTime> getUntil() {
-        return Optional.ofNullable(until);
-    }
-
-    public static class Builder extends BaseBuilder<Builder> {
+    public static class Builder extends BaseBuilder<Builder, PullRequestRangeField, PullRequestTimeField> {
         private PullRequestState state;
         private String owner;
         private String name;
-        private LocalDateTime since;
-        private LocalDateTime until;
 
         public Builder state(PullRequestState state) {
             this.state = state;
@@ -71,16 +59,6 @@ public class PullRequestSearchCriteria extends BaseSearchCriteria {
 
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder since(LocalDateTime since) {
-            this.since = since;
-            return this;
-        }
-
-        public Builder until(LocalDateTime until) {
-            this.until = until;
             return this;
         }
 

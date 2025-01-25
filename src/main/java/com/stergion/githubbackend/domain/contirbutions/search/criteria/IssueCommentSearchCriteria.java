@@ -1,22 +1,19 @@
 package com.stergion.githubbackend.domain.contirbutions.search.criteria;
 
-import java.time.LocalDateTime;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueCommentRangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueCommentTimeField;
+
 import java.util.Optional;
 
-public class IssueCommentSearchCriteria extends BaseSearchCriteria {
+public class IssueCommentSearchCriteria
+        extends BaseSearchCriteria<IssueCommentRangeField, IssueCommentTimeField> {
     private final String owner;
     private final String name;
-    private final LocalDateTime since;
-    private final LocalDateTime until;
-    private final String closer;
 
     private IssueCommentSearchCriteria(Builder builder) {
         super(builder);
         this.owner = builder.owner;
         this.name = builder.name;
-        this.since = builder.since;
-        this.until = builder.until;
-        this.closer = builder.closer;
         validate();
     }
 
@@ -25,9 +22,6 @@ public class IssueCommentSearchCriteria extends BaseSearchCriteria {
     }
 
     private void validate() {
-        if (until != null && since != null && until.isBefore(since)) {
-            throw new IllegalArgumentException("until must be after since");
-        }
     }
 
     public Optional<String> getOwner() {
@@ -38,24 +32,11 @@ public class IssueCommentSearchCriteria extends BaseSearchCriteria {
         return Optional.ofNullable(name);
     }
 
-    public Optional<LocalDateTime> getSince() {
-        return Optional.ofNullable(since);
-    }
 
-    public Optional<LocalDateTime> getUntil() {
-        return Optional.ofNullable(until);
-    }
-
-    public Optional<String> getCloser() {
-        return Optional.ofNullable(closer);
-    }
-
-    public static class Builder extends BaseBuilder<Builder> {
+    public static class Builder
+            extends BaseBuilder<Builder, IssueCommentRangeField, IssueCommentTimeField> {
         private String owner;
         private String name;
-        private LocalDateTime since;
-        private LocalDateTime until;
-        private String closer;
 
         public Builder owner(String owner) {
             this.owner = owner;
@@ -64,21 +45,6 @@ public class IssueCommentSearchCriteria extends BaseSearchCriteria {
 
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder since(LocalDateTime since) {
-            this.since = since;
-            return this;
-        }
-
-        public Builder until(LocalDateTime until) {
-            this.until = until;
-            return this;
-        }
-
-        public Builder closer(String closer) {
-            this.closer = closer;
             return this;
         }
 

@@ -1,23 +1,33 @@
 package com.stergion.githubbackend.domain.contirbutions.search.criteria;
 
+import com.stergion.githubbackend.domain.contirbutions.search.RangeValue;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.SearchField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.TimeField;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-public abstract class BaseSearchCriteria {
+public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeField> {
     private final String userLogin;  // required
     private final int page;
     private final int size;
     private final SearchField sortBy;
     private final boolean ascending;
+    private final Map<R, RangeValue<Integer>> rangeFilters;
+    private final Map<T, RangeValue<LocalDateTime>> timeFilters;
 
-    protected BaseSearchCriteria(BaseBuilder<?> builder) {
-        this.userLogin = Objects.requireNonNull(builder.userLogin, "userLogin must not be null");
+    protected BaseSearchCriteria(BaseBuilder<?, R, T> builder) {
+        this.userLogin = builder.userLogin;
         this.page = builder.page;
         this.size = builder.size;
         this.sortBy = builder.sortBy;
         this.ascending = builder.ascending;
+        this.rangeFilters = Map.copyOf(builder.rangeFilters);
+        this.timeFilters = Map.copyOf(builder.timeFilters);
         validate();
     }
 
@@ -31,7 +41,6 @@ public abstract class BaseSearchCriteria {
         if (size <= 0) {
             throw new IllegalArgumentException("size must be greater than 0");
         }
-
     }
 
     public String getUserLogin() {
@@ -54,42 +63,75 @@ public abstract class BaseSearchCriteria {
         return ascending;
     }
 
+    public Map<R, RangeValue<Integer>> getRangeFilters() {
+        return rangeFilters;
+    }
 
-    public abstract static class BaseBuilder<T extends BaseBuilder<T>> {
+    public Map<T, RangeValue<LocalDateTime>> getTimeFilters() {
+        return timeFilters;
+    }
+
+
+    public abstract static class BaseBuilder<B extends BaseBuilder<B, R, T>, R extends RangeField
+            , T extends TimeField> {
         private String userLogin;
         private int page = 0;  // default values
         private int size = 20;
         private SearchField sortBy = CommonField.CREATED_AT;  // default to common field
         private boolean ascending = false;
+        private final Map<R, RangeValue<Integer>> rangeFilters = new HashMap<>();
+        private final Map<T, RangeValue<LocalDateTime>> timeFilters = new HashMap<>();
 
         @SuppressWarnings("unchecked")
-        protected T self() {
-            return (T) this;
+        protected B self() {
+            return (B) this;
         }
 
-        public T userLogin(String userLogin) {
+        public B userLogin(String userLogin) {
             this.userLogin = userLogin;
             return self();
         }
 
-        public T page(int page) {
+        public B page(int page) {
             this.page = page;
             return self();
         }
 
-        public T size(int size) {
+        public B size(int size) {
             this.size = size;
             return self();
         }
 
-        public T sortBy(SearchField sortBy) {
+        public B sortBy(SearchField sortBy) {
             this.sortBy = sortBy;
             return self();
         }
 
-        public T ascending(boolean ascending) {
+        public B ascending(boolean ascending) {
             this.ascending = ascending;
             return self();
+        }
+
+        public B addRangeFilter(R field, RangeValue<Integer> range) {
+            this.rangeFilters.put(field, range);
+            return self();
+        }
+
+        public B addTimeFilter(T field, RangeValue<LocalDateTime> range) {
+            this.timeFilters.put(field, range);
+            return self();
+        }
+
+        public B between(T field, LocalDateTime start, LocalDateTime end) {
+            return addTimeFilter(field, RangeValue.between(start, end));
+        }
+
+        public B since(T field, LocalDateTime start) {
+            return addTimeFilter(field, RangeValue.min(start));
+        }
+
+        public B until(T field, LocalDateTime end) {
+            return addTimeFilter(field, RangeValue.max(end));
         }
     }
 }

@@ -1,24 +1,26 @@
 package com.stergion.githubbackend.domain.contirbutions.search.criteria;
 
+import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitRangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitTimeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueRangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueTimeField;
 import com.stergion.githubbackend.domain.utils.types.IssueState;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class IssueSearchCriteria extends BaseSearchCriteria {
-    private final IssueState state;
+public class IssueSearchCriteria extends BaseSearchCriteria<IssueRangeField, IssueTimeField> {
     private final String owner;
     private final String name;
-    private final LocalDateTime since;
-    private final LocalDateTime until;
+    private final IssueState state;
+    private final String closer;
 
     private IssueSearchCriteria(Builder builder) {
         super(builder);
         this.state = builder.state;
         this.owner = builder.owner;
         this.name = builder.name;
-        this.since = builder.since;
-        this.until = builder.until;
+        this.closer = builder.closer;
         validate();
     }
 
@@ -27,9 +29,6 @@ public class IssueSearchCriteria extends BaseSearchCriteria {
     }
 
     private void validate() {
-        if (until != null && since != null && until.isBefore(since)) {
-            throw new IllegalArgumentException("until must be after since");
-        }
     }
 
     public Optional<IssueState> getState() {
@@ -44,20 +43,17 @@ public class IssueSearchCriteria extends BaseSearchCriteria {
         return Optional.ofNullable(name);
     }
 
-    public Optional<LocalDateTime> getSince() {
-        return Optional.ofNullable(since);
+    public Optional<String> getCloser() {
+        return Optional.ofNullable(closer);
     }
 
-    public Optional<LocalDateTime> getUntil() {
-        return Optional.ofNullable(until);
-    }
 
-    public static class Builder extends BaseBuilder<Builder> {
-        private IssueState state;
+    public static class Builder extends BaseBuilder<Builder, IssueRangeField, IssueTimeField> {
         private String owner;
         private String name;
-        private LocalDateTime since;
-        private LocalDateTime until;
+        private IssueState state;
+        private String closer;
+
 
         public Builder state(IssueState state) {
             this.state = state;
@@ -74,13 +70,8 @@ public class IssueSearchCriteria extends BaseSearchCriteria {
             return this;
         }
 
-        public Builder since(LocalDateTime since) {
-            this.since = since;
-            return this;
-        }
-
-        public Builder until(LocalDateTime until) {
-            this.until = until;
+        public Builder closer(String closer) {
+            this.closer = closer;
             return this;
         }
 
