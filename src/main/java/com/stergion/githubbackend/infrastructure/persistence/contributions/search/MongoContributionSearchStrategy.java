@@ -1,10 +1,12 @@
 package com.stergion.githubbackend.infrastructure.persistence.contributions.search;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Facet;
 import com.stergion.githubbackend.domain.contirbutions.search.ContributionSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
+import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.ContributionRepository;
 import io.quarkus.logging.Log;
@@ -113,6 +115,7 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
 
 
     public static class Result {
+        private static final ObjectMapper MAPPER = JsonObjectMapper.create();
         private List<Metadata> metadata;
         private List<Document> data;
 
@@ -132,6 +135,15 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
             this.data = data;
         }
 
+        @Override
+        public String toString() {
+            try {
+                return MAPPER.writeValueAsString(this);
+            } catch (Exception ignored) {
+                return super.toString();
+            }
+        }
+
         public static class Metadata {
             private long total;
 
@@ -141,6 +153,15 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
 
             public void setTotal(long total) {
                 this.total = total;
+            }
+
+            @Override
+            public String toString() {
+                try {
+                    return MAPPER.writeValueAsString(this);
+                }catch (Exception ignored) {
+                    return super.toString();
+                }
             }
         }
     }
