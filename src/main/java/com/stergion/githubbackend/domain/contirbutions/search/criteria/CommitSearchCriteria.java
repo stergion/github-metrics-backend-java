@@ -46,6 +46,7 @@ public class CommitSearchCriteria extends BaseSearchCriteria<CommitRangeField, C
             return this;
         }
 
+        @Override
         public CommitSearchCriteria build() {
             return new CommitSearchCriteria(this);
         }

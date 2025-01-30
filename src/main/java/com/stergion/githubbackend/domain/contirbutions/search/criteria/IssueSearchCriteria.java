@@ -75,6 +75,7 @@ public class IssueSearchCriteria extends BaseSearchCriteria<IssueRangeField, Iss
             return this;
         }
 
+        @Override
         public IssueSearchCriteria build() {
             return new IssueSearchCriteria(this);
         }

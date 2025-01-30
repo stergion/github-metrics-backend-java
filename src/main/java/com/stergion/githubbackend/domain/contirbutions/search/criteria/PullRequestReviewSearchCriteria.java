@@ -61,6 +61,7 @@ public class PullRequestReviewSearchCriteria
             return this;
         }
 
+        @Override
         public PullRequestReviewSearchCriteria build() {
             return new PullRequestReviewSearchCriteria(this);
         }

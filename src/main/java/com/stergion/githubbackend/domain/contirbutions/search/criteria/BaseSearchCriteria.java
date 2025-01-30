@@ -122,5 +122,6 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
             return self();
         }
 
+        public abstract BaseSearchCriteria<R, T> build();
     }
 }

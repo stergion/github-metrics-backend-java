@@ -48,6 +48,7 @@ public class IssueCommentSearchCriteria
             return this;
         }
 
+        @Override
         public IssueCommentSearchCriteria build() {
             return new IssueCommentSearchCriteria(this);
         }

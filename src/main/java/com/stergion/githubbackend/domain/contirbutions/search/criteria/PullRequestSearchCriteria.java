@@ -62,6 +62,7 @@ public class PullRequestSearchCriteria extends BaseSearchCriteria<PullRequestRan
             return this;
         }
 
+        @Override
         public PullRequestSearchCriteria build() {
             return new PullRequestSearchCriteria(this);
         }
