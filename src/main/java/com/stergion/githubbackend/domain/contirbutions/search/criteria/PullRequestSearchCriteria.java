@@ -10,15 +10,11 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class PullRequestSearchCriteria extends BaseSearchCriteria<PullRequestRangeField, PullRequestTimeField> {
-    private final String owner;
-    private final String name;
     private final PullRequestState state;
 
     private PullRequestSearchCriteria(Builder builder) {
         super(builder);
         this.state = builder.state;
-        this.owner = builder.owner;
-        this.name = builder.name;
         validate();
     }
 
@@ -33,32 +29,12 @@ public class PullRequestSearchCriteria extends BaseSearchCriteria<PullRequestRan
         return Optional.ofNullable(state);
     }
 
-    public Optional<String> getOwner() {
-        return Optional.ofNullable(owner);
-    }
-
-    public Optional<String> getName() {
-        return Optional.ofNullable(name);
-    }
-
 
     public static class Builder extends BaseBuilder<Builder, PullRequestRangeField, PullRequestTimeField> {
         private PullRequestState state;
-        private String owner;
-        private String name;
 
         public Builder state(PullRequestState state) {
             this.state = state;
-            return this;
-        }
-
-        public Builder owner(String owner) {
-            this.owner = owner;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
             return this;
         }
 

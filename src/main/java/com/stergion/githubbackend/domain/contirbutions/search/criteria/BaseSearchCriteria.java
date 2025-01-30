@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeField> {
     private final String userLogin;  // required
+    private final String owner;  // Nullable
+    private final String name;  // Nullable
     private final int page;
     private final int size;
     private final SearchField sortBy;
@@ -22,6 +25,8 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
 
     protected BaseSearchCriteria(BaseBuilder<?, R, T> builder) {
         this.userLogin = builder.userLogin;
+        this.owner = builder.owner;
+        this.name = builder.name;
         this.page = builder.page;
         this.size = builder.size;
         this.sortBy = builder.sortBy;
@@ -45,6 +50,14 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
 
     public String getUserLogin() {
         return userLogin;
+    }
+
+    public Optional<String> getOwner() {
+        return Optional.ofNullable(owner);
+    }
+
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
     }
 
     public int getPage() {
@@ -75,9 +88,11 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
     public abstract static class BaseBuilder<B extends BaseBuilder<B, R, T>, R extends RangeField
             , T extends TimeField> {
         private String userLogin;
+        private String owner;
+        private String name;
         private int page = 0;  // default values
         private int size = 20;
-        private SearchField sortBy = CommonField.CREATED_AT;  // default to common field
+        private SearchField sortBy = CommonField.OWNER;  // default to common field
         private boolean ascending = false;
         private final Map<R, RangeValue<Integer>> rangeFilters = new HashMap<>();
         private final Map<T, RangeValue<LocalDateTime>> timeFilters = new HashMap<>();
@@ -89,6 +104,16 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
 
         public B userLogin(String userLogin) {
             this.userLogin = userLogin;
+            return self();
+        }
+
+        public B owner(String owner) {
+            this.owner = owner;
+            return self();
+        }
+
+        public B name(String name) {
+            this.name = name;
             return self();
         }
 

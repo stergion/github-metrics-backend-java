@@ -7,13 +7,9 @@ import java.util.Optional;
 
 public class IssueCommentSearchCriteria
         extends BaseSearchCriteria<IssueCommentRangeField, IssueCommentTimeField> {
-    private final String owner;
-    private final String name;
 
     private IssueCommentSearchCriteria(Builder builder) {
         super(builder);
-        this.owner = builder.owner;
-        this.name = builder.name;
         validate();
     }
 
@@ -24,30 +20,8 @@ public class IssueCommentSearchCriteria
     private void validate() {
     }
 
-    public Optional<String> getOwner() {
-        return Optional.ofNullable(owner);
-    }
-
-    public Optional<String> getName() {
-        return Optional.ofNullable(name);
-    }
-
-
     public static class Builder
             extends BaseBuilder<Builder, IssueCommentRangeField, IssueCommentTimeField> {
-        private String owner;
-        private String name;
-
-        public Builder owner(String owner) {
-            this.owner = owner;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
         @Override
         public IssueCommentSearchCriteria build() {
             return new IssueCommentSearchCriteria(this);
