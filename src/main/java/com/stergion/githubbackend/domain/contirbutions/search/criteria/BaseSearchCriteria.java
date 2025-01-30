@@ -122,16 +122,5 @@ public abstract class BaseSearchCriteria<R extends RangeField, T extends TimeFie
             return self();
         }
 
-        public B between(T field, LocalDateTime start, LocalDateTime end) {
-            return addTimeFilter(field, RangeValue.between(start, end));
-        }
-
-        public B since(T field, LocalDateTime start) {
-            return addTimeFilter(field, RangeValue.min(start));
-        }
-
-        public B until(T field, LocalDateTime end) {
-            return addTimeFilter(field, RangeValue.max(end));
-        }
     }
 }
