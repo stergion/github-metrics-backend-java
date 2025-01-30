@@ -37,4 +37,9 @@ public class RangeValue<T extends Comparable<? super T>> {
     public static <T extends Comparable<? super T>> RangeValue<T> max(T max) {
         return new RangeValue<>(null, max);
     }
+
+    @Override
+    public String toString() {
+        return "{min: %s, max: %s}".formatted(min, max);
+    }
 }
