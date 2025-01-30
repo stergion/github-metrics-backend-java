@@ -3,8 +3,6 @@ package com.stergion.githubbackend.domain.contirbutions.search.fields;
 import java.time.LocalDateTime;
 
 public enum CommitTimeField implements TimeField {
-    // Common Time Fields
-    CREATED_AT(CommonField.CREATED_AT),
 
     // Commit Specific Time Fields
     COMMITTED_AT(CommitField.COMMITED_DATE),
