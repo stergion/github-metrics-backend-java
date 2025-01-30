@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public abstract class MongoContributionSearchStrategy<T extends Contribution,
-        U extends BaseSearchCriteria>
+        U extends BaseSearchCriteria<? extends RangeField, ? extends TimeField>>
         implements ContributionSearchStrategy<T, U> {
 
     protected final ContributionRepository<T> repository;
@@ -42,7 +42,7 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
     }
 
     private static <T extends Contribution> PagedResponse<T> createEmptyResponse(
-            BaseSearchCriteria criteria) {
+            BaseSearchCriteria<? extends RangeField, ? extends TimeField> criteria) {
         return PagedResponse.<T>builder()
                             .content(List.of())
                             .pageNumber(criteria.getPage())
@@ -89,7 +89,7 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
                          .atMost(3);
     }
 
-    public Document createSort(BaseSearchCriteria criteria) {
+    public Document createSort(BaseSearchCriteria<?, ?> criteria) {
         return new Document(criteria.getSortBy().fieldName(),
                 criteria.isAscending() ? 1 : -1);
     }

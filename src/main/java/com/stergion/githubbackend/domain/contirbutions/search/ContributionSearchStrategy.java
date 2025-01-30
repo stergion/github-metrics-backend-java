@@ -4,7 +4,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearc
 import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
 import io.smallrye.mutiny.Uni;
 
-public interface ContributionSearchStrategy<T extends Contribution, U extends BaseSearchCriteria> {
+public interface ContributionSearchStrategy<T extends Contribution, U extends BaseSearchCriteria<?, ?>> {
     /**
      * Performs a search based on the provided criteria
      *
