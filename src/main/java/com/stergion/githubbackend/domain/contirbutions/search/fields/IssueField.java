@@ -1,6 +1,13 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum IssueField implements SearchField {
+    // COMMON FIELDS
+    USER_LOGIN(CommonField.USER_LOGIN.fieldName()),
+    OWNER(CommonField.OWNER.fieldName()),
+    NAME(CommonField.NAME.fieldName()),
+
+
+    // ISSUE SPECIFIC FIELDS
     // categorical
     STATE("STATE"),
     CLOSER("closer"),

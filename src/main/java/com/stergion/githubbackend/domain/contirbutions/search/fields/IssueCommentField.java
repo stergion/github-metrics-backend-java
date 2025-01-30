@@ -1,6 +1,13 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum IssueCommentField implements SearchField {
+    // COMMON FIELDS
+    USER_LOGIN(CommonField.USER_LOGIN.fieldName()),
+    OWNER(CommonField.OWNER.fieldName()),
+    NAME(CommonField.NAME.fieldName()),
+
+    // ISSUE COMMENT SPECIFIC FIELDS
+
     // categorical
 
     // time
