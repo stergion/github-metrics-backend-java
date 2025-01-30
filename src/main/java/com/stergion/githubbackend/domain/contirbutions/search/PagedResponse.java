@@ -1,5 +1,10 @@
 package com.stergion.githubbackend.domain.contirbutions.search;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -10,6 +15,8 @@ public class PagedResponse<T> {
     private final int pageSize;
     private final long totalElements;
     private final int totalPages;
+
+    private static final ObjectMapper OBJECT_MAPPER = JsonObjectMapper.create();
 
     private PagedResponse(Builder<T> builder) {
         this.content = Objects.requireNonNull(builder.content);
@@ -53,10 +60,12 @@ public class PagedResponse<T> {
         return totalPages;
     }
 
+    @JsonIgnore
     public boolean isFirst() {
         return pageNumber == 0;
     }
 
+    @JsonIgnore
     public boolean isLast() {
         return pageNumber == totalPages - 1;
     }
@@ -67,6 +76,15 @@ public class PagedResponse<T> {
 
     public boolean hasPrevious() {
         return pageNumber > 0;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "{content: %s}".formatted(content);
+        }
     }
 
     public static class Builder<T> {
