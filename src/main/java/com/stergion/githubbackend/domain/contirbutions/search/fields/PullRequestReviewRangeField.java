@@ -3,20 +3,16 @@ package com.stergion.githubbackend.domain.contirbutions.search.fields;
 public enum PullRequestReviewRangeField implements RangeField {
     ;
 
-    private final SearchField field;
+    private final String field;
 
-    PullRequestReviewRangeField(SearchField field) {
+    PullRequestReviewRangeField(String field) {
         this.field = field;
     }
 
-    @Override
-    public SearchField getField() {
-        return field;
-    }
 
     @Override
-    public String getFieldName() {
-        return field.fieldName();
+    public String getField() {
+        return field;
     }
 
     @Override

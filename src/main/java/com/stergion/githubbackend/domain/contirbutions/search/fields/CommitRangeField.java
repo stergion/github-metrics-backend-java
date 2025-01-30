@@ -1,24 +1,19 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum CommitRangeField implements RangeField {
-    ADDITIONS(CommitField.ADDITIONS),
-    DELETIONS(CommitField.DELETIONS),
-    FILES_COUNT(CommitField.FILES_COUNT);
+    ADDITIONS(CommitField.ADDITIONS.fieldName()),
+    DELETIONS(CommitField.DELETIONS.fieldName()),
+    FILES_COUNT(CommitField.FILES_COUNT.fieldName());
 
-    private final SearchField field;
+    private final String field;
 
-    CommitRangeField(SearchField field) {
+    CommitRangeField(String field) {
         this.field = field;
     }
 
     @Override
-    public SearchField getField() {
+    public String getField() {
         return field;
-    }
-
-    @Override
-    public String getFieldName() {
-        return field.fieldName();
     }
 
     @Override

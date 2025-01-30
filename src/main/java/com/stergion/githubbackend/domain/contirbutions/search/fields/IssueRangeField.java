@@ -1,22 +1,18 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum IssueRangeField implements RangeField {
-    REACTIONS(IssueField.REACTIONS);
+    REACTIONS(IssueField.REACTIONS.fieldName());
 
-    private final SearchField field;
+    private final String field;
 
-    IssueRangeField(SearchField field) {
+    IssueRangeField(String field) {
         this.field = field;
     }
 
-    @Override
-    public SearchField getField() {
-        return field;
-    }
 
     @Override
-    public String getFieldName() {
-        return field.fieldName();
+    public String getField() {
+        return field;
     }
 
     @Override

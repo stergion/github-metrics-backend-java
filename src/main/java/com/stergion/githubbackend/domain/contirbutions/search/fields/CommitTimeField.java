@@ -3,25 +3,18 @@ package com.stergion.githubbackend.domain.contirbutions.search.fields;
 import java.time.LocalDateTime;
 
 public enum CommitTimeField implements TimeField {
+    COMMITED_DATE(CommitField.COMMITED_DATE.fieldName()),
+    PUSHED_DATE(CommitField.PUSHED_DATE.fieldName());
 
-    // Commit Specific Time Fields
-    COMMITTED_AT(CommitField.COMMITED_DATE),
-    PUSHED_AT(CommitField.PUSHED_DATE);
+    private final String field;
 
-    private final SearchField field;
-
-    CommitTimeField(SearchField field) {
+    CommitTimeField(String field) {
         this.field = field;
     }
 
     @Override
-    public SearchField getField() {
+    public String getField() {
         return field;
-    }
-
-    @Override
-    public String getFieldName() {
-        return field.fieldName();
     }
 
     @Override

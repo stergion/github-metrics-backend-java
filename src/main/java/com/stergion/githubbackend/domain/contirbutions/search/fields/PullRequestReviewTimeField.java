@@ -3,28 +3,21 @@ package com.stergion.githubbackend.domain.contirbutions.search.fields;
 import java.time.LocalDateTime;
 
 public enum PullRequestReviewTimeField implements TimeField {
-    // Common Time Fields
-    CREATED_AT(CommonField.CREATED_AT),
+    CREATED_AT(PullRequestReviewField.CREATED_AT.fieldName()),
+    UPDATED_AT(PullRequestReviewField.UPDATED_AT.fieldName()),
+    PUBLISHED_AT(PullRequestReviewField.PUBLISHED_AT.fieldName()),
+    LAST_EDITED_AT(PullRequestReviewField.LAST_EDITED_AT.fieldName());
 
-    // Review Specific Time Fields
-    UPDATED_AT(PullRequestReviewField.UPDATED_AT),
-    PUBLISHED_AT(PullRequestReviewField.PUBLISHED_AT),
-    LAST_EDITED_AT(PullRequestReviewField.LAST_EDITED_AT);
+    private final String field;
 
-    private final SearchField field;
-
-    PullRequestReviewTimeField(SearchField field) {
+    PullRequestReviewTimeField(String field) {
         this.field = field;
     }
 
-    @Override
-    public SearchField getField() {
-        return field;
-    }
 
     @Override
-    public String getFieldName() {
-        return field.fieldName();
+    public String getField() {
+        return field;
     }
 
     @Override

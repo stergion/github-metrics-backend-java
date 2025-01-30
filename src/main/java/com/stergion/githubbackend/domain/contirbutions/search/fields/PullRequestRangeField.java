@@ -1,25 +1,21 @@
 package com.stergion.githubbackend.domain.contirbutions.search.fields;
 
 public enum PullRequestRangeField implements RangeField {
-    COMMITS(PullRequestField.COMMITS),
-    COMMENTS(PullRequestField.COMMENTS),
-    REACTIONS(PullRequestField.REACTIONS),
-    CLOSING_ISSUES(PullRequestField.CLOSING_ISSUES);
+    COMMITS(PullRequestField.COMMITS.fieldName()),
+    COMMENTS(PullRequestField.COMMENTS.fieldName()),
+    REACTIONS(PullRequestField.REACTIONS.fieldName()),
+    CLOSING_ISSUES(PullRequestField.CLOSING_ISSUES.fieldName());
 
-    private final SearchField field;
+    private final String field;
 
-    PullRequestRangeField(SearchField field) {
+    PullRequestRangeField(String field) {
         this.field = field;
     }
 
-    @Override
-    public SearchField getField() {
-        return field;
-    }
 
     @Override
-    public String getFieldName() {
-        return field.fieldName();
+    public String getField() {
+        return field;
     }
 
     @Override
