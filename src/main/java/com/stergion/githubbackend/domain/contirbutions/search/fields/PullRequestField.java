@@ -5,6 +5,7 @@ public enum PullRequestField implements SearchField {
     STATE("STATE"),
 
     // time
+    CREATED_AT("createdAt"),
     MERGED_AT("mergedAt"),
     UPDATED_AT("updatedAt"),
     CLOSED_AT("closedAt"),

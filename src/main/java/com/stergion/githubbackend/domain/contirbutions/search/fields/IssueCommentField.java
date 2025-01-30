@@ -4,6 +4,7 @@ public enum IssueCommentField implements SearchField {
     // categorical
 
     // time
+    CREATED_AT("createdAt"),
     PUBLISHED_AT("publishedAt"),
     UPDATED_AT("updatedAt"),
     LAST_EDITED_AT("lastEditedAt"),

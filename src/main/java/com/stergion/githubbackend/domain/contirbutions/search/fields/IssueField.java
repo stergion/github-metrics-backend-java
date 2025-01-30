@@ -6,6 +6,7 @@ public enum IssueField implements SearchField {
     CLOSER("closer"),
 
     // time
+    CREATED_AT("createdAt"),
     UPDATED_AT("updatedAt"),
     CLOSED_AT("closedAt"),
 

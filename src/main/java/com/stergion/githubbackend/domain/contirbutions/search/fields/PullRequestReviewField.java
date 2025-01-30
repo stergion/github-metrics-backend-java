@@ -5,6 +5,7 @@ public enum PullRequestReviewField implements SearchField {
     STATE("STATE"),
 
     // time
+    CREATED_AT("createdAt"),
     UPDATED_AT("updatedAt"),
     PUBLISHED_AT("publishedAt"),
     LAST_EDITED_AT("lastEditedAt"),
