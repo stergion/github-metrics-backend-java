@@ -3,9 +3,15 @@ package com.stergion.githubbackend.infrastructure.persistence.contributions.sear
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Facet;
+import com.mongodb.client.model.Filters;
 import com.stergion.githubbackend.domain.contirbutions.search.ContributionSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.RangeValue;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeableField;
+import com.stergion.githubbackend.domain.contirbutions.search.fields.TimeField;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Contribution;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.ContributionRepository;
@@ -17,7 +23,10 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public abstract class MongoContributionSearchStrategy<T extends Contribution,
         U extends BaseSearchCriteria>
@@ -43,9 +52,32 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
                             .build();
     }
 
+    private static <F extends RangeableField<?>> BiConsumer<F, RangeValue<?>> getRangeValueBiConsumer(
+            List<Bson> conditions) {
+        Objects.requireNonNull(conditions, "conditions list must not be null");
+
+        return (field, range) -> {
+            Objects.requireNonNull(field, "field must not be null");
+            Objects.requireNonNull(range, "range must not be null");
+
+            List<Bson> rangeConditions = new ArrayList<>();
+
+            range.getMin().ifPresent(min ->
+                    rangeConditions.add(Filters.gte(field.getField(), min)));
+
+            range.getMax().ifPresent(max ->
+                    rangeConditions.add(Filters.lte(field.getField(), max)));
+
+            if (!rangeConditions.isEmpty()) {
+                conditions.add(Filters.and(rangeConditions));
+            }
+        };
+    }
+
     @Override
     public Uni<PagedResponse<T>> search(U criteria) {
         List<Bson> pipeline = createAggregationPipeline(criteria);
+
         return repository.mongoCollection()
                          .aggregate(pipeline, Result.class)
                          .collect()
@@ -77,6 +109,30 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
     }
 
     abstract Bson createQuery(U criteria);
+
+    protected List<Bson> createBaseConditions(U criteria) {
+        List<Bson> conditions = new ArrayList<>();
+        conditions.add(Filters.eq(CommonField.USER_LOGIN.fieldName(), criteria.getUserLogin()));
+        conditions.addAll(createTimeFilters(criteria));
+        conditions.addAll(createRangeFilters(criteria));
+        return conditions;
+    }
+
+    protected List<Bson> createTimeFilters(U criteria) {
+        List<Bson> conditions = new ArrayList<>();
+
+        criteria.getTimeFilters().forEach(getRangeValueBiConsumer(conditions));
+
+        return conditions;
+    }
+
+    protected List<Bson> createRangeFilters(U criteria) {
+        List<Bson> conditions = new ArrayList<>();
+
+        criteria.getRangeFilters().forEach(getRangeValueBiConsumer(conditions));
+
+        return conditions;
+    }
 
     private PagedResponse<T> createPagedResponse(List<Result> results, U criteria) {
         if (results.isEmpty()) {

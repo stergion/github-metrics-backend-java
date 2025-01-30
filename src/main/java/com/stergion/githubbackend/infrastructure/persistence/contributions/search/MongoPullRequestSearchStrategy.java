@@ -7,6 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField
 import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestField;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.PullRequestRepository;
+import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -22,9 +23,7 @@ public class MongoPullRequestSearchStrategy
 
     @Override
     public Bson createQuery(PullRequestSearchCriteria criteria) {
-        List<Bson> conditions = new ArrayList<>();
-        conditions.add(
-                Filters.eq(CommonField.USER_LOGIN.fieldName(), criteria.getUserLogin()));
+        List<Bson> conditions = new ArrayList<>(createBaseConditions(criteria));
 
         criteria.getOwner().ifPresent(owner ->
                 conditions.add(Filters.eq(CommonField.OWNER.fieldName(), owner)));
@@ -35,12 +34,8 @@ public class MongoPullRequestSearchStrategy
         criteria.getState().ifPresent(state ->
                 conditions.add(Filters.eq(PullRequestField.STATE.fieldName(), state)));
 
-        criteria.getSince().ifPresent(since ->
-                conditions.add(Filters.gte(CommonField.CREATED_AT.fieldName(), since)));
-
-        criteria.getUntil().ifPresent(until ->
-                conditions.add(Filters.lte(CommonField.CREATED_AT.fieldName(), until)));
-
-        return Filters.and(conditions);
+        var query = Filters.and(conditions);
+        Log.debug("Mongo query: " + query.toBsonDocument().toJson());
+        return query;
     }
 }

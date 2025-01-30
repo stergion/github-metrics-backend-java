@@ -3,10 +3,10 @@ package com.stergion.githubbackend.infrastructure.persistence.contributions.sear
 import com.mongodb.client.model.Filters;
 import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
-import com.stergion.githubbackend.domain.contirbutions.search.fields.CommitField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.contributions.repositories.CommitRepository;
+import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
@@ -22,9 +22,7 @@ public class MongoCommitSearchStrategy
 
     @Override
     public Bson createQuery(CommitSearchCriteria criteria) {
-        List<Bson> conditions = new ArrayList<>();
-        conditions.add(
-                Filters.eq(CommonField.USER_LOGIN.fieldName(), criteria.getUserLogin()));
+        List<Bson> conditions = new ArrayList<>(createBaseConditions(criteria));
 
         criteria.getOwner().ifPresent(owner ->
                 conditions.add(Filters.eq(CommonField.OWNER.fieldName(), owner)));
@@ -32,12 +30,8 @@ public class MongoCommitSearchStrategy
         criteria.getName().ifPresent(name ->
                 conditions.add(Filters.eq(CommonField.NAME.fieldName(), name)));
 
-        criteria.getSince().ifPresent(since ->
-                conditions.add(Filters.gte(CommitField.COMMITED_DATE.fieldName(), since)));
-
-        criteria.getUntil().ifPresent(until ->
-                conditions.add(Filters.lte(CommitField.COMMITED_DATE.fieldName(), until)));
-
-        return Filters.and(conditions);
+        var query = Filters.and(conditions);
+        Log.debug("Mongo query: " + query.toBsonDocument().toJson());
+        return query;
     }
 }
