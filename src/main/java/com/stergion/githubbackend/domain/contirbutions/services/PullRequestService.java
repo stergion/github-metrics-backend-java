@@ -20,7 +20,9 @@ import java.util.List;
 
 @ApplicationScoped
 public class PullRequestService extends ContributionService<PullRequestDTO, PullRequest> {
+    @Inject
     PullRequestMapper pullRequestMapper;
+    @Inject
     PullRequestSearchStrategy searchStrategy;
 
     @Inject
