@@ -4,16 +4,19 @@ import com.stergion.githubbackend.common.Database;
 import com.stergion.githubbackend.common.DatabaseType;
 import com.stergion.githubbackend.domain.contirbutions.search.*;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+@ApplicationScoped
 public class SearchStrategyProducer {
     @ConfigProperty(name = "database.type", defaultValue = "mongo")
     String databaseType;
 
     @Inject
+    @Any
     Instance<SearchStrategyFactory> factories;
 
     private SearchStrategyFactory getFactory() {
