@@ -1,9 +1,8 @@
 package com.stergion.githubbackend.domain.repositories;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.infrastructure.persistence.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.Repository;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(config = MapStructConfig.class)
 public interface RepositoryMapper {

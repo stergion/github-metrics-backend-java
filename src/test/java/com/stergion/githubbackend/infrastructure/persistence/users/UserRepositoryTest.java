@@ -1,6 +1,8 @@
 package com.stergion.githubbackend.infrastructure.persistence.users;
 
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;

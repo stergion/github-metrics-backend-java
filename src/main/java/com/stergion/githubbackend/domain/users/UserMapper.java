@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.users;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.infrastructure.persistence.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

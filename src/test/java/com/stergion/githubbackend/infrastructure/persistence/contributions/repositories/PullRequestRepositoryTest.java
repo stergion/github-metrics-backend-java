@@ -1,7 +1,8 @@
 package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.contributions.entities.PullRequest;
-import com.stergion.githubbackend.infrastructure.persistence.utilityTypes.*;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
