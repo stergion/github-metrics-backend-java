@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "PullRequestReviews")
 public class PullRequestReview extends Contribution {
 
     @NotNull

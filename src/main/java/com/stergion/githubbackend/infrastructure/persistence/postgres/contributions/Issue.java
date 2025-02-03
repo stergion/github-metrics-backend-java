@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "Issues")
 public class Issue extends Contribution {
 
     @NotNull

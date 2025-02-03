@@ -2,11 +2,13 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedIssue;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
+@Table(name = "IssueComments")
 public class IssueComment extends Contribution {
     @NotNull
     @PastOrPresent
