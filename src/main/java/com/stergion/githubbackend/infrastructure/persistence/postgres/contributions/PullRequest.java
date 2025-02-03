@@ -13,6 +13,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.List;
 
+@Entity
 @Table(name = "PullRequests")
 public class PullRequest extends Contribution {
 
