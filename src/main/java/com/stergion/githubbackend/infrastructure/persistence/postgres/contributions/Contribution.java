@@ -9,6 +9,14 @@ import java.net.URI;
 import java.util.UUID;
 
 @Entity
+@Table(
+        name = "Contributions",
+        indexes = {
+                @Index(name = "idx_contribution_user", columnList = "userId"),
+                @Index(name = "idx_contribution_repository", columnList = "repositoryId"),
+                @Index(name = "idx_contribution_user_repo", columnList = "userId,repositoryId")
+        }
+)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Contribution {
 
