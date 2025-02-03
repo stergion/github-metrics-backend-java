@@ -7,7 +7,6 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.type
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.Topic;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.NaturalId;
 
 import java.net.URI;
@@ -41,7 +40,7 @@ public class Repository {
     @Column(unique = true)
     private String githubId;
 
-    @NotNull
+    @NotBlank
     @Column(unique = true)
     private URI githubUrl;
 
