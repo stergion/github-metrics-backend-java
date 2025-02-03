@@ -3,18 +3,13 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
+import java.net.URI;
 import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(indexes = {
-        @Index(columnList = "id"),
-        @Index(columnList = "user"),
-        @Index(columnList = "repository"),
-        @Index(columnList = "user, repository"),
-        @Index(columnList = "githubId"),
-})
 public abstract class Contribution {
 
     @Id
@@ -27,8 +22,14 @@ public abstract class Contribution {
     @ManyToOne
     private Repository repository;
 
+    @NotBlank
+    @Column(unique = true)
     private String githubId;
-    private String githubUrl;
+
+
+    @NotBlank
+    @Column(unique = true)
+    private URI githubUrl;
 
     /*
      *********************
@@ -69,11 +70,11 @@ public abstract class Contribution {
         this.githubId = githubId;
     }
 
-    public String getGithubUrl() {
+    public URI getGithubUrl() {
         return githubUrl;
     }
 
-    public void setGithubUrl(String githubUrl) {
+    public void setGithubUrl(URI githubUrl) {
         this.githubUrl = githubUrl;
     }
 }
