@@ -7,10 +7,6 @@ public class Language {
 
     @Override
     public String toString() {
-        return "{" +
-                "name: '" + name + '\'' +
-                ", size: " + size +
-                ", percentage: " + percentage +
-                "}";
+        return "{name: %s, size: %s, percentage: %s}".formatted(name, size, percentage);
     }
 }
