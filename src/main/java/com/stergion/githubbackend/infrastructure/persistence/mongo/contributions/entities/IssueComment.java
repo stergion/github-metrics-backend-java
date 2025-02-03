@@ -3,6 +3,7 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueType;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -107,11 +108,6 @@ public non-sealed class IssueComment implements Contribution {
                     ", github=" + github +
                     "}";
         }
-    }
-
-    public enum IssueType {
-        ISSUE,
-        PULL_REQUEST,
     }
 
     @Override

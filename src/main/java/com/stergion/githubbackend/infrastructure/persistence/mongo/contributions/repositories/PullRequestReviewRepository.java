@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReview;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.PullRequestReviewState;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestReviewState;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.types.ObjectId;

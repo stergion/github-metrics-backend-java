@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes;
+package com.stergion.githubbackend.infrastructure.persistence.utils.types;
 
 public enum PullRequestReviewState {
     PENDING,
