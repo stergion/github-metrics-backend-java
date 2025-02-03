@@ -1,10 +1,12 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes;
 
+import java.time.LocalDateTime;
+
 public class CommitComment {
     public String author;
-    public String publishedAt;
+    public LocalDateTime publishedAt;
     public int position;
-    public String reactionsCount;
+    public int reactionsCount;
     public String body;
 
     @Override
