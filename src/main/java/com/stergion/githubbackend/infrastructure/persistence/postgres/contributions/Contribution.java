@@ -17,9 +17,11 @@ public abstract class Contribution {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "repositoryId", nullable = false)
     private Repository repository;
 
     @NotBlank
