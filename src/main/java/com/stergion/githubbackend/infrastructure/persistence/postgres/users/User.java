@@ -17,10 +17,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Users", indexes = {
-        @Index(columnList = "id"),
-        @Index(columnList = "login")
-})
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
