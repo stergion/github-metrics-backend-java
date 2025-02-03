@@ -17,11 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "Repositories",
-        indexes = {
-                @Index(columnList = "id"),
-                @Index(columnList = "owner"),
-                @Index(columnList = "owner, name")
-        }
+        indexes = {@Index(name = "idx_repository_owner", columnList = "owner")}
 )
 public class Repository {
     @Id
