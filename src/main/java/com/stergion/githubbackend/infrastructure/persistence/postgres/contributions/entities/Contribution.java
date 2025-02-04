@@ -4,6 +4,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.repositori
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.net.URI;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public abstract class Contribution {
     private String githubId;
 
 
-    @NotBlank
+    @NotNull
     @Column(unique = true)
     private URI githubUrl;
 

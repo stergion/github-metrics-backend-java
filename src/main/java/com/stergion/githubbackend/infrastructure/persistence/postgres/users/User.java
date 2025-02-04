@@ -6,6 +6,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.repositori
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import org.hibernate.annotations.NaturalId;
 
@@ -34,7 +35,7 @@ public class User {
     @Column(unique = true)
     private String githubId;
 
-    @NotBlank
+    @NotNull
     @Column(unique = true)
     private URI githubUrl;
 
