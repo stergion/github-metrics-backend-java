@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions;
+package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedIssue;

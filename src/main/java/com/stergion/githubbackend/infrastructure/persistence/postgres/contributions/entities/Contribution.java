@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions;
+package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
