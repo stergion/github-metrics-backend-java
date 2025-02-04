@@ -2,6 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedIssue;
+import io.quarkus.logging.Log;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class IssueComment extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
+            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }

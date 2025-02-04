@@ -5,6 +5,7 @@ import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
+import io.quarkus.logging.Log;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -48,6 +49,7 @@ public class Commit extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
+            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }

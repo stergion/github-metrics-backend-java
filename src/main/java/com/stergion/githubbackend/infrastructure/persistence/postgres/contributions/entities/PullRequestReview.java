@@ -5,6 +5,7 @@ import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.domain.utils.types.PullRequestReviewState;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.PullRequestRef;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.PullRequestReviewComment;
+import io.quarkus.logging.Log;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -47,6 +48,7 @@ public class PullRequestReview extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
+            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
