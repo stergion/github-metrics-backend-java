@@ -1,7 +1,10 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres;
 
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -53,5 +56,69 @@ public final class TestEntityCreators {
             users.add(createTestUser("testUser" + i));
         }
         return users;
+    }
+
+    public static Commit createCommit(User user, Repository repository) {
+        Commit commit = new Commit();
+        commit.setUser(user);
+        commit.setRepository(repository);
+        commit.setGithubId("test-commit-id");
+        commit.setGithubUrl(URI.create("https://github.com/test/commit"));
+        commit.setCommittedDate(LocalDateTime.now());
+        commit.setPushedDate(LocalDateTime.now());
+        commit.setAdditions(10);
+        commit.setDeletions(5);
+        return commit;
+    }
+
+    public static Commit createCommit(User user, Repository repository, String githubId) {
+        Commit commit = createCommit(user, repository);
+        commit.setGithubId(githubId);
+        return commit;
+    }
+
+    public static List<Commit> createCommits(User user, Repository repository, int count) {
+        List<Commit> commits = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            commits.add(createCommit(user, repository, "commit-" + i));
+        }
+        return commits;
+    }
+
+    public static CommitComment createComment() {
+        return new CommitComment(
+                "testAuthor",
+                LocalDateTime.now(),
+                1,
+                5,
+                "Test comment body"
+        );
+    }
+
+    public static List<CommitComment> createComments(int count) {
+        List<CommitComment> comments = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            comments.add(createComment());
+        }
+        return comments;
+    }
+
+    public static AssociatedPullRequest createAssociatedPullRequest() {
+        return new AssociatedPullRequest(
+                "test-pr-id",
+                URI.create("https://github.com/test/pr")
+        );
+    }
+
+    public static List<AssociatedPullRequest> createAssociatedPullRequests(int count) {
+        List<AssociatedPullRequest> prs = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            AssociatedPullRequest pr = new AssociatedPullRequest(
+                    "test-pr-" + i,
+                    URI.create("https://github.com/test/pr/" + i)
+            );
+            prs.add(pr);
+        }
+        return prs;
     }
 }
