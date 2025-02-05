@@ -1,6 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;

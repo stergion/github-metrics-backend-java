@@ -2,6 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;

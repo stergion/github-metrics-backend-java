@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.NameWithOwner;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.Document;
