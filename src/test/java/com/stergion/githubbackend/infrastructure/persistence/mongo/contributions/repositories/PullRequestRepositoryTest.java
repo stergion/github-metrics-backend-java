@@ -2,6 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

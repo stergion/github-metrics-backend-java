@@ -1,6 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
