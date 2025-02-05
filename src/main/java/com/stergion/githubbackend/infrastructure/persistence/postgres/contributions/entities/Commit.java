@@ -6,11 +6,14 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.type
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
 import io.quarkus.logging.Log;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,25 +23,22 @@ public class Commit extends Contribution {
 
     @NotNull
     @PastOrPresent
-    private LocalDate committedDate;
+    private LocalDateTime committedDate;
 
-    private LocalDate pushedDate;
+    private LocalDateTime pushedDate;
 
     private int additions;
     private int deletions;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "commitId")
     private List<CommitComment> comments = new ArrayList<>();
     private int commentsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "commitId")
     private List<AssociatedPullRequest> associatedPullRequest = new ArrayList<>();
     private int associatedPullRequestsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "commitId")
     private List<File> files = new ArrayList<>();
     private int filesCount;
 
@@ -49,7 +49,7 @@ public class Commit extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
@@ -61,19 +61,19 @@ public class Commit extends Contribution {
      *********************
      */
 
-    public LocalDate getCommittedDate() {
+    public LocalDateTime getCommittedDate() {
         return committedDate;
     }
 
-    public void setCommittedDate(LocalDate committedDate) {
+    public void setCommittedDate(LocalDateTime committedDate) {
         this.committedDate = committedDate;
     }
 
-    public LocalDate getPushedDate() {
+    public LocalDateTime getPushedDate() {
         return pushedDate;
     }
 
-    public void setPushedDate(LocalDate pushedDate) {
+    public void setPushedDate(LocalDateTime pushedDate) {
         this.pushedDate = pushedDate;
     }
 

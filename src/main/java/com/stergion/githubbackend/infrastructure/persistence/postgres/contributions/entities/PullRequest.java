@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,11 +20,11 @@ public class PullRequest extends Contribution {
 
     @NotNull
     @PastOrPresent
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate mergedAt;
-    private LocalDate closedAt;
-    private LocalDate updatedAt;
+    private LocalDateTime mergedAt;
+    private LocalDateTime closedAt;
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     private PullRequestState state;
@@ -57,7 +57,7 @@ public class PullRequest extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
@@ -69,35 +69,35 @@ public class PullRequest extends Contribution {
      *********************
      */
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getMergedAt() {
+    public LocalDateTime getMergedAt() {
         return mergedAt;
     }
 
-    public void setMergedAt(LocalDate mergedAt) {
+    public void setMergedAt(LocalDateTime mergedAt) {
         this.mergedAt = mergedAt;
     }
 
-    public LocalDate getClosedAt() {
+    public LocalDateTime getClosedAt() {
         return closedAt;
     }
 
-    public void setClosedAt(LocalDate closedAt) {
+    public void setClosedAt(LocalDateTime closedAt) {
         this.closedAt = closedAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

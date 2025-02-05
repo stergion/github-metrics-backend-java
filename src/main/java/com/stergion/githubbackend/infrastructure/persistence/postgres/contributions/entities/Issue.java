@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +19,12 @@ public class Issue extends Contribution {
 
     @NotNull
     @PastOrPresent
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @PastOrPresent
-    private LocalDate closedAt;
+    private LocalDateTime closedAt;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     private IssueState state;
@@ -45,7 +45,7 @@ public class Issue extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
@@ -57,27 +57,27 @@ public class Issue extends Contribution {
      *********************
      */
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getClosedAt() {
+    public LocalDateTime getClosedAt() {
         return closedAt;
     }
 
-    public void setClosedAt(LocalDate closedAt) {
+    public void setClosedAt(LocalDateTime closedAt) {
         this.closedAt = closedAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

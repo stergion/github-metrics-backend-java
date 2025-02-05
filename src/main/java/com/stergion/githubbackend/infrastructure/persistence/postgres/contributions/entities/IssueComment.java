@@ -8,18 +8,18 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "IssueComments")
 public class IssueComment extends Contribution {
     @NotNull
     @PastOrPresent
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate publishedAt;
-    private LocalDate updatedAt;
-    private LocalDate lastEditedAt;
+    private LocalDateTime publishedAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime lastEditedAt;
     private AssociatedIssue associatedIssue;
     private String body;
 
@@ -30,7 +30,7 @@ public class IssueComment extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
@@ -42,35 +42,35 @@ public class IssueComment extends Contribution {
      *********************
      */
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getPublishedAt() {
+    public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(LocalDate publishedAt) {
+    public void setPublishedAt(LocalDateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDate getLastEditedAt() {
+    public LocalDateTime getLastEditedAt() {
         return lastEditedAt;
     }
 
-    public void setLastEditedAt(LocalDate lastEditedAt) {
+    public void setLastEditedAt(LocalDateTime lastEditedAt) {
         this.lastEditedAt = lastEditedAt;
     }
 
