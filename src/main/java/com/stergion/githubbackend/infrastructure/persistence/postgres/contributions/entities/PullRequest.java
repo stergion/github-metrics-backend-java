@@ -32,7 +32,7 @@ public class PullRequest extends Contribution {
     private int reactionsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "pullRequestId")
+//    @JoinColumn(name = "pullRequestId")
     private List<Label> labels;
     private String title;
     private String body;

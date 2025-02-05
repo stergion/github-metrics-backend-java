@@ -43,20 +43,21 @@ public class Repository {
     private URI githubUrl;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "repositoryId")
+//    @JoinColumn(name = "repositoryId")
     private List<Label> labels = new ArrayList<>();
     private int labelsCount;
     private String primaryLanguage;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "repositoryId")
+//    @JoinColumn(name = "repositoryId")
     private List<Language> languages = new ArrayList<>();
 
     private int languagesCount;
     private int languagesSize;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "repositoryId")
+//    @JoinColumn(name = "repositoryId")
+//    @JoinTable(name = "RepositoryLabels")
     private List<Topic> topics = new ArrayList<>();
 
     private int topicsCount;
