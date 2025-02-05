@@ -17,10 +17,8 @@ public class Language {
     @NotBlank
     private String name;
 
-    @NotBlank
     private int size;
 
-    @NotBlank
     private float percentage;
 
     @Override
