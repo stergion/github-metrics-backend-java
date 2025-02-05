@@ -5,6 +5,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.repositori
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -120,5 +121,27 @@ public final class TestEntityCreators {
             prs.add(pr);
         }
         return prs;
+    }
+
+    public static File createFile(int fileNumber) {
+        File file = new File();
+        file.setFileName("file" + fileNumber + ".txt");
+        file.setBaseName("file" + fileNumber);
+        file.setExtension("txt");
+        file.setPath("/path/to/file" + fileNumber);
+        file.setStatus("modified");
+        file.setAdditions(10);
+        file.setDeletions(5);
+        file.setChanges(15);
+        file.setPatch("@@ -1,3 +1,3 @@\n-old\n+new");
+        return file;
+    }
+
+    public static List<File> createFiles(int count) {
+        List<File> files = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            files.add(createFile(i));
+        }
+        return files;
     }
 }
