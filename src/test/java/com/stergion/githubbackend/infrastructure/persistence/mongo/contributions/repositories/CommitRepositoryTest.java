@@ -1,7 +1,6 @@
-package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Commit;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.CommitRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
@@ -78,7 +77,9 @@ class CommitRepositoryTest {
         void findByGitHubId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            Commit found = commitRepository.findByGitHubId(testCommit.github().id).await().indefinitely();
+            Commit found = commitRepository.findByGitHubId(testCommit.github().id)
+                                           .await()
+                                           .indefinitely();
             assertNotNull(found, "Found commit should not be null");
             assertEquals(testCommit.id(), found.id());
             assertEquals(testCommit.userId(), found.userId());

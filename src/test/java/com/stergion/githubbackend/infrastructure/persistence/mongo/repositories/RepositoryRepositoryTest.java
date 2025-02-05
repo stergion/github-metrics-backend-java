@@ -1,7 +1,5 @@
-package com.stergion.githubbackend.infrastructure.persistence.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.Repository;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

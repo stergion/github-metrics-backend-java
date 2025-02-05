@@ -1,7 +1,6 @@
-package com.stergion.githubbackend.infrastructure.persistence.contributions.repositories;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
@@ -136,7 +135,8 @@ class IssueCommentRepositoryTest {
         void findByUserAndRepoId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
+            List<IssueComment> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID,
+                                                                     TEST_REPO_ID)
                                                              .collect().asList()
                                                              .await().atMost(TIMEOUT);
 
