@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class TestEntityCreators {
 
-    public static User createTestUser(String login) {
+    public static User createUser(String login) {
         User user = new User();
         user.setLogin(login);
         user.setName("Test User " + login);
@@ -25,11 +25,11 @@ public final class TestEntityCreators {
         return user;
     }
 
-    public static User createTestUser() {
-        return createTestUser("testUser");
+    public static User createUser() {
+        return createUser("testUser");
     }
 
-    public static Repository createTestRepository(String name, String owner) {
+    public static Repository createRepository(String name, String owner) {
         Repository repo = new Repository();
         repo.setName(name);
         repo.setOwner(owner);
@@ -38,22 +38,22 @@ public final class TestEntityCreators {
         return repo;
     }
 
-    public static Repository createTestRepository(String name) {
-        return createTestRepository(name, "testOwner");
+    public static Repository createRepository(String name) {
+        return createRepository(name, "testOwner");
     }
 
-    public static List<Repository> createTestRepositories(int count) {
+    public static List<Repository> createRepositories(int count) {
         List<Repository> repositories = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            repositories.add(createTestRepository("repo" + i));
+            repositories.add(createRepository("repo" + i));
         }
         return repositories;
     }
 
-    public static List<User> createTestUsers(int count) {
+    public static List<User> createUsers(int count) {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            users.add(createTestUser("testUser" + i));
+            users.add(createUser("testUser" + i));
         }
         return users;
     }

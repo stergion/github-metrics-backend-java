@@ -39,7 +39,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing repository")
         void updateRepository(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("testRepo");
+            Repository repo = TestEntityCreators.createRepository("testRepo");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -67,7 +67,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing repository")
         void deleteRepository(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("testRepo");
+            Repository repo = TestEntityCreators.createRepository("testRepo");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -86,8 +86,8 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should not allow duplicate repositories with same owner and name")
         void noDuplicateRepositories(UniAsserter asserter) {
-            Repository repo1 = TestEntityCreators.createTestRepository("testRepo", "testOwner");
-            Repository repo2 = TestEntityCreators.createTestRepository("testRepo", "testOwner");
+            Repository repo1 = TestEntityCreators.createRepository("testRepo", "testOwner");
+            Repository repo2 = TestEntityCreators.createRepository("testRepo", "testOwner");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo1)));
@@ -105,7 +105,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new repository successfully")
         void createRepository(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("testRepo");
+            Repository repo = TestEntityCreators.createRepository("testRepo");
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)),
@@ -123,7 +123,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find repository by ID")
         void findRepositoryById(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("testRepo");
+            Repository repo = TestEntityCreators.createRepository("testRepo");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -150,16 +150,16 @@ class RepositoryRepositoryTest {
         @DisplayName("Should handle mixed existing and non-existing repositories in batch find")
         void findByNameAndOwnersMixed(UniAsserter asserter) {
             List<Repository> repos = List.of(
-                    TestEntityCreators.createTestRepository("repo1", "owner1"),
-                    TestEntityCreators.createTestRepository("repo1", "owner2"),
-                    TestEntityCreators.createTestRepository("repo1", "owner3"),
-                    TestEntityCreators.createTestRepository("repo1", "owner4"),
-                    TestEntityCreators.createTestRepository("repo2", "owner1"),
-                    TestEntityCreators.createTestRepository("repo2", "owner2"),
-                    TestEntityCreators.createTestRepository("repo2", "owner3"),
-                    TestEntityCreators.createTestRepository("repo2", "owner4"),
-                    TestEntityCreators.createTestRepository("repo3", "owner1"),
-                    TestEntityCreators.createTestRepository("repo3", "owner2")
+                    TestEntityCreators.createRepository("repo1", "owner1"),
+                    TestEntityCreators.createRepository("repo1", "owner2"),
+                    TestEntityCreators.createRepository("repo1", "owner3"),
+                    TestEntityCreators.createRepository("repo1", "owner4"),
+                    TestEntityCreators.createRepository("repo2", "owner1"),
+                    TestEntityCreators.createRepository("repo2", "owner2"),
+                    TestEntityCreators.createRepository("repo2", "owner3"),
+                    TestEntityCreators.createRepository("repo2", "owner4"),
+                    TestEntityCreators.createRepository("repo3", "owner1"),
+                    TestEntityCreators.createRepository("repo3", "owner2")
                                             );
 
             asserter.execute(
@@ -202,7 +202,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle case sensitivity in owner and name searches")
         void caseSensitiveSearch(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("RepoName", "OwnerName");
+            Repository repo = TestEntityCreators.createRepository("RepoName", "OwnerName");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -226,7 +226,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find repository by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("testRepo");
+            Repository repo = TestEntityCreators.createRepository("testRepo");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -253,9 +253,9 @@ class RepositoryRepositoryTest {
         @DisplayName("Should find repositories by owner")
         void findByOwner(UniAsserter asserter) {
             List<Repository> repos = new ArrayList<>();
-            repos.add(TestEntityCreators.createTestRepository("repo1", "owner1"));
-            repos.add(TestEntityCreators.createTestRepository("repo2", "owner1"));
-            repos.add(TestEntityCreators.createTestRepository("repo3", "owner2"));
+            repos.add(TestEntityCreators.createRepository("repo1", "owner1"));
+            repos.add(TestEntityCreators.createRepository("repo2", "owner1"));
+            repos.add(TestEntityCreators.createRepository("repo3", "owner2"));
 
             asserter.execute(() -> Panache.withTransaction(() ->
                             repositoryRepository.persist(repos)
@@ -283,7 +283,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find repository by name and owner")
         void findByNameAndOwner(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("specific-repo",
+            Repository repo = TestEntityCreators.createRepository("specific-repo",
                     "specific-owner");
 
             asserter.execute(
@@ -313,8 +313,8 @@ class RepositoryRepositoryTest {
         @DisplayName("Should find repositories by name and owners list")
         void findByNameAndOwners(UniAsserter asserter) {
             List<Repository> repos = new ArrayList<>();
-            repos.add(TestEntityCreators.createTestRepository("repo1", "owner1"));
-            repos.add(TestEntityCreators.createTestRepository("repo2", "owner2"));
+            repos.add(TestEntityCreators.createRepository("repo1", "owner1"));
+            repos.add(TestEntityCreators.createRepository("repo2", "owner2"));
 
             asserter.execute(() -> Panache.withTransaction(() ->
                             repositoryRepository.persist(repos)
@@ -361,9 +361,9 @@ class RepositoryRepositoryTest {
         @DisplayName("Should delete repositories by owner")
         void deleteByOwner(UniAsserter asserter) {
             List<Repository> repos = new ArrayList<>();
-            repos.add(TestEntityCreators.createTestRepository("repo1", "owner-to-delete"));
-            repos.add(TestEntityCreators.createTestRepository("repo2", "owner-to-delete"));
-            repos.add(TestEntityCreators.createTestRepository("repo3", "owner-to-keep"));
+            repos.add(TestEntityCreators.createRepository("repo1", "owner-to-delete"));
+            repos.add(TestEntityCreators.createRepository("repo2", "owner-to-delete"));
+            repos.add(TestEntityCreators.createRepository("repo3", "owner-to-keep"));
 
             asserter.execute(() -> Panache.withTransaction(() ->
                             repositoryRepository.persist(repos)
@@ -395,7 +395,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle repository with labels")
         void repositoryWithLabels(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("labelTest");
+            Repository repo = TestEntityCreators.createRepository("labelTest");
 
             // Create and add labels
             Label label1 = new Label();
@@ -431,7 +431,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle repository with languages")
         void repositoryWithLanguages(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("languageTest");
+            Repository repo = TestEntityCreators.createRepository("languageTest");
 
             Language java = new Language();
             java.setName("Java");
@@ -475,7 +475,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update repository relationships")
         void updateRepositoryRelationships(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("relationshipTest");
+            Repository repo = TestEntityCreators.createRepository("relationshipTest");
 
             // Initial labels
             Label label1 = new Label();
@@ -510,7 +510,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should cascade delete repository relationships")
         void cascadeDeleteRelationships(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("cascadeTest");
+            Repository repo = TestEntityCreators.createRepository("cascadeTest");
 
             // Add labels and languages
             Label label = new Label();
@@ -541,7 +541,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should validate relationship consistency")
         void validateRelationshipConsistency(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("consistencyTest");
+            Repository repo = TestEntityCreators.createRepository("consistencyTest");
 
             // Set inconsistent state
             Label label = new Label();
@@ -583,7 +583,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle repository metrics")
         void handleRepositoryMetrics(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("metricsTest");
+            Repository repo = TestEntityCreators.createRepository("metricsTest");
 
             repo.setForkCount(100);
             repo.setStargazerCount(1000);
@@ -616,7 +616,7 @@ class RepositoryRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle repository with topics")
         void repositoryWithTopics(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createTestRepository("topicTest");
+            Repository repo = TestEntityCreators.createRepository("topicTest");
 
             Topic topic1 = new Topic();
             topic1.setName("spring-boot");
