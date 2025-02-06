@@ -256,8 +256,6 @@ class UserRepositoryTest {
             asserter.execute(() -> Panache.withTransaction(
                     () -> repositoryRepository.persist(repositories)));
 
-            repositories.forEach(i -> System.out.println(i.getId()));
-
             asserter.execute(() -> Panache.withTransaction(() -> {
                 user.setRepositories(new HashSet<>(repositories));
                 return userRepository.persist(user);
