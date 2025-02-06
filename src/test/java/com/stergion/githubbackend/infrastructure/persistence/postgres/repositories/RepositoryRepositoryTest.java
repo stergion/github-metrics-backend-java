@@ -10,6 +10,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.vertx.RunOnVertxContext;
 import io.quarkus.test.vertx.UniAsserter;
 import jakarta.inject.Inject;
+import org.hibernate.reactive.mutiny.Mutiny;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ class RepositoryRepositoryTest {
 
     @Inject
     RepositoryRepository repositoryRepository;
+
+    @Inject
+    Mutiny.SessionFactory sessionFactory;
 
     @BeforeEach
     @RunOnVertxContext
@@ -524,26 +528,88 @@ class RepositoryRepositoryTest {
         void cascadeDeleteRelationships(UniAsserter asserter) {
             Repository repo = TestEntityCreators.createRepository("cascadeTest");
 
-            // Add labels and languages
+            // Create and add a label
             Label label = new Label();
             label.setLabel("bug");
+            label.setDescription("Bug label");
             repo.setLabels(List.of(label));
+            repo.setLabelsCount(1);
 
+            // Create and add a language
             Language java = new Language();
             java.setName("Java");
             java.setSize(1000);
             java.setPercentage(100.0f);
             repo.setLanguages(List.of(java));
+            repo.setLanguagesCount(1);
 
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
-            asserter.execute(() -> Panache.withTransaction(
-                    () -> repositoryRepository.deleteById(repo.getId())));
+            // Create and add a topic
+            Topic topic = new Topic();
+            topic.setName("java");
+            repo.setTopics(List.of(topic));
+            repo.setTopicsCount(1);
 
-            // Verify cascade delete worked
+            // First persist everything
+            asserter.execute(() ->
+                            Panache.withTransaction(() -> repositoryRepository.persist(repo))
+                            );
+
+
+            // Verify entities exist in their tables
             asserter.assertThat(
-                    () -> repositoryRepository.findById(repo.getId()),
-                    Assertions::assertNull
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(l) FROM Label l", Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(1L, count)
+                               );
+
+            asserter.assertThat(
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(l) FROM Language l",
+                                                   Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(1L, count)
+                               );
+
+            asserter.assertThat(
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(t) FROM Topic t", Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(1L, count)
+                               );
+
+            // Delete the repository
+            asserter.execute(() ->
+                            Panache.withTransaction(() -> repositoryRepository.deleteById(repo.getId()))
+                            );
+
+            // Verify cascade deletion
+            asserter.assertThat(
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(l) FROM Label l", Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(0L, count)
+                               );
+
+            asserter.assertThat(
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(l) FROM Language l",
+                                                   Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(0L, count)
+                               );
+
+            asserter.assertThat(
+                    () -> sessionFactory.withSession(session ->
+                                    session.createQuery("SELECT COUNT(t) FROM Topic t", Long.class)
+                                           .getSingleResult()
+                                                    ),
+                    count -> assertEquals(0L, count)
                                );
 
             asserter.surroundWith(u -> Panache.withSession(() -> u));
