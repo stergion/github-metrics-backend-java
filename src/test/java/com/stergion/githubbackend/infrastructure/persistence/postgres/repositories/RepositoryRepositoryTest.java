@@ -180,15 +180,16 @@ class RepositoryRepositoryTest {
                     TestEntityCreators.createRepository("repo3", "owner2")
                                             );
 
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repos)));
-
             List<NameWithOwner> nameWithOwners = List.of(
                     new NameWithOwner("owner1", "repo1"),
                     new NameWithOwner("owner1", "repo2"),
                     new NameWithOwner("owner2", "repo1"),
                     new NameWithOwner("owner2", "nonexistent")
                                                         );
+
+            asserter.execute(
+                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repos)));
+
 
             asserter.assertThat(
                     () -> repositoryRepository.findByNameAndOwners(nameWithOwners)
@@ -470,9 +471,8 @@ class RepositoryRepositoryTest {
             repo.setLanguagesSize(1428);
             repo.setPrimaryLanguage("Java");
 
-            asserter.execute(() -> Panache.withTransaction(() ->
-                            repositoryRepository.persist(repo)
-                                                          ));
+            asserter.execute(
+                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
 
             asserter.assertThat(
                     () -> repositoryRepository.findById(repo.getId()),
@@ -528,6 +528,40 @@ class RepositoryRepositoryTest {
                                             .anyMatch(l -> l.getLabel().equals("bug")));
                         assertTrue(foundRepo.getLabels().stream()
                                             .anyMatch(l -> l.getLabel().equals("feature")));
+                    }
+                               );
+
+            asserter.surroundWith(u -> Panache.withSession(() -> u));
+        }
+
+        @Test
+        @RunOnVertxContext
+        @DisplayName("Should handle repository with topics")
+        void repositoryWithTopics(UniAsserter asserter) {
+            Repository repo = TestEntityCreators.createRepository("topicTest");
+
+            Topic topic1 = new Topic();
+            topic1.setName("spring-boot");
+
+            Topic topic2 = new Topic();
+            topic2.setName("java");
+
+            repo.setTopics(List.of(topic1, topic2));
+            repo.setTopicsCount(2);
+
+            asserter.execute(() -> Panache.withTransaction(() ->
+                            repositoryRepository.persist(repo)
+                                                          ));
+
+            asserter.assertThat(
+                    () -> repositoryRepository.findById(repo.getId()),
+                    foundRepo -> {
+                        assertEquals(2, foundRepo.getTopicsCount());
+                        assertEquals(2, foundRepo.getTopics().size());
+                        assertTrue(foundRepo.getTopics().stream()
+                                            .anyMatch(t -> t.getName().equals("spring-boot")));
+                        assertTrue(foundRepo.getTopics().stream()
+                                            .anyMatch(t -> t.getName().equals("java")));
                     }
                                );
 
