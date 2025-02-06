@@ -86,7 +86,7 @@ public final class TestEntityCreators {
         return commits;
     }
 
-    public static CommitComment createComment() {
+    public static CommitComment createCommitComment() {
         return new CommitComment(
                 "testAuthor",
                 LocalDateTime.now(),
@@ -96,10 +96,10 @@ public final class TestEntityCreators {
         );
     }
 
-    public static List<CommitComment> createComments(int count) {
+    public static List<CommitComment> createCommitComments(int count) {
         List<CommitComment> comments = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            comments.add(createComment());
+            comments.add(createCommitComment());
         }
         return comments;
     }
