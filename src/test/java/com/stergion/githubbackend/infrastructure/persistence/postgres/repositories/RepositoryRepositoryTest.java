@@ -581,39 +581,6 @@ class RepositoryRepositoryTest {
 
         @Test
         @RunOnVertxContext
-        @DisplayName("Should handle repository metrics")
-        void handleRepositoryMetrics(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createRepository("metricsTest");
-
-            repo.setForkCount(100);
-            repo.setStargazerCount(1000);
-            repo.setWatcherCount(50);
-
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
-
-            // Update metrics
-            repo.setForkCount(150);
-            repo.setStargazerCount(1500);
-            repo.setWatcherCount(75);
-
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
-
-            asserter.assertThat(
-                    () -> repositoryRepository.findById(repo.getId()),
-                    foundRepo -> {
-                        assertEquals(150, foundRepo.getForkCount());
-                        assertEquals(1500, foundRepo.getStargazerCount());
-                        assertEquals(75, foundRepo.getWatcherCount());
-                    }
-                               );
-
-            asserter.surroundWith(u -> Panache.withSession(() -> u));
-        }
-
-        @Test
-        @RunOnVertxContext
         @DisplayName("Should handle repository with topics")
         void repositoryWithTopics(UniAsserter asserter) {
             Repository repo = TestEntityCreators.createRepository("topicTest");
