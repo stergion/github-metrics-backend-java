@@ -87,10 +87,12 @@ class UserRepositoryTest {
             asserter.execute(
                     () -> Panache.withTransaction(() -> userRepository.persist(user)));
 
-            user.setName(updatedName);
 
             asserter.execute(
-                    () -> Panache.withTransaction(() -> userRepository.persist(user)));
+                    () -> {
+                        user.setName(updatedName);
+                        return Panache.withTransaction(() -> userRepository.persist(user));
+                    });
 
             asserter.assertThat(
                     () -> userRepository.findById(user.getId()),
