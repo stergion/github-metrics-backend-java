@@ -124,12 +124,16 @@ public final class TestEntityCreators {
         return prs;
     }
 
-    public static File createFile(int fileNumber) {
+    public static File createFile() {
+        return createFile("");
+    }
+
+    public static File createFile(String suffix) {
         File file = new File();
-        file.setFileName("file" + fileNumber + ".txt");
-        file.setBaseName("file" + fileNumber);
+        file.setFileName("file" + suffix + ".txt");
+        file.setBaseName("file" + suffix);
         file.setExtension("txt");
-        file.setPath("/path/to/file" + fileNumber);
+        file.setPath("/path/to/file" + suffix);
         file.setStatus("modified");
         file.setAdditions(10);
         file.setDeletions(5);
@@ -141,7 +145,7 @@ public final class TestEntityCreators {
     public static List<File> createFiles(int count) {
         List<File> files = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            files.add(createFile(i));
+            files.add(createFile(Integer.toString(i)));
         }
         return files;
     }
