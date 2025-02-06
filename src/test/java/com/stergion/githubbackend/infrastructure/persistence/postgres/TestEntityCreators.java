@@ -72,9 +72,10 @@ public final class TestEntityCreators {
         return commit;
     }
 
-    public static Commit createCommit(User user, Repository repository, String githubId) {
+    public static Commit createCommit(User user, Repository repository, String suffix) {
         Commit commit = createCommit(user, repository);
-        commit.setGithubId(githubId);
+        commit.setGithubId(suffix);
+        commit.setGithubUrl(URI.create("https://github.com/test/commit/" + suffix));
         return commit;
     }
 
