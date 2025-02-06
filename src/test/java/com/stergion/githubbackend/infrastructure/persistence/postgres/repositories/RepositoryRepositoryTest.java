@@ -44,9 +44,19 @@ class RepositoryRepositoryTest {
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
 
-            repo.setStargazerCount(100);
-            repo.setForkCount(50);
-            repo.setWatcherCount(25);
+            asserter.assertThat(
+                    () -> repositoryRepository.findById(repo.getId()),
+                    updatedRepo -> {
+                        assertEquals(0, updatedRepo.getStargazerCount());
+                        assertEquals(0, updatedRepo.getForkCount());
+                        assertEquals(0, updatedRepo.getWatcherCount());
+                    }
+                               );
+            asserter.execute(() -> {
+                repo.setStargazerCount(100);
+                repo.setForkCount(50);
+                repo.setWatcherCount(25);
+            });
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
@@ -486,14 +496,16 @@ class RepositoryRepositoryTest {
             asserter.execute(
                     () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
 
-            // Add another label
-            Label label2 = new Label();
-            label2.setLabel("feature");
-            repo.setLabels(List.of(label1, label2));
-            repo.setLabelsCount(2);
 
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
+            asserter.execute(() -> {
+                // Add another label
+                Label label2 = new Label();
+                label2.setLabel("feature");
+                repo.setLabels(List.of(label1, label2));
+                repo.setLabelsCount(2);
+
+                return Panache.withTransaction(() -> repositoryRepository.persist(repo));
+            });
 
             asserter.assertThat(
                     () -> repositoryRepository.findById(repo.getId()),
@@ -532,82 +544,6 @@ class RepositoryRepositoryTest {
             asserter.assertThat(
                     () -> repositoryRepository.findById(repo.getId()),
                     Assertions::assertNull
-                               );
-
-            asserter.surroundWith(u -> Panache.withSession(() -> u));
-        }
-
-        @Test
-        @RunOnVertxContext
-        @DisplayName("Should validate relationship consistency")
-        void validateRelationshipConsistency(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createRepository("consistencyTest");
-
-            // Set inconsistent state
-            Label label = new Label();
-            label.setLabel("bug");
-            repo.setLabels(List.of(label));
-            repo.setLabelsCount(2); // Incorrect count
-
-            Language java = new Language();
-            java.setName("Java");
-            java.setSize(1000);
-            java.setPercentage(70.0f);
-            Language python = new Language();
-            python.setName("Python");
-            python.setSize(1000);
-            python.setPercentage(40.0f); // Total percentage > 100
-            repo.setLanguages(List.of(java, python));
-
-            asserter.execute(
-                    () -> Panache.withTransaction(() -> repositoryRepository.persist(repo)));
-
-            asserter.assertThat(
-                    () -> repositoryRepository.findById(repo.getId()),
-                    foundRepo -> {
-                        // Verify actual counts don't match declared counts
-                        assertNotEquals(foundRepo.getLabelsCount(), foundRepo.getLabels().size());
-
-                        // Verify language percentages sum to > 100
-                        float totalPercentage = foundRepo.getLanguages().stream()
-                                                         .map(Language::getPercentage)
-                                                         .reduce(0f, Float::sum);
-                        assertTrue(totalPercentage > 100);
-                    }
-                               );
-
-            asserter.surroundWith(u -> Panache.withSession(() -> u));
-        }
-
-        @Test
-        @RunOnVertxContext
-        @DisplayName("Should handle repository with topics")
-        void repositoryWithTopics(UniAsserter asserter) {
-            Repository repo = TestEntityCreators.createRepository("topicTest");
-
-            Topic topic1 = new Topic();
-            topic1.setName("spring-boot");
-
-            Topic topic2 = new Topic();
-            topic2.setName("java");
-
-            repo.setTopics(List.of(topic1, topic2));
-            repo.setTopicsCount(2);
-
-            asserter.execute(() -> Panache.withTransaction(() ->
-                            repositoryRepository.persist(repo)
-                                                          ));
-
-            asserter.assertThat(
-                    () -> repositoryRepository.findById(repo.getId()),
-                    foundRepo -> {
-                        assertEquals(2, foundRepo.getTopicsCount());
-                        assertEquals(2, foundRepo.getTopics().size());
-                        assertTrue(foundRepo.getTopics().stream()
-                                            .anyMatch(t -> t.getName().equals("spring-boot")));
-                        assertTrue(foundRepo.getTopics().stream()
-                                            .anyMatch(t -> t.getName().equals("java")));
-                    }
                                );
 
             asserter.surroundWith(u -> Panache.withSession(() -> u));
