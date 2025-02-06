@@ -73,6 +73,10 @@ class RepositoryRepositoryTest {
                         assertEquals(25, updatedRepo.getWatcherCount());
                     }
                                );
+            asserter.assertThat(
+                    () -> repositoryRepository.count(),
+                    reposCount -> assertEquals(1, reposCount)
+                               );
 
             asserter.surroundWith(u -> Panache.withSession(() -> u));
         }
@@ -393,8 +397,12 @@ class RepositoryRepositoryTest {
                                );
 
             asserter.assertThat(
-                    () -> repositoryRepository.findByOwner("owner-to-keep"),
-                    keptRepos -> assertEquals(1, keptRepos.size())
+                    () -> repositoryRepository.findAll().list(),
+                    keptRepos -> {
+                        assertEquals(1, keptRepos.size());
+                        assertEquals("owner-to-keep", keptRepos.getFirst().getOwner());
+                        assertEquals("repo3", keptRepos.getFirst().getName());
+                    }
                                );
 
             asserter.surroundWith(u -> Panache.withSession(() -> u));
@@ -516,6 +524,10 @@ class RepositoryRepositoryTest {
                     foundRepo -> {
                         assertEquals(2, foundRepo.getLabelsCount());
                         assertEquals(2, foundRepo.getLabels().size());
+                        assertTrue(foundRepo.getLabels().stream()
+                                            .anyMatch(l -> l.getLabel().equals("bug")));
+                        assertTrue(foundRepo.getLabels().stream()
+                                            .anyMatch(l -> l.getLabel().equals("feature")));
                     }
                                );
 
