@@ -32,20 +32,17 @@ public class PullRequest extends Contribution {
     private int reactionsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "pullRequestId")
     private List<Label> labels;
     private String title;
     private String body;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "pullRequestId")
     private List<PullRequestCommit> commits;
 
     private int commitsCount;
     private int commentsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "pullRequestId")
     private List<ClosingIssuesReference> closingIssuesReferences;
 
     private int closingIssuesReferencesCount;

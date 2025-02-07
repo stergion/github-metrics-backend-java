@@ -34,7 +34,6 @@ public class Issue extends Contribution {
     private int reactionsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "issueId")
     private List<Label> labels = new ArrayList<>();
     private String closer;
 
@@ -117,8 +116,7 @@ public class Issue extends Contribution {
         return labels;
     }
 
-    public void setLabels(
-            List<Label> labels) {
+    public void setLabels(List<Label> labels) {
         this.labels = labels;
     }
 

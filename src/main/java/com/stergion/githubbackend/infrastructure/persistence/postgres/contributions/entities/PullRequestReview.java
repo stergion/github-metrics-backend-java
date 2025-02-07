@@ -34,11 +34,9 @@ public class PullRequestReview extends Contribution {
     @Enumerated(EnumType.STRING)
     private PullRequestReviewState state;
 
-    @Column(columnDefinition = "text")
     private String body;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "reviewId")
     private List<PullRequestReviewComment> comments = new ArrayList<>();
 
     private static final ObjectMapper MAPPER = JsonObjectMapper.create();
