@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.hibernate.reactive.mutiny.Mutiny;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.UUID;
 public class RepositoryRepository implements PanacheRepositoryBase<Repository, UUID> {
     @Inject
     EntityManagerFactory em;
+    @Inject
+    Mutiny.SessionFactory sessionFactory;
+
 
     public Uni<Repository> findByGitHubId(String githubId) {
         return find("githubId", githubId).firstResult();
@@ -52,6 +56,47 @@ public class RepositoryRepository implements PanacheRepositoryBase<Repository, U
         query.where(cb.or(predicates));
 
         return getSession().chain(i -> i.createQuery(query).getResultList());
+    }
+
+    @Override
+    public Uni<Long> deleteAll() {
+        String deleteRepositoryLabelsQuery = "delete from Repositories_Labels ";
+        String deleteRepositoryLanguagesQuery = "delete from Repositories_Languages ";
+        String deleteRepositoryTopicsQuery = "delete from Repositories_Topics ";
+        String deleteRepositoriesQuery = "Delete from Repositories";
+        String deleteLabelsQuery = "delete from Labels ";
+        String deleteLanguagesQuery = "delete from Languages ";
+        String deleteTopicsQuery = "delete from Topics ";
+
+        return sessionFactory.withTransaction((session, tx) ->
+                        session.createNativeQuery(deleteRepositoryLabelsQuery)
+                               .executeUpdate()
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteRepositoryLanguagesQuery)
+                                                      .executeUpdate()
+                                       )
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteRepositoryTopicsQuery)
+                                                      .executeUpdate()
+                                       )
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteRepositoriesQuery)
+                                                      .executeUpdate()
+                                       )
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteLabelsQuery)
+                                                      .executeUpdate()
+                                       )
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteLanguagesQuery)
+                                                      .executeUpdate()
+                                       )
+                               .flatMap(result ->
+                                               session.createNativeQuery(deleteTopicsQuery)
+                                                      .executeUpdate()
+                                       )
+                               .map(Long::valueOf)
+                                             );
     }
 
     public Uni<Long> deleteByOwner(String owner) {
