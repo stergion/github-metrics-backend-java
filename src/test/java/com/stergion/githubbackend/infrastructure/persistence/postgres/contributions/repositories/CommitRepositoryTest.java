@@ -48,9 +48,9 @@ class CommitRepositoryTest {
         testRepo = TestEntityCreators.createRepository("testRepo", "testOwner");
 
         // Persist test entities
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(testUser)));
-        asserter.execute(
-                () -> Panache.withTransaction(() -> repositoryRepository.persist(testRepo)));
+        asserter.execute(() -> Panache.withTransaction(() ->
+                userRepository.persist(testUser)
+                              .chain(() -> repositoryRepository.persist(testRepo))));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
@@ -59,9 +59,10 @@ class CommitRepositoryTest {
     @RunOnVertxContext
     void tearDown(UniAsserter asserter) {
         // Clean up existing data
-        asserter.execute(() -> Panache.withTransaction(() -> commitRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
+        asserter.execute(() -> Panache.withTransaction(() ->
+                commitRepository.deleteAll()
+                                .chain(() -> userRepository.deleteAll())
+                                .chain(() -> repositoryRepository.deleteAll())));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }

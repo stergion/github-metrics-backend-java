@@ -48,15 +48,10 @@ class IssueRepositoryTest {
         testUser = TestEntityCreators.createUser("testIssueCreator");
         testRepo = TestEntityCreators.createRepository("testRepo", "testOwner");
 
-//        // Clean up existing data
-//        asserter.execute(() -> Panache.withTransaction(() -> issueRepository.deleteAll()));
-//        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
-//        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
-
         // Persist test entities
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(testUser)));
-        asserter.execute(
-                () -> Panache.withTransaction(() -> repositoryRepository.persist(testRepo)));
+        asserter.execute(() -> Panache.withTransaction(() ->
+                userRepository.persist(testUser)
+                              .chain(() -> repositoryRepository.persist(testRepo))));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
@@ -65,9 +60,10 @@ class IssueRepositoryTest {
     @RunOnVertxContext
     void tearDown(UniAsserter asserter) {
         // Clean up existing data
-        asserter.execute(() -> Panache.withTransaction(() -> issueRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
+        asserter.execute(() -> Panache.withTransaction(() ->
+                issueRepository.deleteAll()
+                        .chain(() -> userRepository.deleteAll())
+                        .chain(() -> repositoryRepository.deleteAll())));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
@@ -377,7 +373,7 @@ class IssueRepositoryTest {
                         assertEquals(3, foundIssues.size());
                         assertTrue(foundIssues.stream().allMatch(issue ->
                                 issue.getUser().getId().equals(testUser.getId()) &&
-                                        issue.getRepository().getId().equals(testRepo.getId())));
+                                issue.getRepository().getId().equals(testRepo.getId())));
                     }
                                );
 
@@ -394,20 +390,24 @@ class IssueRepositoryTest {
         @DisplayName("Should fail when required fields are null")
         void validateRequiredFields(UniAsserter asserter) {
             // Test with null user
-            Issue issueWithNullUser = TestEntityCreators.createIssue(testUser, testRepo, "null-user");
+            Issue issueWithNullUser = TestEntityCreators.createIssue(testUser, testRepo,
+                    "null-user");
             issueWithNullUser.setUser(null);
 
             // Test with null repository
-            Issue issueWithNullRepo = TestEntityCreators.createIssue(testUser, testRepo, "null-repo");
+            Issue issueWithNullRepo = TestEntityCreators.createIssue(testUser, testRepo,
+                    "null-repo");
             issueWithNullRepo.setRepository(null);
 
             // Test with null githubId and githubUrl
-            Issue issueWithNullGithubId = TestEntityCreators.createIssue(testUser, testRepo, "null-github-id");
+            Issue issueWithNullGithubId = TestEntityCreators.createIssue(testUser, testRepo,
+                    "null-github-id");
             issueWithNullGithubId.setGithubId(null);
             issueWithNullGithubId.setGithubUrl(null);
 
             // Test with null created date
-            Issue issueWithNullCreatedAt = TestEntityCreators.createIssue(testUser, testRepo, "null-created-at");
+            Issue issueWithNullCreatedAt = TestEntityCreators.createIssue(testUser, testRepo,
+                    "null-created-at");
             issueWithNullCreatedAt.setCreatedAt(null);
 
             asserter.assertFailedWith(
@@ -421,12 +421,14 @@ class IssueRepositoryTest {
                                      );
 
             asserter.assertFailedWith(
-                    () -> Panache.withTransaction(() -> issueRepository.persist(issueWithNullGithubId)),
+                    () -> Panache.withTransaction(
+                            () -> issueRepository.persist(issueWithNullGithubId)),
                     throwable -> assertTrue(throwable.getMessage().toLowerCase().contains("null"))
                                      );
 
             asserter.assertFailedWith(
-                    () -> Panache.withTransaction(() -> issueRepository.persist(issueWithNullCreatedAt)),
+                    () -> Panache.withTransaction(
+                            () -> issueRepository.persist(issueWithNullCreatedAt)),
                     throwable -> assertTrue(throwable.getMessage().toLowerCase().contains("null"))
                                      );
 
@@ -437,8 +439,8 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void validateUniqueConstraints(UniAsserter asserter) {
-            Issue issue1 = TestEntityCreators.createIssue(testUser, testRepo,"1");
-            Issue issue2 = TestEntityCreators.createIssue(testUser, testRepo,"2");
+            Issue issue1 = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            Issue issue2 = TestEntityCreators.createIssue(testUser, testRepo, "2");
             // Set same githubId and githubUrl for both issues
             issue2.setGithubId(issue1.getGithubId());
             issue2.setGithubUrl(issue1.getGithubUrl());
@@ -447,7 +449,8 @@ class IssueRepositoryTest {
 
             asserter.assertFailedWith(
                     () -> Panache.withTransaction(() -> issueRepository.persist(issue2)),
-                    throwable -> assertTrue(throwable.getMessage().toLowerCase().contains("constraint"))
+                    throwable -> assertTrue(
+                            throwable.getMessage().toLowerCase().contains("constraint"))
                                      );
 
             asserter.surroundWith(u -> Panache.withSession(() -> u));

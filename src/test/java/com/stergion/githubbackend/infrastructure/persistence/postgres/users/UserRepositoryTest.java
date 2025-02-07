@@ -29,8 +29,9 @@ class UserRepositoryTest {
     @AfterEach
     @RunOnVertxContext
     void tearDown(UniAsserter asserter) {
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
+        asserter.execute(() -> Panache.withTransaction(
+                () -> userRepository.deleteAll()
+                                    .chain(() -> repositoryRepository.deleteAll())));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
