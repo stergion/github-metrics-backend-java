@@ -2,9 +2,9 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.domain.utils.types.PullRequestReviewState;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.PullRequestRef;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.PullRequestReviewComment;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestReviewState;
 import io.quarkus.logging.Log;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
