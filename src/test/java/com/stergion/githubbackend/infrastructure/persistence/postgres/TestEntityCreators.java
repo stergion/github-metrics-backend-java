@@ -73,7 +73,14 @@ public final class TestEntityCreators {
     }
 
     public static Commit createCommit(User user, Repository repository, String suffix) {
-        Commit commit = createCommit(user, repository);
+        Commit commit = new Commit();
+        commit.setUser(user);
+        commit.setRepository(repository);
+        commit.setCommittedDate(LocalDateTime.now());
+        commit.setPushedDate(LocalDateTime.now());
+        commit.setAdditions(10);
+        commit.setDeletions(5);
+
         commit.setGithubId(suffix);
         commit.setGithubUrl(URI.create("https://github.com/test/commit/" + suffix));
         return commit;
