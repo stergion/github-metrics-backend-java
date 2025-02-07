@@ -2,7 +2,6 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.utils.typ
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import jakarta.persistence.*;
 
 import java.net.URI;
@@ -36,5 +35,53 @@ public class PullRequestCommit {
         } catch (Exception e) {
             return "{id: %s, githubId: %s }".formatted(id, githubId);
         }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getGithubId() {
+        return githubId;
+    }
+
+    public void setGithubId(String githubId) {
+        this.githubId = githubId;
+    }
+
+    public URI getGithubUrl() {
+        return githubUrl;
+    }
+
+    public void setGithubUrl(URI githubUrl) {
+        this.githubUrl = githubUrl;
+    }
+
+    public int getAdditions() {
+        return additions;
+    }
+
+    public void setAdditions(int additions) {
+        this.additions = additions;
+    }
+
+    public int getDeletions() {
+        return deletions;
+    }
+
+    public void setDeletions(int deletions) {
+        this.deletions = deletions;
+    }
+
+    public int getChangedFiles() {
+        return changedFiles;
+    }
+
+    public void setChangedFiles(int changedFiles) {
+        this.changedFiles = changedFiles;
     }
 }
