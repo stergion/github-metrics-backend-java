@@ -28,9 +28,9 @@ class RepositoryRepositoryTest {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
-    @BeforeEach
+    @AfterEach
     @RunOnVertxContext
-    void setUp(UniAsserter asserter) {
+    void tearDown(UniAsserter asserter) {
         asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
@@ -199,17 +199,17 @@ class RepositoryRepositoryTest {
                         assertTrue(foundRepos.stream()
                                              .anyMatch(
                                                      r -> r.getOwner().equals("owner1")
-                                                             && r.getName().equals("repo1")
+                                                          && r.getName().equals("repo1")
                                                       ));
                         assertTrue(foundRepos.stream()
                                              .anyMatch(
                                                      r -> r.getOwner().equals("owner1")
-                                                             && r.getName().equals("repo2")
+                                                          && r.getName().equals("repo2")
                                                       ));
                         assertTrue(foundRepos.stream()
                                              .anyMatch(
                                                      r -> r.getOwner().equals("owner2")
-                                                             && r.getName().equals("repo1")
+                                                          && r.getName().equals("repo1")
                                                       ));
                     }
                                );
