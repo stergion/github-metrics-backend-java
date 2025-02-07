@@ -3,9 +3,14 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
 public final class IssueCommentRepository implements ContributionRepository<IssueComment> {
+    @Inject
+    Mutiny.SessionFactory sessionFactory;
+
     @Override
     public Uni<Long> deleteAll() {
         String deleteIssueCommentsQuery = """
@@ -26,6 +31,11 @@ public final class IssueCommentRepository implements ContributionRepository<Issu
                 SELECT count(*) FROM ids id
                 """;
 
-        return delete(deleteIssueCommentsQuery);
+        return sessionFactory.withTransaction((session, tx) ->
+                        session.createNativeQuery(deleteIssueCommentsQuery)
+                               .executeUpdate()
+                               .map(Long::valueOf)
+                                             );
+
     }
 }
