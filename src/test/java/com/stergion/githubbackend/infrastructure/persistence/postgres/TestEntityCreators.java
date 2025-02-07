@@ -2,13 +2,12 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.Label;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueType;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -181,6 +180,36 @@ public final class TestEntityCreators {
             issues.add(createIssue(user, repository, "issue-" + i));
         }
         return issues;
+    }
+
+    public static IssueComment createIssueComment(User user, Repository repository, String suffix) {
+        IssueComment comment = new IssueComment();
+        comment.setUser(user);
+        comment.setRepository(repository);
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setPublishedAt(LocalDateTime.now());
+        comment.setUpdatedAt(LocalDateTime.now());
+        comment.setBody("Test comment body " + suffix);
+
+        comment.setGithubId("test-comment-" + suffix);
+        comment.setGithubUrl(URI.create("https://github.com/test/comment/" + suffix));
+
+        AssociatedIssue associatedIssue = new AssociatedIssue(
+                IssueType.ISSUE,
+                "test-issue-" + suffix,
+                "https://github.com/test/issue/" + suffix
+        );
+        comment.setAssociatedIssue(associatedIssue);
+
+        return comment;
+    }
+
+    public static List<IssueComment> createIssueComments(User user, Repository repository, int count) {
+        List<IssueComment> comments = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            comments.add(createIssueComment(user, repository, "comment-" + i));
+        }
+        return comments;
     }
 
     public static Label createLabel(String name) {
