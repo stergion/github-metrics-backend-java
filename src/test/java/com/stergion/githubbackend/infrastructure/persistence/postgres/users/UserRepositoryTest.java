@@ -26,9 +26,9 @@ class UserRepositoryTest {
     @Inject
     RepositoryRepository repositoryRepository;
 
-    @BeforeEach
+    @AfterEach
     @RunOnVertxContext
-    void setUp(UniAsserter asserter) {
+    void tearDown(UniAsserter asserter) {
         asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
         asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
 
