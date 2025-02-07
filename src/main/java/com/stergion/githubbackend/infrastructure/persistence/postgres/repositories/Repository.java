@@ -43,22 +43,18 @@ public class Repository {
     private URI githubUrl;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "repositoryId")
-    private List<Label> labels = new ArrayList<>();
+    private final List<Label> labels = new ArrayList<>();
     private int labelsCount;
     private String primaryLanguage;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "repositoryId")
-    private List<Language> languages = new ArrayList<>();
+    private final List<Language> languages = new ArrayList<>();
 
     private int languagesCount;
     private int languagesSize;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "repositoryId")
-//    @JoinTable(name = "RepositoryLabels")
-    private List<Topic> topics = new ArrayList<>();
+    private final List<Topic> topics = new ArrayList<>();
 
     private int topicsCount;
     private int forkCount;
@@ -141,7 +137,8 @@ public class Repository {
     }
 
     public void setLabels(List<Label> labels) {
-        this.labels = labels;
+        this.labels.clear();
+        this.labels.addAll(labels);
     }
 
     public int getLabelsCount() {
@@ -165,7 +162,8 @@ public class Repository {
     }
 
     public void setLanguages(List<Language> languages) {
-        this.languages = languages;
+        this.languages.clear();
+        this.languages.addAll(languages);
     }
 
 
@@ -190,7 +188,8 @@ public class Repository {
     }
 
     public void setTopics(List<Topic> topics) {
-        this.topics = topics;
+        this.topics.clear();
+        this.topics.addAll(topics);
     }
 
     public int getTopicsCount() {

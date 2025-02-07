@@ -31,15 +31,15 @@ public class Commit extends Contribution {
     private int deletions;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommitComment> comments = new ArrayList<>();
+    private final List<CommitComment> comments = new ArrayList<>();
     private int commentsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AssociatedPullRequest> associatedPullRequest = new ArrayList<>();
+    private final List<AssociatedPullRequest> associatedPullRequest = new ArrayList<>();
     private int associatedPullRequestsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<File> files = new ArrayList<>();
+    private final List<File> files = new ArrayList<>();
     private int filesCount;
 
     private static final ObjectMapper MAPPER = JsonObjectMapper.create();
@@ -94,12 +94,12 @@ public class Commit extends Contribution {
     }
 
     public List<CommitComment> getComments() {
-        return comments;
+        return List.copyOf(comments);
     }
 
-    public void setComments(
-            List<CommitComment> comments) {
-        this.comments = comments;
+    public void setComments(List<CommitComment> comments) {
+        this.comments.clear();
+        this.comments.addAll(comments);
     }
 
     public int getCommentsCount() {
@@ -111,12 +111,12 @@ public class Commit extends Contribution {
     }
 
     public List<AssociatedPullRequest> getAssociatedPullRequest() {
-        return associatedPullRequest;
+        return List.copyOf(associatedPullRequest);
     }
 
-    public void setAssociatedPullRequest(
-            List<AssociatedPullRequest> associatedPullRequest) {
-        this.associatedPullRequest = associatedPullRequest;
+    public void setAssociatedPullRequest(List<AssociatedPullRequest> associatedPullRequest) {
+        this.associatedPullRequest.clear();
+        this.associatedPullRequest.addAll(associatedPullRequest);
     }
 
     public int getAssociatedPullRequestsCount() {
@@ -128,12 +128,12 @@ public class Commit extends Contribution {
     }
 
     public List<File> getFiles() {
-        return files;
+        return List.copyOf(files);
     }
 
-    public void setFiles(
-            List<File> files) {
-        this.files = files;
+    public void setFiles(List<File> files) {
+        this.files.clear();
+        this.files.addAll(files);
     }
 
     public int getFilesCount() {

@@ -37,7 +37,7 @@ public class PullRequestReview extends Contribution {
     private String body;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PullRequestReviewComment> comments = new ArrayList<>();
+    private final List<PullRequestReviewComment> comments = new ArrayList<>();
 
     private static final ObjectMapper MAPPER = JsonObjectMapper.create();
 
@@ -46,7 +46,7 @@ public class PullRequestReview extends Contribution {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, userLogin: %s, owner:%s, name:%s}".formatted(getId(),
                     getUser().getLogin(), getRepository().getOwner(), getRepository().getName());
         }
@@ -124,11 +124,11 @@ public class PullRequestReview extends Contribution {
     }
 
     public List<PullRequestReviewComment> getComments() {
-        return comments;
+        return List.copyOf(comments);
     }
 
-    public void setComments(
-            List<PullRequestReviewComment> comments) {
-        this.comments = comments;
+    public void setComments(List<PullRequestReviewComment> comments) {
+        this.comments.clear();
+        this.comments.addAll(comments);
     }
 }

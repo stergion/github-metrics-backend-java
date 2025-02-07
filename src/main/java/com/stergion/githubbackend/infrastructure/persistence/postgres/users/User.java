@@ -55,7 +55,7 @@ public class User {
             joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "repositoryId", referencedColumnName = "id")
     )
-    private Set<Repository> repositories = new HashSet<>();
+    private final Set<Repository> repositories = new HashSet<>();
 
     private URI avatarUrl;
     private String bio;
@@ -69,7 +69,7 @@ public class User {
         try {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
-            Log.error(e.getClass()+ ": " + e.getMessage() + ". \nCause: " + e.getCause());
+            Log.error(e.getClass() + ": " + e.getMessage() + ". \nCause: " + e.getCause());
             return "{id: %s, login: %s, name: %s}".formatted(id, login, name);
         }
     }
@@ -158,7 +158,8 @@ public class User {
     }
 
     public void setRepositories(Set<Repository> repositories) {
-        this.repositories = repositories;
+        this.repositories.clear();
+        this.repositories.addAll(repositories);
     }
 
     public URI getAvatarUrl() {

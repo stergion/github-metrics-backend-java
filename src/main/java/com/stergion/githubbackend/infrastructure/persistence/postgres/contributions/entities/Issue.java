@@ -34,7 +34,7 @@ public class Issue extends Contribution {
     private int reactionsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Label> labels = new ArrayList<>();
+    private final List<Label> labels = new ArrayList<>();
     private String closer;
 
     private static final ObjectMapper MAPPER = JsonObjectMapper.create();
@@ -113,11 +113,12 @@ public class Issue extends Contribution {
     }
 
     public List<Label> getLabels() {
-        return labels;
+        return List.copyOf(labels);
     }
 
     public void setLabels(List<Label> labels) {
-        this.labels = labels;
+        this.labels.clear();
+        this.labels.addAll(labels);
     }
 
     public String getCloser() {

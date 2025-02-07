@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,18 +33,18 @@ public class PullRequest extends Contribution {
     private int reactionsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Label> labels;
+    private final List<Label> labels = new ArrayList<>();
     private String title;
     private String body;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PullRequestCommit> commits;
+    private final List<PullRequestCommit> commits = new ArrayList<>();
 
     private int commitsCount;
     private int commentsCount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClosingIssuesReference> closingIssuesReferences;
+    private final List<ClosingIssuesReference> closingIssuesReferences = new ArrayList<>();
 
     private int closingIssuesReferencesCount;
 
@@ -116,12 +117,12 @@ public class PullRequest extends Contribution {
     }
 
     public List<Label> getLabels() {
-        return labels;
+        return List.copyOf(labels);
     }
 
-    public void setLabels(
-            List<Label> labels) {
-        this.labels = labels;
+    public void setLabels(List<Label> labels) {
+        this.labels.clear();
+        this.labels.addAll(labels);
     }
 
     public String getTitle() {
@@ -141,12 +142,12 @@ public class PullRequest extends Contribution {
     }
 
     public List<PullRequestCommit> getCommits() {
-        return commits;
+        return List.copyOf(commits);
     }
 
-    public void setCommits(
-            List<PullRequestCommit> commits) {
-        this.commits = commits;
+    public void setCommits(List<PullRequestCommit> commits) {
+        this.commits.clear();
+        this.commits.addAll(commits);
     }
 
     public int getCommitsCount() {
@@ -166,12 +167,12 @@ public class PullRequest extends Contribution {
     }
 
     public List<ClosingIssuesReference> getClosingIssuesReferences() {
-        return closingIssuesReferences;
+        return List.copyOf(closingIssuesReferences);
     }
 
-    public void setClosingIssuesReferences(
-            List<ClosingIssuesReference> closingIssuesReferences) {
-        this.closingIssuesReferences = closingIssuesReferences;
+    public void setClosingIssuesReferences(List<ClosingIssuesReference> closingIssuesReferences) {
+        this.closingIssuesReferences.clear();
+        this.closingIssuesReferences.addAll(closingIssuesReferences);
     }
 
     public int getClosingIssuesReferencesCount() {
