@@ -1,14 +1,12 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.*;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueType;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestReviewState;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
 
 import java.net.URI;
@@ -238,6 +236,58 @@ public final class TestEntityCreators {
             pullRequests.add(createPullRequest(user, repository, "pr-" + i));
         }
         return pullRequests;
+    }
+
+    public static List<PullRequestReviewComment> createPullRequestReviewComments(int count) {
+        List<PullRequestReviewComment> comments = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            comments.add(new PullRequestReviewComment(
+                    "testReviewer" + i,
+                    "test-comment-id-" + i,
+                    "https://github.com/test/comment/" + i,
+                    "Test review comment body " + i
+            ));
+        }
+        return comments;
+    }
+
+    public static PullRequestReview createPullRequestReview(User user, Repository repository, String suffix) {
+        PullRequestReview review = new PullRequestReview();
+        review.setUser(user);
+        review.setRepository(repository);
+        review.setPullRequest(createPullRequestRef());
+        review.setCreatedAt(LocalDateTime.now());
+        review.setState(PullRequestReviewState.PENDING);
+        review.setBody("Test review body");
+
+        review.setGithubId("test-review-" + suffix);
+        review.setGithubUrl(URI.create("https://github.com/test/review/" + suffix));
+
+        return review;
+    }
+
+    public static List<PullRequestReview> createPullRequestReviews(User user, Repository repository, int count) {
+        List<PullRequestReview> reviews = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            reviews.add(createPullRequestReview(user, repository, "review-" + i));
+        }
+        return reviews;
+    }
+
+    public static PullRequestRef createPullRequestRef() {
+        return new PullRequestRef(
+                "test-pr-id",
+                "https://github.com/test/pr"
+        );
+    }
+
+    public static PullRequestReviewComment createPullRequestReviewComment() {
+        return new PullRequestReviewComment(
+                "testReviewer",
+                "test-comment-id",
+                "https://github.com/test/comment",
+                "Test review comment body"
+        );
     }
 
     public static PullRequestCommit createPullRequestCommit() {
