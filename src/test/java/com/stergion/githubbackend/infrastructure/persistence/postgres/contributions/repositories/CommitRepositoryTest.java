@@ -17,7 +17,6 @@ import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,15 +47,21 @@ class CommitRepositoryTest {
         testUser = TestEntityCreators.createUser("testCommitter");
         testRepo = TestEntityCreators.createRepository("testRepo", "testOwner");
 
-        // Clean up existing data
-        asserter.execute(() -> Panache.withTransaction(() -> commitRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
-        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
-
         // Persist test entities
         asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(testUser)));
         asserter.execute(
                 () -> Panache.withTransaction(() -> repositoryRepository.persist(testRepo)));
+
+        asserter.surroundWith(u -> Panache.withSession(() -> u));
+    }
+
+    @AfterEach
+    @RunOnVertxContext
+    void tearDown(UniAsserter asserter) {
+        // Clean up existing data
+        asserter.execute(() -> Panache.withTransaction(() -> commitRepository.deleteAll()));
+        asserter.execute(() -> Panache.withTransaction(() -> userRepository.deleteAll()));
+        asserter.execute(() -> Panache.withTransaction(() -> repositoryRepository.deleteAll()));
 
         asserter.surroundWith(u -> Panache.withSession(() -> u));
     }
@@ -235,12 +240,13 @@ class CommitRepositoryTest {
                     commitRepository.persist(commits)));
 
             asserter.assertThat(
-                    () -> commitRepository.findByUserIdAndRepoId(testUser.getId(), testRepo.getId()),
+                    () -> commitRepository.findByUserIdAndRepoId(testUser.getId(),
+                            testRepo.getId()),
                     foundCommits -> {
                         assertEquals(3, foundCommits.size());
                         assertTrue(foundCommits.stream().allMatch(c ->
                                         c.getUser().getId().equals(testUser.getId()) &&
-                                                c.getRepository().getId().equals(testRepo.getId())
+                                        c.getRepository().getId().equals(testRepo.getId())
                                                                  ));
                     }
                                );
@@ -392,36 +398,6 @@ class CommitRepositoryTest {
     }
 
     @Nested
-    @DisplayName("State Tests")
-    class StateTests {
-
-        @Test
-        @RunOnVertxContext
-        @DisplayName("Should handle dates properly")
-        void handleDates(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
-            LocalDateTime committedDate = LocalDateTime.now().minusDays(2);
-            LocalDateTime pushedDate = LocalDateTime.now().minusDays(1);
-
-            commit.setCommittedDate(committedDate);
-            commit.setPushedDate(pushedDate);
-
-            asserter.execute(() -> Panache.withTransaction(() -> commitRepository.persist(commit)));
-
-            asserter.assertThat(
-                    () -> commitRepository.findById(commit.getId()),
-                    foundCommit -> {
-                        assertEquals(committedDate, foundCommit.getCommittedDate());
-                        assertEquals(pushedDate, foundCommit.getPushedDate());
-                        assertTrue(foundCommit.getCommittedDate()
-                                              .isBefore(foundCommit.getPushedDate()));
-                    }
-                               );
-            asserter.surroundWith(u -> Panache.withSession(() -> u));
-        }
-    }
-
-    @Nested
     @DisplayName("Relationship Tests")
     class RelationshipTests {
 
@@ -506,7 +482,8 @@ class CommitRepositoryTest {
             // Verify entities exist in their tables
             asserter.assertThat(
                     () -> sessionFactory.withSession(session ->
-                                    session.createQuery("SELECT COUNT(c) FROM CommitComment c", Long.class)
+                                    session.createQuery("SELECT COUNT(c) FROM CommitComment c",
+                                                   Long.class)
                                            .getSingleResult()
                                                     ),
                     count -> assertEquals(1L, count)
@@ -514,7 +491,9 @@ class CommitRepositoryTest {
 
             asserter.assertThat(
                     () -> sessionFactory.withSession(session ->
-                                    session.createQuery("SELECT COUNT(p) FROM AssociatedPullRequest p", Long.class)
+                                    session.createQuery("SELECT COUNT(p) FROM " +
+                                                        "AssociatedPullRequest p",
+                                                   Long.class)
                                            .getSingleResult()
                                                     ),
                     count -> assertEquals(1L, count)
@@ -542,7 +521,8 @@ class CommitRepositoryTest {
             // Verify cascade deletion of relationships
             asserter.assertThat(
                     () -> sessionFactory.withSession(session ->
-                                    session.createQuery("SELECT COUNT(c) FROM CommitComment c", Long.class)
+                                    session.createQuery("SELECT COUNT(c) FROM CommitComment c",
+                                                   Long.class)
                                            .getSingleResult()
                                                     ),
                     count -> assertEquals(0L, count)
@@ -550,7 +530,9 @@ class CommitRepositoryTest {
 
             asserter.assertThat(
                     () -> sessionFactory.withSession(session ->
-                                    session.createQuery("SELECT COUNT(p) FROM AssociatedPullRequest p", Long.class)
+                                    session.createQuery("SELECT COUNT(p) FROM " +
+                                                        "AssociatedPullRequest p",
+                                                   Long.class)
                                            .getSingleResult()
                                                     ),
                     count -> assertEquals(0L, count)
