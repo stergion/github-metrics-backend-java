@@ -3,15 +3,13 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.utils.typ
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.net.URI;
 import java.util.UUID;
 
 @Entity
+@Table(name = "PullRequestCommits")
 public class PullRequestCommit {
 
     @Id

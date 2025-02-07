@@ -1,13 +1,11 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Entity
+@Table(name = "PullRequestReviewComments")
 public class PullRequestReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

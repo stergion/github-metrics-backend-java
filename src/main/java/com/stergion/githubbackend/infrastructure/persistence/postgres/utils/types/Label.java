@@ -7,6 +7,7 @@ import org.hibernate.annotations.NaturalId;
 import java.util.UUID;
 
 @Entity
+@Table(name = "Labels")
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

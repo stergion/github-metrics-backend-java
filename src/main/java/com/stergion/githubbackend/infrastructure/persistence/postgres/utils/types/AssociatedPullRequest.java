@@ -1,14 +1,12 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.net.URI;
 import java.util.UUID;
 
 @Entity
+@Table(name = "AssociatedPullRequests")
 public class AssociatedPullRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
