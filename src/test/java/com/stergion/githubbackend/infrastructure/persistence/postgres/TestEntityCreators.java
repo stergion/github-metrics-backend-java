@@ -3,11 +3,13 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueType;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -210,6 +212,74 @@ public final class TestEntityCreators {
             comments.add(createIssueComment(user, repository, "comment-" + i));
         }
         return comments;
+    }
+
+    public static PullRequest createPullRequest(User user, Repository repository, String suffix) {
+        PullRequest pr = new PullRequest();
+        pr.setUser(user);
+        pr.setRepository(repository);
+        pr.setCreatedAt(LocalDateTime.now());
+        pr.setState(PullRequestState.OPEN);
+        pr.setReactionsCount(0);
+        pr.setTitle("Test Pull Request " + suffix);
+        pr.setBody("Test pull request body");
+        pr.setCommitsCount(0);
+        pr.setCommentsCount(0);
+        pr.setClosingIssuesReferencesCount(0);
+
+        pr.setGithubId("test-pr-" + suffix);
+        pr.setGithubUrl(URI.create("https://github.com/test/pr/" + suffix));
+        return pr;
+    }
+
+    public static List<PullRequest> createPullRequests(User user, Repository repository, int count) {
+        List<PullRequest> pullRequests = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            pullRequests.add(createPullRequest(user, repository, "pr-" + i));
+        }
+        return pullRequests;
+    }
+
+    public static PullRequestCommit createPullRequestCommit() {
+        PullRequestCommit commit = new PullRequestCommit();
+        commit.setGithubId("test-commit-id");
+        commit.setGithubUrl(URI.create("https://github.com/test/commit"));
+        commit.setAdditions(10);
+        commit.setDeletions(5);
+        commit.setChangedFiles(3);
+        return commit;
+    }
+
+    public static List<PullRequestCommit> createPullRequestCommits(int count) {
+        List<PullRequestCommit> commits = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            PullRequestCommit commit = new PullRequestCommit();
+            commit.setGithubId("test-commit-" + i);
+            commit.setGithubUrl(URI.create("https://github.com/test/commit/" + i));
+            commit.setAdditions(10 + i);
+            commit.setDeletions(5 + i);
+            commit.setChangedFiles(3 + i);
+            commits.add(commit);
+        }
+        return commits;
+    }
+
+    public static ClosingIssuesReference createClosingIssuesReference() {
+        return new ClosingIssuesReference(
+                "test-issue-id",
+                URI.create("https://github.com/test/issue")
+        );
+    }
+
+    public static List<ClosingIssuesReference> createClosingIssuesReferences(int count) {
+        List<ClosingIssuesReference> references = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            references.add(new ClosingIssuesReference(
+                    "test-issue-" + i,
+                    URI.create("https://github.com/test/issue/" + i)
+            ));
+        }
+        return references;
     }
 
     public static Label createLabel(String name) {
