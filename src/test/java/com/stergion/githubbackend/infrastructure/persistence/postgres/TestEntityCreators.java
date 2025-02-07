@@ -1,11 +1,14 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.Label;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -155,5 +158,43 @@ public final class TestEntityCreators {
             files.add(createFile(Integer.toString(i)));
         }
         return files;
+    }
+
+    public static Issue createIssue(User user, Repository repository, String suffix) {
+        Issue issue = new Issue();
+        issue.setUser(user);
+        issue.setRepository(repository);
+        issue.setBody("Test issue body");
+        issue.setState(IssueState.OPEN);
+        issue.setCreatedAt(LocalDateTime.now());
+        issue.setReactionsCount(0);
+
+        issue.setGithubId("test-issue-" + suffix);
+        issue.setGithubUrl(URI.create("https://github.com/test/issue/" + suffix));
+        issue.setTitle("Test Issue " + suffix);
+        return issue;
+    }
+
+    public static List<Issue> createIssues(User user, Repository repository, int count) {
+        List<Issue> issues = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            issues.add(createIssue(user, repository, "issue-" + i));
+        }
+        return issues;
+    }
+
+    public static Label createLabel(String name) {
+        Label label = new Label();
+        label.setLabel(name);
+        label.setDescription("Description for " + name);
+        return label;
+    }
+
+    public static List<Label> createLabels(int count) {
+        List<Label> labels = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            labels.add(createLabel("label-" + i));
+        }
+        return labels;
     }
 }
