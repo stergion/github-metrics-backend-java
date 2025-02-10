@@ -1,13 +1,13 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueCommentEntity;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
-public final class IssueCommentRepository implements ContributionRepository<IssueComment> {
+public final class IssueCommentRepository implements ContributionRepository<IssueCommentEntity> {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "IssueComments")
-public class IssueComment extends ContributionEntity {
+public class IssueCommentEntity extends ContributionEntity {
     @NotNull
     @PastOrPresent
     private LocalDateTime createdAt;

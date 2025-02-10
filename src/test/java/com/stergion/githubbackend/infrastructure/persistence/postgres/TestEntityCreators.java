@@ -182,8 +182,8 @@ public final class TestEntityCreators {
         return issues;
     }
 
-    public static IssueComment createIssueComment(UserEntity user, RepositoryEntity repository, String suffix) {
-        IssueComment comment = new IssueComment();
+    public static IssueCommentEntity createIssueComment(UserEntity user, RepositoryEntity repository, String suffix) {
+        IssueCommentEntity comment = new IssueCommentEntity();
         comment.setUser(user);
         comment.setRepository(repository);
         comment.setCreatedAt(LocalDateTime.now());
@@ -204,8 +204,8 @@ public final class TestEntityCreators {
         return comment;
     }
 
-    public static List<IssueComment> createIssueComments(UserEntity user, RepositoryEntity repository, int count) {
-        List<IssueComment> comments = new ArrayList<>();
+    public static List<IssueCommentEntity> createIssueComments(UserEntity user, RepositoryEntity repository, int count) {
+        List<IssueCommentEntity> comments = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             comments.add(createIssueComment(user, repository, "comment-" + i));
         }

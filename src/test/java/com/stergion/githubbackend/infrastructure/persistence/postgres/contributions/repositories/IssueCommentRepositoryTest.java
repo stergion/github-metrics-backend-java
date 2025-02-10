@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueCommentEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
@@ -70,7 +70,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new issue comment successfully")
         void createIssueComment(UniAsserter asserter) {
-            IssueComment comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> issueCommentRepository.persist(comment)),
@@ -90,7 +90,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue comment by ID")
         void findIssueCommentById(UniAsserter asserter) {
-            IssueComment comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> issueCommentRepository.persist(comment)));
@@ -111,7 +111,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing issue comment")
         void updateIssueComment(UniAsserter asserter) {
-            IssueComment comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> issueCommentRepository.persist(comment)));
@@ -137,7 +137,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing issue comment")
         void deleteIssueComment(UniAsserter asserter) {
-            IssueComment comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> issueCommentRepository.persist(comment)));
@@ -161,7 +161,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue comment by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            IssueComment comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> issueCommentRepository.persist(comment)));
@@ -186,7 +186,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue comments by user ID")
         void findByUserId(UniAsserter asserter) {
-            List<IssueComment> comments = TestEntityCreators.createIssueComments(testUser, testRepo,
+            List<IssueCommentEntity> comments = TestEntityCreators.createIssueComments(testUser, testRepo,
                     3);
 
             asserter.execute(
@@ -210,7 +210,7 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue comments by repository ID")
         void findByRepoId(UniAsserter asserter) {
-            List<IssueComment> comments = TestEntityCreators.createIssueComments(testUser, testRepo,
+            List<IssueCommentEntity> comments = TestEntityCreators.createIssueComments(testUser, testRepo,
                     3);
 
             asserter.execute(
@@ -239,15 +239,15 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should fail when required fields are null")
         void validateRequiredFields(UniAsserter asserter) {
-            IssueComment commentWithNullUser = TestEntityCreators.createIssueComment(testUser,
+            IssueCommentEntity commentWithNullUser = TestEntityCreators.createIssueComment(testUser,
                     testRepo, "null-user");
             commentWithNullUser.setUser(null);
 
-            IssueComment commentWithNullRepo = TestEntityCreators.createIssueComment(testUser,
+            IssueCommentEntity commentWithNullRepo = TestEntityCreators.createIssueComment(testUser,
                     testRepo, "null-repo");
             commentWithNullRepo.setRepository(null);
 
-            IssueComment commentWithNullCreatedAt = TestEntityCreators.createIssueComment(testUser,
+            IssueCommentEntity commentWithNullCreatedAt = TestEntityCreators.createIssueComment(testUser,
                     testRepo, "null-created");
             commentWithNullCreatedAt.setCreatedAt(null);
 
@@ -276,8 +276,8 @@ class IssueCommentRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void validateUniqueConstraints(UniAsserter asserter) {
-            IssueComment comment1 = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
-            IssueComment comment2 = TestEntityCreators.createIssueComment(testUser, testRepo, "2");
+            IssueCommentEntity comment1 = TestEntityCreators.createIssueComment(testUser, testRepo, "1");
+            IssueCommentEntity comment2 = TestEntityCreators.createIssueComment(testUser, testRepo, "2");
             comment2.setGithubId(comment1.getGithubId());
             comment2.setGithubUrl(comment1.getGithubUrl());
 
