@@ -108,7 +108,7 @@ public class RepositoryBuilder {
         }
     }
 
-    public Repository buildDTO() {
+    public Repository buildDomain() {
         try {
             return new Repository(
                     null,
@@ -144,14 +144,14 @@ public class RepositoryBuilder {
         return repositories;
     }
 
-    public List<Repository> buildDTOList(int count) {
+    public List<Repository> buildDomainList(int count) {
         List<Repository> repositories = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             repositories.add(new RepositoryBuilder()
                     .withId(id + "-" + i)
                     .withName(name + "-" + i)
                     .withOwner(owner)
-                    .buildDTO());
+                    .buildDomain());
         }
         return repositories;
     }

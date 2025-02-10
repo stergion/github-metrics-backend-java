@@ -31,7 +31,7 @@ class RepositoryMapperTest {
     class RepositoryResponseTests {
 
         @Test
-        @DisplayName("Should map all fields correctly when DTO is complete")
+        @DisplayName("Should map all fields correctly when model is complete")
         void shouldMapAllFieldsCorrectly() {
             // Arrange
             var id = new ObjectId();
@@ -44,7 +44,7 @@ class RepositoryMapperTest {
                     new Language("Python", 500, 0.6f));
             var topics = List.of(new Topic("spring"), new Topic("web"));
 
-            var dto = new Repository(
+            var repo = new Repository(
                     id,
                     owner,
                     name,
@@ -63,7 +63,7 @@ class RepositoryMapperTest {
             );
 
             // Act
-            RepositoryResponse response = repositoryMapper.toRepositoryResponse(dto);
+            RepositoryResponse response = repositoryMapper.toRepositoryResponse(repo);
 
             // Assert
             assertNotNull(response, "Response should not be null");
@@ -92,7 +92,7 @@ class RepositoryMapperTest {
         void shouldHandleNullCollections() {
             // Arrange
             var id = new ObjectId();
-            var dto = new Repository(
+            var repo = new Repository(
                     id,
                     "owner",
                     "name",
@@ -111,7 +111,7 @@ class RepositoryMapperTest {
             );
 
             // Act
-            RepositoryResponse response = repositoryMapper.toRepositoryResponse(dto);
+            RepositoryResponse response = repositoryMapper.toRepositoryResponse(repo);
 
             // Assert
             assertNotNull(response, "Response should not be null");
@@ -125,7 +125,7 @@ class RepositoryMapperTest {
         void shouldHandleNullPrimaryLanguage() {
             // Arrange
             var id = new ObjectId();
-            var dto = new Repository(
+            var repo = new Repository(
                     id,
                     "owner",
                     "name",
@@ -144,7 +144,7 @@ class RepositoryMapperTest {
             );
 
             // Act
-            RepositoryResponse response = repositoryMapper.toRepositoryResponse(dto);
+            RepositoryResponse response = repositoryMapper.toRepositoryResponse(repo);
 
             // Assert
             assertNotNull(response, "Response should not be null");
@@ -163,7 +163,7 @@ class RepositoryMapperTest {
             var id = new ObjectId();
             var owner = "testOwner";
             var name = "testRepo";
-            var dto = new Repository(
+            var repo = new Repository(
                     id,
                     owner,
                     name,
@@ -182,7 +182,7 @@ class RepositoryMapperTest {
             );
 
             // Act
-            NameWithOwnerResponse response = repositoryMapper.toNameWithOwnerResponse(dto);
+            NameWithOwnerResponse response = repositoryMapper.toNameWithOwnerResponse(repo);
 
             // Assert
             assertAll(

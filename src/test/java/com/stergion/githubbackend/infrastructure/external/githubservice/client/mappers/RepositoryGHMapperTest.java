@@ -24,25 +24,25 @@ public class RepositoryGHMapperTest {
     RepositoryGHMapper mapper;
 
     @Test
-    @DisplayName("Should map all fields correctly when converting from RepositoryGH to DTO")
+    @DisplayName("Should map all fields correctly when converting from RepositoryGH to domain")
     void shouldMapAllFieldsCorrectly() {
         // Arrange
         var repositoryGH = createFullRepositoryGH();
 
         // Act
-        Repository dto = mapper.toDomain(repositoryGH);
+        Repository repo = mapper.toDomain(repositoryGH);
 
         // Assert
-        assertNotNull(dto);
-        assertEquals("testOwner", dto.owner());
-        assertEquals("testRepo", dto.name());
-        assertEquals("test-id", dto.github().id());
-        assertEquals(URI.create("https://example.com"), dto.github().url());
-        assertEquals(100, dto.stargazerCount());
-        assertEquals(50, dto.forkCount());
-        assertEquals("Java", dto.primaryLanguage());
-        assertEquals(2, dto.languages().size());
-        assertEquals(2, dto.topics().size());
+        assertNotNull(repo);
+        assertEquals("testOwner", repo.owner());
+        assertEquals("testRepo", repo.name());
+        assertEquals("test-id", repo.github().id());
+        assertEquals(URI.create("https://example.com"), repo.github().url());
+        assertEquals(100, repo.stargazerCount());
+        assertEquals(50, repo.forkCount());
+        assertEquals("Java", repo.primaryLanguage());
+        assertEquals(2, repo.languages().size());
+        assertEquals(2, repo.topics().size());
     }
 
     @Test
@@ -52,16 +52,16 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createMinimalRepositoryGH();
 
         // Act
-        Repository dto = mapper.toDomain(repositoryGH);
+        Repository repo = mapper.toDomain(repositoryGH);
 
         // Assert
-        assertNotNull(dto);
-        assertNotNull(dto.languages(), "Languages list should not be null");
-        assertNotNull(dto.topics(), "Topics list should not be null");
-        assertNotNull(dto.labels(), "Labels list should not be null");
-        assertTrue(dto.languages().isEmpty(), "Languages list should be empty");
-        assertTrue(dto.topics().isEmpty(), "Topics list should be empty");
-        assertTrue(dto.labels().isEmpty(), "Labels list should be empty");
+        assertNotNull(repo);
+        assertNotNull(repo.languages(), "Languages list should not be null");
+        assertNotNull(repo.topics(), "Topics list should not be null");
+        assertNotNull(repo.labels(), "Labels list should not be null");
+        assertTrue(repo.languages().isEmpty(), "Languages list should be empty");
+        assertTrue(repo.topics().isEmpty(), "Topics list should be empty");
+        assertTrue(repo.labels().isEmpty(), "Labels list should be empty");
     }
 
     @Test
@@ -71,10 +71,10 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createRepositoryWithLanguages();
 
         // Act
-        Repository dto = mapper.toDomain(repositoryGH);
+        Repository repo = mapper.toDomain(repositoryGH);
 
         // Assert
-        List<Language> languages = dto.languages();
+        List<Language> languages = repo.languages();
         assertEquals(2, languages.size());
 
         Language java = languages.stream()
@@ -97,10 +97,10 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createRepositoryWithTopics();
 
         // Act
-        Repository dto = mapper.toDomain(repositoryGH);
+        Repository repo = mapper.toDomain(repositoryGH);
 
         // Assert
-        List<Topic> topics = dto.topics();
+        List<Topic> topics = repo.topics();
         assertEquals(2, topics.size());
         assertTrue(topics.stream().anyMatch(t -> t.name().equals("java")));
         assertTrue(topics.stream().anyMatch(t -> t.name().equals("testing")));

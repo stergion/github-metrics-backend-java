@@ -57,22 +57,22 @@ public class RepositoryService {
         return repo;
     }
 
-    private Repository createRepository(Repository repoDTO) {
-        var repo = repoMapper.toEntity(repoDTO);
-        repoRepository.save(repo);
+    private Repository createRepository(Repository repo) {
+        var repoEntity = repoMapper.toEntity(repo);
+        repoRepository.save(repoEntity);
 
-        return repoMapper.toDomain(repo);
+        return repoMapper.toDomain(repoEntity);
     }
 
-    private List<Repository> createRepositories(List<Repository> repoDTO) {
-        var repos = repoDTO.stream()
+    private List<Repository> createRepositories(List<Repository> repo) {
+        var repoEntities = repo.stream()
                            .map(repoMapper::toEntity)
                            .distinct()
                            .toList();
 
-        repoRepository.save(repos);
+        repoRepository.save(repoEntities);
 
-        return repos.stream()
+        return repoEntities.stream()
                     .map(repoMapper::toDomain)
                     .toList();
     }
@@ -82,8 +82,8 @@ public class RepositoryService {
     }
 
     public Repository fetchAndCreateRepository(String owner, String name) {
-        Repository repoDTO = fetchRepository(owner, name);
-        return createRepository(repoDTO);
+        Repository repo = fetchRepository(owner, name);
+        return createRepository(repo);
     }
 
     private Multi<List<Repository>> fetchUserRepositories(String login, LocalDateTime from,
