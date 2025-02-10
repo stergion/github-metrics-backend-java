@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.UserGH;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +19,6 @@ public interface UserGHMapper {
     @Mapping(target = "avatarURL", source = "avatarUrl")
     @Mapping(target = "websiteURL", source = "websiteUrl")
     @Mapping(target = "twitterHandle", source = "twitterUsername")
-    UserDTO toDTO(UserGH user);
+    User toDomain(UserGH user);
 
 }

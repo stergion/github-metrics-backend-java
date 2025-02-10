@@ -3,8 +3,8 @@ package com.stergion.githubbackend.application.service;
 import com.stergion.githubbackend.domain.contirbutions.services.*;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.users.UserAlreadyExistsException;
-import com.stergion.githubbackend.domain.users.UserDTO;
 import com.stergion.githubbackend.domain.users.UserService;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
@@ -62,14 +62,14 @@ public class UserDataManagementService {
 
         // Create new user
         Log.debug("Fetching and saving user info of '" + login + "'");
-        UserDTO user = userService.fetchAndCreateUser(login);
+        User user = userService.fetchAndCreateUser(login);
 
         // Update user Repositories and Contributions
         doUpdate(user, from, to);
     }
 
     public void updateUser(String login) {
-        UserDTO user = userService.getUser(login);
+        User user = userService.getUser(login);
 
         // Update user Repositories and Contributions
         doUpdate(user, user.updatedAt(), LocalDateTime.now());
@@ -101,7 +101,7 @@ public class UserDataManagementService {
     }
 
     public void deleteUser(String login) {
-        UserDTO user = userService.getUser(login);
+        User user = userService.getUser(login);
 
         Log.debugf("Deleting user '%s' Commit contributions", user.login());
         commitService.deleteUserContributions(user.id());
@@ -118,7 +118,7 @@ public class UserDataManagementService {
         userService.deleteUser(login);
     }
 
-    private void doUpdate(UserDTO user, LocalDateTime from, LocalDateTime to) {
+    private void doUpdate(User user, LocalDateTime from, LocalDateTime to) {
         String login = user.login();
         // Get user repositories
         Log.debug("Fetching and saving repository info of '" + user.login() + "'");

@@ -3,7 +3,7 @@ package com.stergion.githubbackend.application.mapper;
 import com.stergion.githubbackend.application.response.UserResponse;
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
@@ -27,10 +27,10 @@ public interface UserMapper {
     @Mapping(source = "user.bio", target = "bio")
     @Mapping(source = "user.twitterHandle", target = "twitterHandle")
     @Mapping(source = "user.websiteURL", target = "websiteURL")
-    UserResponse toResponse(UserDTO user, List<RepositoryDTO> repositories);
+    UserResponse toResponse(User user, List<RepositoryDTO> repositories);
 
     @Named("toNameWithOwnerList")
-    default List<NameWithOwner> toNameWithOwnerList(UserDTO user,
+    default List<NameWithOwner> toNameWithOwnerList(User user,
                                                     List<RepositoryDTO> repositories) {
         if (repositories == null || repositories.isEmpty()) {
             return List.of();

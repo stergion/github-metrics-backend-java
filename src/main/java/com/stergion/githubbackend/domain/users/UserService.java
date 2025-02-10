@@ -30,50 +30,50 @@ public class UserService {
     @Inject
     RepositoryService repositoryService;
 
-    private UserDTO fetchUser(String login) {
-        UserDTO user = client.getUserInfo(login);
+    private User fetchUser(String login) {
+        User user = client.getUserInfo(login);
         if (user == null) {
             throw new UserNotFoundException(login);
         }
         return user;
     }
 
-    private UserDTO createUser(UserDTO userDTO) {
-        var user = mapper.toEntity(userDTO);
-        repository.persist(user);
-        return mapper.toDTO(user);
+    private User createUser(User user) {
+        var userEntity = mapper.toEntity(user);
+        repository.persist(userEntity);
+        return mapper.toDomain(userEntity);
     }
 
-    private UserDTO updateUser(UserDTO userDTO) {
-        var user = mapper.toEntity(userDTO);
-        repository.update(user);
-        return mapper.toDTO(user);
+    private User updateUser(User user) {
+        var userEntity = mapper.toEntity(user);
+        repository.update(userEntity);
+        return mapper.toDomain(userEntity);
     }
 
-    public UserDTO fetchAndCreateUser(String login) {
+    public User fetchAndCreateUser(String login) {
         if (check(login)) {
             throw new UserAlreadyExistsException(login);
         }
 //      Create User only if not found
-        UserDTO userDTO = fetchUser(login);
+        User user = fetchUser(login);
 
-        return createUser(userDTO);
+        return createUser(user);
     }
 
-    public UserDTO fetchAndUpdateUser(@NotBlank String login) {
+    public User fetchAndUpdateUser(@NotBlank String login) {
         if (!check(login)) {
             throw new UserNotFoundException(login);
         }
-        UserDTO userDTO = fetchUser(login);
-        return updateUser(userDTO);
+        User user = fetchUser(login);
+        return updateUser(user);
     }
 
-    public UserDTO getUser(String login) {
+    public User getUser(String login) {
         UserEntity user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);
         }
-        return mapper.toDTO(user);
+        return mapper.toDomain(user);
     }
 
     public ObjectId getUserId(@NotNull String login) {
@@ -88,34 +88,34 @@ public class UserService {
         return repository.findByLogin(login) != null;
     }
 
-    public UserDTO updateRepositories(UserDTO userDTO, List<RepositoryDTO> repos) {
+    public User updateRepositories(User user, List<RepositoryDTO> repos) {
         if (repos == null || repos.isEmpty()) {
-            Log.warn("Received null repository list for user: " + userDTO.login());
-            return userDTO;
+            Log.warn("Received null repository list for user: " + user.login());
+            return user;
         }
 
         List<ObjectId> ids = repos.stream().map(RepositoryDTO::id).toList();
 
-        return updateRepositoriesFromIds(userDTO, ids);
+        return updateRepositoriesFromIds(user, ids);
     }
 
-    public UserDTO updateRepositoriesFromIds(UserDTO userDTO, List<ObjectId> repoIds){
+    public User updateRepositoriesFromIds(User user, List<ObjectId> repoIds){
         if (repoIds == null || repoIds.isEmpty()) {
-            return userDTO;  // No changes needed
+            return user;  // No changes needed
         }
 
-        UserEntity user = mapper.toEntity(userDTO);
-        Set<ObjectId> uniqueIds = new HashSet<>(user.repositories);  // Start with existing repos
+        UserEntity userEntity = mapper.toEntity(user);
+        Set<ObjectId> uniqueIds = new HashSet<>(userEntity.repositories);  // Start with existing repos
         uniqueIds.addAll(repoIds);  // Add new ones
 
-        if (uniqueIds.size() == user.repositories.size()) {
-            return userDTO;  // No new unique repos were added
+        if (uniqueIds.size() == userEntity.repositories.size()) {
+            return user;  // No new unique repos were added
         }
 
-        user.repositories = new ArrayList<>(uniqueIds);
-        repository.update(user);
+        userEntity.repositories = new ArrayList<>(uniqueIds);
+        repository.update(userEntity);
 
-        return mapper.toDTO(user);
+        return mapper.toDomain(userEntity);
     }
 
     public List<RepositoryDTO> getUserRepositories(String login) {

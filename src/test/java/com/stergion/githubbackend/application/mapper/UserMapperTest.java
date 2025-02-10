@@ -2,7 +2,7 @@ package com.stergion.githubbackend.application.mapper;
 
 import com.stergion.githubbackend.application.response.UserResponse;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import io.quarkus.test.junit.QuarkusTest;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class UserMapperTest {
     @Inject
     UserMapper userMapper;
 
-    private UserDTO testUser;
+    private User testUser;
     private List<RepositoryDTO> testRepositories;
     private final LocalDateTime now = LocalDateTime.now();
 
@@ -33,7 +32,7 @@ public class UserMapperTest {
         // Setup test user
         var repo1Id = new ObjectId();
         var repo2Id = new ObjectId();
-        testUser = new UserDTO(
+        testUser = new User(
                 new ObjectId(),
                 "testuser",
                 "Test User",
@@ -187,7 +186,7 @@ public class UserMapperTest {
 
     @Test
     void testToResponse_withNullOptionalFields() {
-        UserDTO userWithNulls = new UserDTO(
+        User userWithNulls = new User(
                 new ObjectId(),
                 "testuser",
                 "Test User",

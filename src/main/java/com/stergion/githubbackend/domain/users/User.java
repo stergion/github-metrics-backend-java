@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public record UserDTO(
+public record User(
         ObjectId id,
         @NotBlank
         String login,
@@ -43,7 +43,7 @@ public record UserDTO(
         String twitterHandle,
         URI websiteURL
 ) {
-    public UserDTO {
+    public User {
         repositories = repositories != null ? List.copyOf(repositories) : List.of();
     }
 
@@ -60,7 +60,7 @@ public record UserDTO(
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof UserDTO u)
+        return (o instanceof User u)
                 && login.equals(u.login);
     }
 

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 
 @Mapper(config = MapStructConfig.class, imports = {LocalDateTime.class})
 public interface UserMapper {
-    UserDTO toDTO(UserEntity user);
+    User toDomain(UserEntity user);
 
     @Mapping(target = "updatedAt", expression = "java(LocalDateTime.now())")
-    UserEntity toEntity(UserDTO userDTO);
+    UserEntity toEntity(User user);
 }

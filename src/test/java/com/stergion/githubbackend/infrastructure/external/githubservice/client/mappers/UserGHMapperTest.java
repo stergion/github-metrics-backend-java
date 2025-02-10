@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.UserGH;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -33,7 +33,7 @@ public class UserGHMapperTest {
         );
 
         // Map to DTO
-        UserDTO result = mapper.toDTO(userGH);
+        User result = mapper.toDomain(userGH);
 
         // Verify each field is mapped correctly
         assertEquals("testUser", result.login());
@@ -62,7 +62,7 @@ public class UserGHMapperTest {
                 null   // website is null
         );
 
-        UserDTO result = mapper.toDTO(userGH);
+        User result = mapper.toDomain(userGH);
 
         assertEquals("testUser", result.login());
         assertNull(result.bio());

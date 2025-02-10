@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.UserGHMapper;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.UserGH;
@@ -16,8 +16,8 @@ public class UserClient {
     @Inject
     UserGHMapper mapper;
 
-    public UserDTO getUserInfo(String login) {
+    public User getUserInfo(String login) {
         UserGH user = client.getUserInfo(login);
-        return mapper.toDTO(user);
+        return mapper.toDomain(user);
     }
 }

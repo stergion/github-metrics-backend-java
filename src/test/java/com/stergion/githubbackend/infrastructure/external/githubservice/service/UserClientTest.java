@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
-import com.stergion.githubbackend.domain.users.UserDTO;
+import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.exceptions.NotGithubUserException;
@@ -43,7 +43,7 @@ class UserClientTest {
     private static final URI WEBSITE_URL = URI.create("https://example.com");
 
     private UserGH mockUserGH;
-    private UserDTO mockUserDTO;
+    private User mockUser;
     private Github githubRef;
 
     @BeforeEach
@@ -64,7 +64,7 @@ class UserClientTest {
                 WEBSITE_URL
         );
 
-        mockUserDTO = new UserDTO(
+        mockUser = new User(
                 null,
                 VALID_LOGIN,
                 "Test User",
@@ -84,9 +84,9 @@ class UserClientTest {
     @DisplayName("Should return user info for valid login")
     void shouldReturnUserInfoForValidLogin() {
         when(gitHubServiceClient.getUserInfo(VALID_LOGIN)).thenReturn(mockUserGH);
-        when(mapper.toDTO(mockUserGH)).thenReturn(mockUserDTO);
+        when(mapper.toDomain(mockUserGH)).thenReturn(mockUser);
 
-        UserDTO result = userClient.getUserInfo(VALID_LOGIN);
+        User result = userClient.getUserInfo(VALID_LOGIN);
 
         assertNotNull(result);
         assertEquals(VALID_LOGIN, result.login());
@@ -101,7 +101,7 @@ class UserClientTest {
         assertEquals(WEBSITE_URL, result.websiteURL());
 
         verify(gitHubServiceClient).getUserInfo(VALID_LOGIN);
-        verify(mapper).toDTO(mockUserGH);
+        verify(mapper).toDomain(mockUserGH);
     }
 
     @Test
@@ -161,7 +161,7 @@ class UserClientTest {
                 null
         );
 
-        UserDTO userDTOWithNulls = new UserDTO(
+        User userWithNulls = new User(
                 null,
                 VALID_LOGIN,
                 VALID_LOGIN,
@@ -177,9 +177,9 @@ class UserClientTest {
         );
 
         when(gitHubServiceClient.getUserInfo(VALID_LOGIN)).thenReturn(userGHWithNulls);
-        when(mapper.toDTO(userGHWithNulls)).thenReturn(userDTOWithNulls);
+        when(mapper.toDomain(userGHWithNulls)).thenReturn(userWithNulls);
 
-        UserDTO result = userClient.getUserInfo(VALID_LOGIN);
+        User result = userClient.getUserInfo(VALID_LOGIN);
 
         assertNotNull(result);
         assertEquals(VALID_LOGIN, result.login());
@@ -194,6 +194,6 @@ class UserClientTest {
         assertNull(result.websiteURL());
 
         verify(gitHubServiceClient).getUserInfo(VALID_LOGIN);
-        verify(mapper).toDTO(userGHWithNulls);
+        verify(mapper).toDomain(userGHWithNulls);
     }
 }
