@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.fetch;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReviewDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class PullRequestReviewFetchStrategy extends BaseFetchStrategy<PullRequestReviewDTO> {
+public class PullRequestReviewFetchStrategy extends BaseFetchStrategy<PullRequestReview> {
 
     protected PullRequestReviewFetchStrategy() {
         super(null);
@@ -22,7 +22,7 @@ public class PullRequestReviewFetchStrategy extends BaseFetchStrategy<PullReques
     }
 
     @Override
-    protected Multi<PullRequestReviewDTO> doFetch(FetchParams params) {
+    protected Multi<PullRequestReview> doFetch(FetchParams params) {
         return client.getPullRequestReviews(
                 params.login(),
                 params.from(),
@@ -31,8 +31,8 @@ public class PullRequestReviewFetchStrategy extends BaseFetchStrategy<PullReques
     }
 
     @Override
-    protected Multi<List<PullRequestReviewDTO>> doFetchBatched(FetchParams params,
-                                                               BatchProcessorConfig config) {
+    protected Multi<List<PullRequestReview>> doFetchBatched(FetchParams params,
+                                                            BatchProcessorConfig config) {
         return client.getPullRequestReviewsBatched(
                 params.login(),
                 params.from(),

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.fetch;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class IssueCommentFetchStrategy extends BaseFetchStrategy<IssueCommentDTO> {
+public class IssueCommentFetchStrategy extends BaseFetchStrategy<IssueComment> {
     protected IssueCommentFetchStrategy() {
         super(null);
     }
@@ -21,7 +21,7 @@ public class IssueCommentFetchStrategy extends BaseFetchStrategy<IssueCommentDTO
     }
 
     @Override
-    protected Multi<IssueCommentDTO> doFetch(FetchParams params) {
+    protected Multi<IssueComment> doFetch(FetchParams params) {
         return client.getIssueComments(
                 params.login(),
                 params.from(),
@@ -30,8 +30,8 @@ public class IssueCommentFetchStrategy extends BaseFetchStrategy<IssueCommentDTO
     }
 
     @Override
-    protected Multi<List<IssueCommentDTO>> doFetchBatched(FetchParams params,
-                                                          BatchProcessorConfig config) {
+    protected Multi<List<IssueComment>> doFetchBatched(FetchParams params,
+                                                       BatchProcessorConfig config) {
         return client.getIssueCommentsBatched(
                 params.login(),
                 params.from(),

@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class PullRequestService extends ContributionService<PullRequestDTO, PullRequestEntity> {
+public class PullRequestService extends ContributionService<PullRequest, PullRequestEntity> {
     @Inject
     PullRequestMapper pullRequestMapper;
     @Inject
@@ -34,18 +34,18 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
     }
 
     @Override
-    protected PullRequestEntity mapDtoToEntity(PullRequestDTO dto, ObjectId userId, ObjectId repoId) {
+    protected PullRequestEntity mapDtoToEntity(PullRequest dto, ObjectId userId, ObjectId repoId) {
         return pullRequestMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected PullRequestDTO mapEntityToDto(PullRequestEntity entity) {
+    protected PullRequest mapEntityToDto(PullRequestEntity entity) {
         return pullRequestMapper.toDTO(entity);
     }
 
-    public Multi<List<PullRequestDTO>> fetchAndCreatePullRequests(String login,
-                                                                  LocalDateTime from,
-                                                                  LocalDateTime to) {
+    public Multi<List<PullRequest>> fetchAndCreatePullRequests(String login,
+                                                               LocalDateTime from,
+                                                               LocalDateTime to) {
         var params = FetchParams.builder()
                                 .login(login)
                                 .dateRange(from, to)
@@ -54,7 +54,7 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
         return fetchAndCreate(params);
     }
 
-    public Uni<PagedResponse<PullRequestDTO>> search(PullRequestSearchCriteria criteria) {
+    public Uni<PagedResponse<PullRequest>> search(PullRequestSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
                                      pullRequestMapper::toDTO));

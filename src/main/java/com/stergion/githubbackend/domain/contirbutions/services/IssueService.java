@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Issue;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.IssueFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueMapper;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class IssueService extends ContributionService<IssueDTO, IssueEntity> {
+public class IssueService extends ContributionService<Issue, IssueEntity> {
     @Inject
     IssueMapper issueMapper;
     @Inject
@@ -31,17 +31,17 @@ public class IssueService extends ContributionService<IssueDTO, IssueEntity> {
     }
 
     @Override
-    protected IssueEntity mapDtoToEntity(IssueDTO dto, ObjectId userId, ObjectId repoId) {
+    protected IssueEntity mapDtoToEntity(Issue dto, ObjectId userId, ObjectId repoId) {
         return issueMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected IssueDTO mapEntityToDto(IssueEntity entity) {
+    protected Issue mapEntityToDto(IssueEntity entity) {
         return issueMapper.toDTO(entity);
     }
 
-    public Multi<List<IssueDTO>> fetchAndCreateIssues(String login, LocalDateTime from,
-                                                      LocalDateTime to) {
+    public Multi<List<Issue>> fetchAndCreateIssues(String login, LocalDateTime from,
+                                                   LocalDateTime to) {
         var params = FetchParams.builder()
                                 .login(login)
                                 .dateRange(from, to)
@@ -50,7 +50,7 @@ public class IssueService extends ContributionService<IssueDTO, IssueEntity> {
         return fetchAndCreate(params);
     }
 
-    public Uni<PagedResponse<IssueDTO>> search(IssueSearchCriteria criteria) {
+    public Uni<PagedResponse<Issue>> search(IssueSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response, issueMapper::toDTO));
     }

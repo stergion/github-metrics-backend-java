@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.domain.utils.types.PullRequestCommit;
@@ -24,7 +24,7 @@ public interface PullRequestGHMapper {
     @Mapping(target = "reactionsCount", source = "pullRequest.reactions.totalCount")
     @Mapping(target = "closingIssuesReferences", source = "pullRequest.closingIssuesReferences.nodes")
     @Mapping(target = "closingIssuesReferencesCount", source = "pullRequest.closingIssuesReferences.totalCount")
-    PullRequestDTO toDTO(PullRequestGH pullRequest, String login);
+    PullRequest toDTO(PullRequestGH pullRequest, String login);
 
 
     default List<Github> map(PullRequestGH.ClosingIssuesReferences refs) {

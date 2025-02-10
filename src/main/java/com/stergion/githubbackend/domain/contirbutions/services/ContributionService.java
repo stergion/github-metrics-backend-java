@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.ContributionDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
@@ -22,10 +22,10 @@ import java.util.List;
  * Uses the Template Method pattern to allow specific contribution services to customize
  * only what they need to.
  *
- * @param <D> The DTO type (e.g., IssueDTO, CommitDTO)
+ * @param <D> The DTO type (e.g., Issue, Commit)
  * @param <E> The Entity type (e.g., IssueEntity, CommitEntity)
  */
-public abstract class ContributionService<D extends ContributionDTO, E extends ContributionEntity> {
+public abstract class ContributionService<D extends Contribution, E extends ContributionEntity> {
     @Inject
     UserService userService;
 

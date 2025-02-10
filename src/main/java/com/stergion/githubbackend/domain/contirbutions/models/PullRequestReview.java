@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 import java.time.LocalDate;
 import java.util.List;
 
-public record IssueDTO(
+public record PullRequestReview(
         ObjectId id,
         @NotNull
         String user,
@@ -23,21 +23,25 @@ public record IssueDTO(
         Github github,
 
         @NotNull
+        Github pullRequest,
+
+        @NotNull
         @PastOrPresent
         LocalDate createdAt,
 
-        LocalDate closedAt,
+        LocalDate submittedAt,
         LocalDate updatedAt,
-        IssueState state,
-        String title,
+        LocalDate publishedAt,
+        LocalDate lastEditedAt,
+        PullRequestReviewState state,
         String body,
-        int reactionsCount,
-        List<Label> labels,
-        String closer
-) implements ContributionDTO {
-    public IssueDTO {
-        labels = labels != null ? List.copyOf(labels) : List.of();
+        List<PullRequestReviewComment> comments
+) implements Contribution {
+
+    public PullRequestReview {
+        comments = comments != null ? List.copyOf(comments) : List.of();
     }
+
     private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override

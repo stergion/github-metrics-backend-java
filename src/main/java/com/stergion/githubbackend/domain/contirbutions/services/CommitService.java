@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.contirbutions.fetch.CommitFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class CommitService extends ContributionService<CommitDTO, CommitEntity> {
+public class CommitService extends ContributionService<Commit, CommitEntity> {
     @Inject
     CommitMapper commitMapper;
     @Inject
@@ -32,18 +32,18 @@ public class CommitService extends ContributionService<CommitDTO, CommitEntity> 
 
 
     @Override
-    protected CommitEntity mapDtoToEntity(CommitDTO dto, ObjectId userId, ObjectId repoId) {
+    protected CommitEntity mapDtoToEntity(Commit dto, ObjectId userId, ObjectId repoId) {
         return commitMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected CommitDTO mapEntityToDto(CommitEntity entity) {
+    protected Commit mapEntityToDto(CommitEntity entity) {
         return commitMapper.toDTO(entity);
     }
 
-    public Multi<List<CommitDTO>> fetchAndCreateCommits(String login,
-                                                        String owner, String name,
-                                                        LocalDateTime from, LocalDateTime to) {
+    public Multi<List<Commit>> fetchAndCreateCommits(String login,
+                                                     String owner, String name,
+                                                     LocalDateTime from, LocalDateTime to) {
 
         var params = FetchParams.builder()
                                 .login(login)
@@ -54,7 +54,7 @@ public class CommitService extends ContributionService<CommitDTO, CommitEntity> 
         return fetchAndCreate(params);
     }
 
-    public Uni<PagedResponse<CommitDTO>> search(CommitSearchCriteria criteria) {
+    public Uni<PagedResponse<Commit>> search(CommitSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response, commitMapper::toDTO));
     }

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Issue;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.LabelsConnection;
@@ -19,7 +19,7 @@ public interface IssueGHMapper {
     @Mapping(target = "repository.owner", source = "issue.repository.owner.login")
     @Mapping(target = "closer", expression = "java(getCloserLogin(issue))")
     @Mapping(target = "reactionsCount", source = "issue.reactions.totalCount")
-    IssueDTO toDTO(IssueGH issue, String login);
+    Issue toDTO(IssueGH issue, String login);
 
 
     default String getCloserLogin(IssueGH issue) {

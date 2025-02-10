@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueCommentGH;
 import org.mapstruct.Mapper;
@@ -15,18 +15,18 @@ public interface IssueCommentGHMapper {
     @Mapping(target = "github.url", source = "issueComment.url")
     @Mapping(target = "repository.owner", source = "issueComment.repository.owner.login")
     @Mapping(target = "associatedIssue", expression = "java(mapAssociatedIssue(issueComment))")
-    IssueCommentDTO toDTO(IssueCommentGH issueComment, String login);
+    IssueComment toDTO(IssueCommentGH issueComment, String login);
 
 
-    default IssueCommentDTO.AssociatedIssue mapAssociatedIssue(IssueCommentGH issueComment) {
+    default IssueComment.AssociatedIssue mapAssociatedIssue(IssueCommentGH issueComment) {
         if (issueComment.pullRequest() != null) {
-            return new IssueCommentDTO.AssociatedIssue(
-                    IssueCommentDTO.IssueType.PULL_REQUEST,
+            return new IssueComment.AssociatedIssue(
+                    IssueComment.IssueType.PULL_REQUEST,
                     new Github(issueComment.pullRequest().id(), issueComment.pullRequest().url())
             );
         } else if (issueComment.issue() != null) {
-            return new IssueCommentDTO.AssociatedIssue(
-                    IssueCommentDTO.IssueType.ISSUE,
+            return new IssueComment.AssociatedIssue(
+                    IssueComment.IssueType.ISSUE,
                     new Github(issueComment.issue().id(), issueComment.issue().url())
             );
         }

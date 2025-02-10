@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.api.contributions;
 
 import com.stergion.githubbackend.application.request.search.CommitSearchRequest;
-import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.services.CommitService;
@@ -27,7 +27,7 @@ public final class CommitResource
 
     @POST
     @Path("/search")
-    public Uni<PagedResponse<CommitDTO>> findContributions(CommitSearchRequest request) {
+    public Uni<PagedResponse<Commit>> findContributions(CommitSearchRequest request) {
         var builder = CommitSearchCriteria.builder();
 
         var criteria = buildSearchCriteria(builder, request);

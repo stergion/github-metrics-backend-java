@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Issue;
 import com.stergion.githubbackend.domain.utils.types.IssueState;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.*;
@@ -31,7 +31,7 @@ class IssueGHMapperTest {
         var issueGH = createFullIssue(date);
 
         // When
-        IssueDTO dto = mapper.toDTO(issueGH, TEST_LOGIN);
+        Issue dto = mapper.toDTO(issueGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);
@@ -68,7 +68,7 @@ class IssueGHMapperTest {
         var issueGH = createMinimalIssue(date);
 
         // When
-        IssueDTO dto = mapper.toDTO(issueGH, TEST_LOGIN);
+        Issue dto = mapper.toDTO(issueGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);

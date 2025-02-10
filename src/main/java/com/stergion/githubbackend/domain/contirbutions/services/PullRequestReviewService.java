@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReviewDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestReviewFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReviewMapper;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class PullRequestReviewService
-        extends ContributionService<PullRequestReviewDTO, PullRequestReviewEntity> {
+        extends ContributionService<PullRequestReview, PullRequestReviewEntity> {
     @Inject
     PullRequestReviewMapper pullRequestReviewMapper;
     @Inject
@@ -33,19 +33,19 @@ public class PullRequestReviewService
     }
 
     @Override
-    protected PullRequestReviewEntity mapDtoToEntity(PullRequestReviewDTO dto, ObjectId userId,
+    protected PullRequestReviewEntity mapDtoToEntity(PullRequestReview dto, ObjectId userId,
                                                      ObjectId repoId) {
         return pullRequestReviewMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected PullRequestReviewDTO mapEntityToDto(PullRequestReviewEntity entity) {
+    protected PullRequestReview mapEntityToDto(PullRequestReviewEntity entity) {
         return pullRequestReviewMapper.toDTO(entity);
     }
 
-    public Multi<List<PullRequestReviewDTO>> fetchAndCreatePullRequestReviews(String login,
-                                                                              LocalDateTime from,
-                                                                              LocalDateTime to) {
+    public Multi<List<PullRequestReview>> fetchAndCreatePullRequestReviews(String login,
+                                                                           LocalDateTime from,
+                                                                           LocalDateTime to) {
         var params = FetchParams.builder()
                                 .login(login)
                                 .dateRange(from, to)
@@ -53,7 +53,7 @@ public class PullRequestReviewService
         return fetchAndCreate(params);
     }
 
-    public Uni<PagedResponse<PullRequestReviewDTO>> search(
+    public Uni<PagedResponse<PullRequestReview>> search(
             PullRequestReviewSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,

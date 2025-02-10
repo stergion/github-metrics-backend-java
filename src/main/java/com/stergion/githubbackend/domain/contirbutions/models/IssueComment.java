@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 
-public record IssueCommentDTO(
+public record IssueComment(
         ObjectId id,
         @NotNull
         String user,
@@ -31,7 +31,7 @@ public record IssueCommentDTO(
         LocalDate lastEditedAt,
         AssociatedIssue associatedIssue,
         String body
-) implements ContributionDTO {
+) implements Contribution {
     private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     public record AssociatedIssue(IssueType type, Github github) {

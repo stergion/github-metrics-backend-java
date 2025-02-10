@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.utils.types.CommitComment;
 import com.stergion.githubbackend.domain.utils.types.File;
 import com.stergion.githubbackend.domain.utils.types.Github;
@@ -27,7 +27,7 @@ class CommitGHMapperTest {
     CommitGHMapper mapper;
 
     @Test
-    @DisplayName("Should map a complete CommitGH to CommitDTO")
+    @DisplayName("Should map a complete CommitGH to Commit")
     void shouldMapCompleteCommit() throws Exception {
         // Arrange
         String userLogin = "testUser";
@@ -77,7 +77,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        CommitDTO result = mapper.toDTO(commit, userLogin, new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDTO(commit, userLogin, new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);
@@ -128,7 +128,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        CommitDTO result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);
@@ -205,7 +205,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        CommitDTO result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);

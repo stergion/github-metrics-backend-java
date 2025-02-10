@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReviewDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.domain.utils.types.PullRequestReviewComment;
 import com.stergion.githubbackend.domain.utils.types.PullRequestReviewState;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.PullRequestReviewGH;
@@ -32,7 +32,7 @@ class PullRequestReviewGHMapperTest {
         var reviewGH = createFullPullRequestReview(date);
 
         // When
-        PullRequestReviewDTO dto = mapper.toDTO(reviewGH, TEST_LOGIN);
+        PullRequestReview dto = mapper.toDTO(reviewGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);
@@ -70,7 +70,7 @@ class PullRequestReviewGHMapperTest {
         var reviewGH = createMinimalPullRequestReview(date);
 
         // When
-        PullRequestReviewDTO dto = mapper.toDTO(reviewGH, TEST_LOGIN);
+        PullRequestReview dto = mapper.toDTO(reviewGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);

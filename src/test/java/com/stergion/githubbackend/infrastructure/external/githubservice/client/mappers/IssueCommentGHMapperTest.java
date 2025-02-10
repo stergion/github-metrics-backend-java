@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueCommentGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.GitHubNodeRef;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.Reactions;
@@ -32,7 +32,7 @@ class IssueCommentGHMapperTest {
         var commentGH = createFullCommentWithPullRequest(date);
 
         // When
-        IssueCommentDTO dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);
@@ -49,7 +49,7 @@ class IssueCommentGHMapperTest {
 
         // Verify associated pull request
         assertNotNull(dto.associatedIssue());
-        assertEquals(IssueCommentDTO.IssueType.PULL_REQUEST, dto.associatedIssue().type());
+        assertEquals(IssueComment.IssueType.PULL_REQUEST, dto.associatedIssue().type());
         assertEquals("pr-123", dto.associatedIssue().github().id());
     }
 
@@ -61,7 +61,7 @@ class IssueCommentGHMapperTest {
         var commentGH = createFullCommentWithIssue(date);
 
         // When
-        IssueCommentDTO dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);
@@ -73,7 +73,7 @@ class IssueCommentGHMapperTest {
 
         // Verify associated issue
         assertNotNull(dto.associatedIssue());
-        assertEquals(IssueCommentDTO.IssueType.ISSUE, dto.associatedIssue().type());
+        assertEquals(IssueComment.IssueType.ISSUE, dto.associatedIssue().type());
         assertEquals("issue-123", dto.associatedIssue().github().id());
     }
 
@@ -85,7 +85,7 @@ class IssueCommentGHMapperTest {
         var commentGH = createMinimalComment(date);
 
         // When
-        IssueCommentDTO dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
 
         // Then
         assertNotNull(dto);

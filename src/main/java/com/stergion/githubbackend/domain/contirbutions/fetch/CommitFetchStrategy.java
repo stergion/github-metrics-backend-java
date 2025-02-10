@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.fetch;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
+public class CommitFetchStrategy extends BaseFetchStrategy<Commit> {
 
     protected CommitFetchStrategy() {
         super(null);
@@ -27,7 +27,7 @@ public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
     }
 
     @Override
-    protected Multi<CommitDTO> doFetch(FetchParams params) {
+    protected Multi<Commit> doFetch(FetchParams params) {
         var repo = params.nameWithOwner()
                          .orElseThrow(() -> new ValidationException(
                                  "Repository is required for commits"));
@@ -42,8 +42,8 @@ public class CommitFetchStrategy extends BaseFetchStrategy<CommitDTO> {
     }
 
     @Override
-    protected Multi<List<CommitDTO>> doFetchBatched(FetchParams params,
-                                                    BatchProcessorConfig config) {
+    protected Multi<List<Commit>> doFetchBatched(FetchParams params,
+                                                 BatchProcessorConfig config) {
         var repo = params.nameWithOwner()
                          .orElseThrow(() -> new ValidationException(
                                  "Repository is required for commits"));

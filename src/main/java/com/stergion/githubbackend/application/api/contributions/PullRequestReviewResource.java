@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.api.contributions;
 
 import com.stergion.githubbackend.application.request.search.PullRequestReviewSearchRequest;
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReviewDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.services.PullRequestReviewService;
@@ -28,7 +28,7 @@ public final class PullRequestReviewResource
 
     @POST
     @Path("/search")
-    public Uni<PagedResponse<PullRequestReviewDTO>> findContributions(
+    public Uni<PagedResponse<PullRequestReview>> findContributions(
             PullRequestReviewSearchRequest request) {
         var builder = PullRequestReviewSearchCriteria.builder();
 
