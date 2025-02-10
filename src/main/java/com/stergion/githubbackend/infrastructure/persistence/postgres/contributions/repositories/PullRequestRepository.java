@@ -1,13 +1,13 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestEntity;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
-public final class PullRequestRepository implements ContributionRepository<PullRequest> {
+public final class PullRequestRepository implements ContributionRepository<PullRequestEntity> {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 

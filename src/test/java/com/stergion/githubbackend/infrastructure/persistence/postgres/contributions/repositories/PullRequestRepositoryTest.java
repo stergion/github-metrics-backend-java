@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
@@ -74,7 +74,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new pull request successfully")
         void createPullRequest(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> pullRequestRepository.persist(pr)),
@@ -97,7 +97,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle pull request state transitions")
         void handleStateTransitions(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
 
             // Initial state: OPEN
             asserter.execute(
@@ -155,7 +155,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update pull request content")
         void updateContent(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
             asserter.execute(
                     () -> Panache.withTransaction(() -> pullRequestRepository.persist(pr)));
 
@@ -189,7 +189,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete pull request and cascade relationships")
         void deletePullRequest(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
 
             // Add relationships
             pr.setLabels(TestEntityCreators.createLabels(2));
@@ -239,7 +239,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should manage labels")
         void manageLabels(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
             List<Label> labels = TestEntityCreators.createLabels(3);
 
             pr.setLabels(labels);
@@ -276,7 +276,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should manage commits")
         void manageCommits(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
             List<PullRequestCommit> commits = TestEntityCreators.createPullRequestCommits(3);
 
             pr.setCommits(commits);
@@ -299,7 +299,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should manage closing issues references")
         void manageClosingIssues(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
             List<ClosingIssuesReference> refs = TestEntityCreators.createClosingIssuesReferences(2);
 
             pr.setClosingIssuesReferences(refs);
@@ -327,7 +327,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            PullRequest pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
             asserter.execute(
                     () -> Panache.withTransaction(() -> pullRequestRepository.persist(pr)));
 
@@ -351,7 +351,7 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find by repository and user")
         void findByRepoAndUser(UniAsserter asserter) {
-            List<PullRequest> prs = TestEntityCreators.createPullRequests(testUser, testRepo, 3);
+            List<PullRequestEntity> prs = TestEntityCreators.createPullRequests(testUser, testRepo, 3);
             asserter.execute(
                     () -> Panache.withTransaction(() -> pullRequestRepository.persist(prs)));
 
@@ -383,27 +383,27 @@ class PullRequestRepositoryTest {
         @DisplayName("Should enforce required fields")
         void enforceRequiredFields(UniAsserter asserter) {
             // Test with null user
-            PullRequest prWithNullUser = TestEntityCreators.createPullRequest(testUser, testRepo,
+            PullRequestEntity prWithNullUser = TestEntityCreators.createPullRequest(testUser, testRepo,
                     "null-user");
             prWithNullUser.setUser(null);
 
             // Test with null repository
-            PullRequest prWithNullRepo = TestEntityCreators.createPullRequest(testUser, testRepo,
+            PullRequestEntity prWithNullRepo = TestEntityCreators.createPullRequest(testUser, testRepo,
                     "null-repo");
             prWithNullRepo.setRepository(null);
 
             // Test with null createdAt
-            PullRequest prWithNullCreatedAt = TestEntityCreators.createPullRequest(testUser,
+            PullRequestEntity prWithNullCreatedAt = TestEntityCreators.createPullRequest(testUser,
                     testRepo, "null-created");
             prWithNullCreatedAt.setCreatedAt(null);
 
             // Test with null githubId
-            PullRequest prWithNullGithubId = TestEntityCreators.createPullRequest(testUser,
+            PullRequestEntity prWithNullGithubId = TestEntityCreators.createPullRequest(testUser,
                     testRepo, "null-github");
             prWithNullGithubId.setGithubId(null);
 
             // Test with null githubUrl
-            PullRequest prWithNullGithubUrl = TestEntityCreators.createPullRequest(testUser,
+            PullRequestEntity prWithNullGithubUrl = TestEntityCreators.createPullRequest(testUser,
                     testRepo, "null-url");
             prWithNullGithubUrl.setGithubUrl(null);
 
@@ -444,8 +444,8 @@ class PullRequestRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void enforceUniqueConstraints(UniAsserter asserter) {
-            PullRequest pr1 = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
-            PullRequest pr2 = TestEntityCreators.createPullRequest(testUser, testRepo, "2");
+            PullRequestEntity pr1 = TestEntityCreators.createPullRequest(testUser, testRepo, "1");
+            PullRequestEntity pr2 = TestEntityCreators.createPullRequest(testUser, testRepo, "2");
             // Set same githubId for both pull requests
             pr2.setGithubId(pr1.getGithubId());
             pr2.setGithubUrl(pr1.getGithubUrl());
@@ -472,8 +472,8 @@ class PullRequestRepositoryTest {
         @DisplayName("Should handle bulk deletions")
         void handleBulkDeletions(UniAsserter asserter) {
             // Create multiple pull requests
-            List<PullRequest> prs = TestEntityCreators.createPullRequests(testUser, testRepo, 5);
-            for (PullRequest pr : prs) {
+            List<PullRequestEntity> prs = TestEntityCreators.createPullRequests(testUser, testRepo, 5);
+            for (PullRequestEntity pr : prs) {
                 pr.setLabels(TestEntityCreators.createLabels(2));
                 pr.setCommits(TestEntityCreators.createPullRequestCommits(2));
                 pr.setClosingIssuesReferences(TestEntityCreators.createClosingIssuesReferences(1));

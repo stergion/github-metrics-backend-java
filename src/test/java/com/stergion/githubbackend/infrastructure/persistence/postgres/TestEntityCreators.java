@@ -212,8 +212,8 @@ public final class TestEntityCreators {
         return comments;
     }
 
-    public static PullRequest createPullRequest(UserEntity user, RepositoryEntity repository, String suffix) {
-        PullRequest pr = new PullRequest();
+    public static PullRequestEntity createPullRequest(UserEntity user, RepositoryEntity repository, String suffix) {
+        PullRequestEntity pr = new PullRequestEntity();
         pr.setUser(user);
         pr.setRepository(repository);
         pr.setCreatedAt(LocalDateTime.now());
@@ -230,8 +230,8 @@ public final class TestEntityCreators {
         return pr;
     }
 
-    public static List<PullRequest> createPullRequests(UserEntity user, RepositoryEntity repository, int count) {
-        List<PullRequest> pullRequests = new ArrayList<>();
+    public static List<PullRequestEntity> createPullRequests(UserEntity user, RepositoryEntity repository, int count) {
+        List<PullRequestEntity> pullRequests = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             pullRequests.add(createPullRequest(user, repository, "pr-" + i));
         }

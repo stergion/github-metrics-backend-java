@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "PullRequests")
-public class PullRequest extends ContributionEntity {
+public class PullRequestEntity extends ContributionEntity {
 
     @NotNull
     @PastOrPresent
