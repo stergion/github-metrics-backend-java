@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
@@ -32,7 +32,7 @@ class IssueCommentRepositoryTest {
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
-    private IssueComment testComment;
+    private IssueCommentEntity testComment;
 
     @BeforeEach
     void setUp() {
@@ -51,8 +51,8 @@ class IssueCommentRepositoryTest {
 
             assertNotNull(testComment.id(), "Comment ID should be generated");
 
-            IssueComment found = issueCommentRepository.findById(testComment.id())
-                                                       .await().atMost(TIMEOUT);
+            IssueCommentEntity found = issueCommentRepository.findById(testComment.id())
+                                                             .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found comment should not be null");
             assertEquals(testComment.id(), found.id());
@@ -69,8 +69,8 @@ class IssueCommentRepositoryTest {
 
             issueCommentRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
 
-            IssueComment found = issueCommentRepository.findById(testComment.id())
-                                                       .await().atMost(TIMEOUT);
+            IssueCommentEntity found = issueCommentRepository.findById(testComment.id())
+                                                             .await().atMost(TIMEOUT);
             assertNull(found, "Comment should be deleted");
         }
     }
@@ -84,8 +84,8 @@ class IssueCommentRepositoryTest {
         void findByGitHubId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment found = issueCommentRepository.findByGitHubId(testComment.github().id)
-                                                       .await().atMost(TIMEOUT);
+            IssueCommentEntity found = issueCommentRepository.findByGitHubId(testComment.github().id)
+                                                             .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found comment should not be null");
             assertEquals(testComment.id(), found.id());
@@ -100,9 +100,9 @@ class IssueCommentRepositoryTest {
         void findByUserId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID)
-                                                             .collect().asList()
-                                                             .await().atMost(TIMEOUT);
+            List<IssueCommentEntity> found = issueCommentRepository.findByUserId(TEST_USER_ID)
+                                                                   .collect().asList()
+                                                                   .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -118,9 +118,9 @@ class IssueCommentRepositoryTest {
         void findByRepoId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByRepoId(TEST_REPO_ID)
-                                                             .collect().asList()
-                                                             .await().atMost(TIMEOUT);
+            List<IssueCommentEntity> found = issueCommentRepository.findByRepoId(TEST_REPO_ID)
+                                                                   .collect().asList()
+                                                                   .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -136,10 +136,10 @@ class IssueCommentRepositoryTest {
         void findByUserAndRepoId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            List<IssueComment> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID,
+            List<IssueCommentEntity> found = issueCommentRepository.findByUserAndRepoId(TEST_USER_ID,
                                                                      TEST_REPO_ID)
-                                                             .collect().asList()
-                                                             .await().atMost(TIMEOUT);
+                                                                   .collect().asList()
+                                                                   .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one comment");
             assertNotNull(found, "Found comments should not be null");
@@ -192,11 +192,11 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            IssueComment commentWithNulls = createTestComment(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
+            IssueCommentEntity commentWithNulls = createTestComment(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             issueCommentRepository.persist(commentWithNulls).await().atMost(TIMEOUT);
 
-            IssueComment found = issueCommentRepository.findById(commentWithNulls.id())
-                                                       .await().atMost(TIMEOUT);
+            IssueCommentEntity found = issueCommentRepository.findById(commentWithNulls.id())
+                                                             .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found comment should not be null");
             assertEquals(commentWithNulls.id(), found.id());
@@ -216,9 +216,9 @@ class IssueCommentRepositoryTest {
                                       .await().atMost(TIMEOUT);
             }
 
-            List<IssueComment> found = issueCommentRepository.findByUserId(TEST_USER_ID)
-                                                             .collect().asList()
-                                                             .await().atMost(TIMEOUT);
+            List<IssueCommentEntity> found = issueCommentRepository.findByUserId(TEST_USER_ID)
+                                                                   .collect().asList()
+                                                                   .await().atMost(TIMEOUT);
 
             assertEquals(commentCount, found.size(),
                     "Should find correct number of comments");
@@ -234,16 +234,16 @@ class IssueCommentRepositoryTest {
             testComment.publishedAt = null;  // Start unpublished
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment unpublished = issueCommentRepository.findById(testComment.id())
-                                                             .await().atMost(TIMEOUT);
+            IssueCommentEntity unpublished = issueCommentRepository.findById(testComment.id())
+                                                                   .await().atMost(TIMEOUT);
             assertNull(unpublished.publishedAt(), "New comment should be unpublished");
 
             // Simulate publication
             testComment.publishedAt = LocalDate.now();
             issueCommentRepository.update(testComment).await().atMost(TIMEOUT);
 
-            IssueComment published = issueCommentRepository.findById(testComment.id())
-                                                           .await().atMost(TIMEOUT);
+            IssueCommentEntity published = issueCommentRepository.findById(testComment.id())
+                                                                 .await().atMost(TIMEOUT);
             assertNotNull(published.publishedAt(), "Comment should be published");
         }
 
@@ -254,8 +254,8 @@ class IssueCommentRepositoryTest {
             testComment.body = "Original content";
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            IssueComment original = issueCommentRepository.findById(testComment.id())
-                                                          .await().atMost(TIMEOUT);
+            IssueCommentEntity original = issueCommentRepository.findById(testComment.id())
+                                                                .await().atMost(TIMEOUT);
             assertNull(original.lastEditedAt(), "New comment should not be edited");
             assertEquals("Original content", original.body(), "Should have original content");
 
@@ -265,8 +265,8 @@ class IssueCommentRepositoryTest {
             testComment.updatedAt = LocalDate.now();
             issueCommentRepository.update(testComment).await().atMost(TIMEOUT);
 
-            IssueComment edited = issueCommentRepository.findById(testComment.id())
-                                                        .await().atMost(TIMEOUT);
+            IssueCommentEntity edited = issueCommentRepository.findById(testComment.id())
+                                                              .await().atMost(TIMEOUT);
             assertNotNull(edited.lastEditedAt(), "Comment should be marked as edited");
             assertNotNull(edited.updatedAt(), "Comment should have updated timestamp");
             assertEquals("Updated content", edited.body(), "Should have updated content");
@@ -288,8 +288,8 @@ class IssueCommentRepositoryTest {
                               .await().atMost(TIMEOUT);
     }
 
-    private IssueComment createTestComment(ObjectId id, ObjectId userId, ObjectId repoId,
-                                           Optional<String> suffix) {
+    private IssueCommentEntity createTestComment(ObjectId id, ObjectId userId, ObjectId repoId,
+                                                 Optional<String> suffix) {
         var github = new Github();
         github.id = "test-github-" + suffix.orElse("id");
         github.url = URI.create(
@@ -298,7 +298,7 @@ class IssueCommentRepositoryTest {
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 
-        var comment = new IssueComment();
+        var comment = new IssueCommentEntity();
         comment.id = id;
         comment.userId = userId;
         comment.repositoryId = repoId;

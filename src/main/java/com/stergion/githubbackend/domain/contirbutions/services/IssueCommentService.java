@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMappe
 import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class IssueCommentService extends ContributionService<IssueCommentDTO, IssueComment> {
+public class IssueCommentService extends ContributionService<IssueCommentDTO, IssueCommentEntity> {
     @Inject
     IssueCommentMapper issueCommentMapper;
     @Inject
@@ -33,12 +33,12 @@ public class IssueCommentService extends ContributionService<IssueCommentDTO, Is
 
 
     @Override
-    protected IssueComment mapDtoToEntity(IssueCommentDTO dto, ObjectId userId, ObjectId repoId) {
+    protected IssueCommentEntity mapDtoToEntity(IssueCommentDTO dto, ObjectId userId, ObjectId repoId) {
         return issueCommentMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected IssueCommentDTO mapEntityToDto(IssueComment entity) {
+    protected IssueCommentDTO mapEntityToDto(IssueCommentEntity entity) {
         return issueCommentMapper.toDTO(entity);
     }
 

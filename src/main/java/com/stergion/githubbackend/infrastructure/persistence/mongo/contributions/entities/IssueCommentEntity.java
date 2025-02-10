@@ -13,7 +13,7 @@ import org.bson.types.ObjectId;
 import java.time.LocalDate;
 
 @MongoEntity(collection = "issueComments")
-public non-sealed class IssueComment implements ContributionEntity {
+public non-sealed class IssueCommentEntity implements ContributionEntity {
     public ObjectId id;
 
     @NotNull

@@ -4,7 +4,7 @@ import com.mongodb.client.model.Filters;
 import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoIssueCommentSearchStrategy
-        extends MongoContributionSearchStrategy<IssueComment, IssueCommentSearchCriteria>
+        extends MongoContributionSearchStrategy<IssueCommentEntity, IssueCommentSearchCriteria>
         implements IssueCommentSearchStrategy {
 
     public MongoIssueCommentSearchStrategy(IssueCommentRepository repository) {

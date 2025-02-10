@@ -6,7 +6,7 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.
 import org.bson.types.ObjectId;
 
 public sealed interface ContributionEntity permits CommitEntity, IssueEntity, PullRequestEntity, PullRequestReviewEntity,
-        IssueComment {
+        IssueCommentEntity {
     public ObjectId id();
 
     public ObjectId userId();
