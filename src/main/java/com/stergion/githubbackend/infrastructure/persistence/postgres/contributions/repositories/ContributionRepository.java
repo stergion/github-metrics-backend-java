@@ -1,13 +1,13 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.ContributionEntity;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
 import io.smallrye.mutiny.Uni;
 
 import java.util.List;
 import java.util.UUID;
 
-public sealed interface ContributionRepository<T extends Contribution>
+public sealed interface ContributionRepository<T extends ContributionEntity>
         extends PanacheRepositoryBase<T, UUID>
         permits CommitRepository, IssueRepository, IssueCommentRepository, PullRequestRepository,
         PullRequestReviewRepository {

@@ -19,7 +19,7 @@ import java.util.UUID;
         }
 )
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Contribution {
+public abstract class ContributionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
