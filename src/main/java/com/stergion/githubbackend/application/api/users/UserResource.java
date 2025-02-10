@@ -5,7 +5,7 @@ import com.stergion.githubbackend.application.mapper.RepositoryMapper;
 import com.stergion.githubbackend.application.mapper.UserMapper;
 import com.stergion.githubbackend.application.response.UserResponse;
 import com.stergion.githubbackend.application.service.UserDataManagementService;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import io.quarkus.logging.Log;
@@ -40,7 +40,7 @@ public class UserResource {
 
         var usr = userService.getUser(login);
 
-        List<RepositoryDTO> repos = repositoryService.getRepositories(usr.repositories());
+        List<Repository> repos = repositoryService.getRepositories(usr.repositories());
         UserResponse userResponse = userMapper.toResponse(usr, repos);
 
         return RestResponse.ok(userResponse);
@@ -85,9 +85,9 @@ public class UserResource {
         Log.info("Getting user: " + login + " repositories");
 
         var detailLevel = DetailLevel.fromString(detail);
-        List<RepositoryDTO> repos = userService.getUserRepositories(login);
+        List<Repository> repos = userService.getUserRepositories(login);
 
-        Function<RepositoryDTO, ?> mapper = switch(detailLevel) {
+        Function<Repository, ?> mapper = switch(detailLevel) {
             case FULL -> repositoryMapper::toRepositoryResponse;
             case BASIC -> repositoryMapper::toNameWithOwnerResponse;
         };

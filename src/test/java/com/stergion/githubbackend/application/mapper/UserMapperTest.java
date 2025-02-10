@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.mapper;
 
 import com.stergion.githubbackend.application.response.UserResponse;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
@@ -24,7 +24,7 @@ public class UserMapperTest {
     UserMapper userMapper;
 
     private User testUser;
-    private List<RepositoryDTO> testRepositories;
+    private List<Repository> testRepositories;
     private final LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
@@ -49,7 +49,7 @@ public class UserMapperTest {
 
         // Setup test repositories
         testRepositories = List.of(
-                new RepositoryDTO(
+                new Repository(
                         repo1Id,  // Use the same ID as in user's repositories list
                         "testuser",
                         "repo1",
@@ -66,7 +66,7 @@ public class UserMapperTest {
                         20,
                         5
                 ),
-                new RepositoryDTO(
+                new Repository(
                         repo2Id,  // Use the same ID as in user's repositories list
                         "testuser",
                         "repo2",
@@ -120,7 +120,7 @@ public class UserMapperTest {
     void testToResponse_repositoryMappingVerification() {
         // Create a repository that's not in the user's repository list
         ObjectId nonUserRepoId = new ObjectId();
-        RepositoryDTO nonUserRepo = new RepositoryDTO(
+        Repository nonUserRepo = new Repository(
                 nonUserRepoId,
                 "otheruser",
                 "otherrepo",
@@ -139,7 +139,7 @@ public class UserMapperTest {
         );
 
         // Create a list with all repositories including the one not in user's list
-        List<RepositoryDTO> allRepositories = new java.util.ArrayList<>(testRepositories);
+        List<Repository> allRepositories = new java.util.ArrayList<>(testRepositories);
         allRepositories.add(nonUserRepo);
 
         // Perform the mapping

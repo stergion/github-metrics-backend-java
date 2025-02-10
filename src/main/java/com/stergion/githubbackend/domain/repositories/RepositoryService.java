@@ -26,12 +26,12 @@ public class RepositoryService {
     @Inject
     RepositoryIdCache repositoryIdCache;
 
-    public RepositoryDTO getRepository(String owner, String name) {
+    public Repository getRepository(String owner, String name) {
         RepositoryEntity repo = repoRepository.findByNameAndOwner(owner, name);
         if (repo == null) {
             throw new RepositoryNotFoundException(owner, name);
         }
-        return repoMapper.toDTO(repo);
+        return repoMapper.toDomain(repo);
     }
 
     public ObjectId getRepositoryId(NameWithOwner repo) {
@@ -49,22 +49,22 @@ public class RepositoryService {
         return id;
     }
 
-    private RepositoryDTO fetchRepository(String owner, String name) {
-        RepositoryDTO repo = repoClient.getRepositoryInfo(owner, name);
+    private Repository fetchRepository(String owner, String name) {
+        Repository repo = repoClient.getRepositoryInfo(owner, name);
         if (repo == null) {
             throw new RepositoryNotFoundException(owner, name);
         }
         return repo;
     }
 
-    private RepositoryDTO createRepository(RepositoryDTO repoDTO) {
+    private Repository createRepository(Repository repoDTO) {
         var repo = repoMapper.toEntity(repoDTO);
         repoRepository.save(repo);
 
-        return repoMapper.toDTO(repo);
+        return repoMapper.toDomain(repo);
     }
 
-    private List<RepositoryDTO> createRepositories(List<RepositoryDTO> repoDTO) {
+    private List<Repository> createRepositories(List<Repository> repoDTO) {
         var repos = repoDTO.stream()
                            .map(repoMapper::toEntity)
                            .distinct()
@@ -73,52 +73,52 @@ public class RepositoryService {
         repoRepository.save(repos);
 
         return repos.stream()
-                    .map(repoMapper::toDTO)
+                    .map(repoMapper::toDomain)
                     .toList();
     }
 
-    public RepositoryDTO fetchAndCreateRepository(NameWithOwner nameWithOwner) {
+    public Repository fetchAndCreateRepository(NameWithOwner nameWithOwner) {
         return fetchAndCreateRepository(nameWithOwner.owner(), nameWithOwner.name());
     }
 
-    public RepositoryDTO fetchAndCreateRepository(String owner, String name) {
-        RepositoryDTO repoDTO = fetchRepository(owner, name);
+    public Repository fetchAndCreateRepository(String owner, String name) {
+        Repository repoDTO = fetchRepository(owner, name);
         return createRepository(repoDTO);
     }
 
-    private Multi<List<RepositoryDTO>> fetchUserRepositories(String login, LocalDateTime from,
-                                                             LocalDateTime to,
-                                                             BatchProcessorConfig config) {
+    private Multi<List<Repository>> fetchUserRepositories(String login, LocalDateTime from,
+                                                          LocalDateTime to,
+                                                          BatchProcessorConfig config) {
         return repoClient.getRepositoriesContributedToBatched(login, from, to, config);
     }
 
-    private Multi<List<RepositoryDTO>> fetchUserRepositoriesCommited(String login, LocalDateTime from,
-                                                             LocalDateTime to,
-                                                             BatchProcessorConfig config) {
+    private Multi<List<Repository>> fetchUserRepositoriesCommited(String login, LocalDateTime from,
+                                                                  LocalDateTime to,
+                                                                  BatchProcessorConfig config) {
         return repoClient.getRepositoriesCommittedToBatched(login, from, to, config);
     }
 
-    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositories(String login, LocalDateTime from,
-                                                                     LocalDateTime to) {
+    public Multi<List<Repository>> fetchAndCreateUserRepositories(String login, LocalDateTime from,
+                                                                  LocalDateTime to) {
         var config = BatchProcessorConfig.defaultConfig();
         var repos = fetchUserRepositories(login, from, to, config);
 
         return repos.map(this::createRepositories);
     }
 
-    public Multi<List<RepositoryDTO>> fetchAndCreateUserRepositoriesCommited(String login,
-                                                                             LocalDateTime from,
-                                                                             LocalDateTime to) {
+    public Multi<List<Repository>> fetchAndCreateUserRepositoriesCommited(String login,
+                                                                          LocalDateTime from,
+                                                                          LocalDateTime to) {
         var config = BatchProcessorConfig.defaultConfig();
         var repos = fetchUserRepositoriesCommited(login, from, to, config);
 
         return repos.map(this::createRepositories);
     }
 
-    public List<RepositoryDTO> getRepositories(List<ObjectId> ids) {
+    public List<Repository> getRepositories(List<ObjectId> ids) {
         List<RepositoryEntity> repos = repoRepository.findById(ids);
         return repos.stream()
-                    .map(repoMapper::toDTO)
+                    .map(repoMapper::toDomain)
                     .toList();
     }
 }

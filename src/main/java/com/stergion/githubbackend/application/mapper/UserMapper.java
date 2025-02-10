@@ -2,7 +2,7 @@ package com.stergion.githubbackend.application.mapper;
 
 import com.stergion.githubbackend.application.response.UserResponse;
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import org.bson.types.ObjectId;
@@ -27,11 +27,11 @@ public interface UserMapper {
     @Mapping(source = "user.bio", target = "bio")
     @Mapping(source = "user.twitterHandle", target = "twitterHandle")
     @Mapping(source = "user.websiteURL", target = "websiteURL")
-    UserResponse toResponse(User user, List<RepositoryDTO> repositories);
+    UserResponse toResponse(User user, List<Repository> repositories);
 
     @Named("toNameWithOwnerList")
     default List<NameWithOwner> toNameWithOwnerList(User user,
-                                                    List<RepositoryDTO> repositories) {
+                                                    List<Repository> repositories) {
         if (repositories == null || repositories.isEmpty()) {
             return List.of();
         }
@@ -39,7 +39,7 @@ public interface UserMapper {
         // Create a map of repositories by their ID for efficient lookup
         Map<ObjectId, NameWithOwner> repoMap = repositories.stream()
                                                            .collect(Collectors.toMap(
-                                                                   RepositoryDTO::id,
+                                                                   Repository::id,
                                                                    repo -> new NameWithOwner(
                                                                            repo.owner(),
                                                                            repo.name())));

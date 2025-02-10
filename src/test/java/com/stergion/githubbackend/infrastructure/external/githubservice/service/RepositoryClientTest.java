@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.exceptions.InternalServerException;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.exceptions.NotGithubUserException;
@@ -64,13 +64,13 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             RepositoryGH mockRepo = repoBuilder.withOwner(TEST_OWNER)
                                                .withName(TEST_NAME)
                                                .build();
-            RepositoryDTO expectedDTO = repoBuilder.buildDTO();
+            Repository expectedDTO = repoBuilder.buildDTO();
 
             when(gitHubServiceClient.getRepository(TEST_OWNER, TEST_NAME)).thenReturn(mockRepo);
-            when(mapper.toDTO(mockRepo)).thenReturn(expectedDTO);
+            when(mapper.toDomain(mockRepo)).thenReturn(expectedDTO);
 
             // Act
-            RepositoryDTO result = repositoryClient.getRepositoryInfo(TEST_OWNER, TEST_NAME);
+            Repository result = repositoryClient.getRepositoryInfo(TEST_OWNER, TEST_NAME);
 
             // Assert
             assertAll(
@@ -82,7 +82,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
                             "Star count should match")
                      );
             verify(gitHubServiceClient).getRepository(TEST_OWNER, TEST_NAME);
-            verify(mapper).toDTO(mockRepo);
+            verify(mapper).toDomain(mockRepo);
         }
 
         @Test
@@ -115,7 +115,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
         void shouldStreamRepositoriesWithMixedEvents() {
             int dataEventCount = 5;
             List<RepositoryGH> mockRepos = repoBuilder.buildList(dataEventCount);
-            List<RepositoryDTO> expectedDTOs = repoBuilder.buildDTOList(dataEventCount);
+            List<Repository> expectedDTOs = repoBuilder.buildDTOList(dataEventCount);
             List<SseEvent<String>> events = new ArrayList<>();
 
             for (int i = 0; i < dataEventCount; i++) {
@@ -123,7 +123,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
                 when(event.name()).thenReturn("success");
                 when(event.data()).thenReturn(String.format("{\"id\":\"repo-%d\"}", i));
                 when(transformer.transform(event, RepositoryGH.class)).thenReturn(Optional.of(mockRepos.get(i)));
-                when(mapper.toDTO(mockRepos.get(i))).thenReturn(expectedDTOs.get(i));
+                when(mapper.toDomain(mockRepos.get(i))).thenReturn(expectedDTOs.get(i));
                 events.add(event);
 
                 if (i < dataEventCount - 1) {
@@ -137,7 +137,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             when(gitHubServiceClient.getRepositoriesCommittedTo(TEST_LOGIN, FROM_DATE, TO_DATE))
                     .thenReturn(Multi.createFrom().iterable(events));
 
-            List<RepositoryDTO> result = repositoryClient
+            List<Repository> result = repositoryClient
                     .getRepositoriesCommittedTo(TEST_LOGIN, FROM_DATE, TO_DATE)
                     .collect().asList()
                     .await().indefinitely();
@@ -145,7 +145,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             assertEquals(dataEventCount, result.size());
             assertEquals(expectedDTOs, result);
             verify(transformer, times(events.size())).transform(any(), eq(RepositoryGH.class));
-            verify(mapper, times(dataEventCount)).toDTO(any());
+            verify(mapper, times(dataEventCount)).toDomain(any());
         }
 
         @Test
@@ -194,7 +194,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             List<SseEvent<String>> events = createMockSseEvents(totalEvents,
                     i -> String.format("{\"id\":\"repo-%d\"}", i));
             List<RepositoryGH> mockRepos = repoBuilder.buildList(totalEvents);
-            List<RepositoryDTO> expectedDTOs = repoBuilder.buildDTOList(totalEvents);
+            List<Repository> expectedDTOs = repoBuilder.buildDTOList(totalEvents);
 
             when(gitHubServiceClient.getRepositoriesCommittedTo(TEST_LOGIN, FROM_DATE, TO_DATE))
                     .thenReturn(Multi.createFrom().items(events.stream()));
@@ -202,12 +202,12 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             for (int i = 0; i < totalEvents; i++) {
                 when(transformer.transform(events.get(i), RepositoryGH.class))
                         .thenReturn(Optional.of(mockRepos.get(i)));
-                when(mapper.toDTO(mockRepos.get(i)))
+                when(mapper.toDomain(mockRepos.get(i)))
                         .thenReturn(expectedDTOs.get(i));
             }
 
             // Act
-            List<List<RepositoryDTO>> result = repositoryClient
+            List<List<Repository>> result = repositoryClient
                     .getRepositoriesCommittedToBatched(TEST_LOGIN, FROM_DATE, TO_DATE,
                             LARGE_BATCH_CONFIG)
                     .collect().asList()
@@ -219,7 +219,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             assertEquals(expectedBatches, result.size());
             assertEquals(LARGE_BATCH_CONFIG.getBatchSize(), result.getFirst().size());
             verify(transformer, times(totalEvents)).transform(any(), eq(RepositoryGH.class));
-            verify(mapper, times(totalEvents)).toDTO(any());
+            verify(mapper, times(totalEvents)).toDomain(any());
         }
 
         @Test
@@ -236,12 +236,12 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
                     .thenReturn(Multi.createFrom().items(events.stream()));
 
             List<RepositoryGH> mockRepos = repoBuilder.buildList(eventsBeforeError);
-            List<RepositoryDTO> expectedDTOs = repoBuilder.buildDTOList(eventsBeforeError);
+            List<Repository> expectedDTOs = repoBuilder.buildDTOList(eventsBeforeError);
 
             for (int i = 0; i < eventsBeforeError; i++) {
                 when(transformer.transform(events.get(i), RepositoryGH.class))
                         .thenReturn(Optional.of(mockRepos.get(i)));
-                when(mapper.toDTO(mockRepos.get(i)))
+                when(mapper.toDomain(mockRepos.get(i)))
                         .thenReturn(expectedDTOs.get(i));
             }
 
@@ -249,10 +249,10 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
                     .thenThrow(new InternalServerException("Server error"));
 
             // Act & Assert
-            Multi<List<RepositoryDTO>> batchedResult = repositoryClient
+            Multi<List<Repository>> batchedResult = repositoryClient
                     .getRepositoriesCommittedToBatched(TEST_LOGIN, FROM_DATE, TO_DATE, SMALL_BATCH_CONFIG);
 
-            List<List<RepositoryDTO>> result = batchedResult
+            List<List<Repository>> result = batchedResult
                     .collect().asList()
                     .await().asOptional().indefinitely().get();
 
@@ -263,7 +263,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
 
             // Verify all events up to the error were processed
             verify(transformer, times(eventsBeforeError+1)).transform(any(), eq(RepositoryGH.class));
-            verify(mapper, times(eventsBeforeError)).toDTO(any());
+            verify(mapper, times(eventsBeforeError)).toDomain(any());
 
             // Verify error handling
             verify(transformer).transform(eq(events.get(eventsBeforeError)), eq(RepositoryGH.class));
@@ -277,7 +277,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
                     .thenReturn(Multi.createFrom().empty());
 
             // Act
-            List<List<RepositoryDTO>> result = repositoryClient
+            List<List<Repository>> result = repositoryClient
                     .getRepositoriesCommittedToBatched(TEST_LOGIN, FROM_DATE, TO_DATE,
                             SMALL_BATCH_CONFIG)
                     .collect().asList()
@@ -286,7 +286,7 @@ class RepositoryClientTest extends BaseGitHubServiceTest {
             // Assert
             assertTrue(result.isEmpty());
             verify(transformer, never()).transform(any(), any());
-            verify(mapper, never()).toDTO(any());
+            verify(mapper, never()).toDomain(any());
         }
     }
 }

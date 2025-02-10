@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.utils.types.Language;
 import com.stergion.githubbackend.domain.utils.types.Topic;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.RepositoryGH;
@@ -30,7 +30,7 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createFullRepositoryGH();
 
         // Act
-        RepositoryDTO dto = mapper.toDTO(repositoryGH);
+        Repository dto = mapper.toDomain(repositoryGH);
 
         // Assert
         assertNotNull(dto);
@@ -52,7 +52,7 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createMinimalRepositoryGH();
 
         // Act
-        RepositoryDTO dto = mapper.toDTO(repositoryGH);
+        Repository dto = mapper.toDomain(repositoryGH);
 
         // Assert
         assertNotNull(dto);
@@ -71,7 +71,7 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createRepositoryWithLanguages();
 
         // Act
-        RepositoryDTO dto = mapper.toDTO(repositoryGH);
+        Repository dto = mapper.toDomain(repositoryGH);
 
         // Assert
         List<Language> languages = dto.languages();
@@ -97,7 +97,7 @@ public class RepositoryGHMapperTest {
         var repositoryGH = createRepositoryWithTopics();
 
         // Act
-        RepositoryDTO dto = mapper.toDTO(repositoryGH);
+        Repository dto = mapper.toDomain(repositoryGH);
 
         // Assert
         List<Topic> topics = dto.topics();

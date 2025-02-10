@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.service;
 
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.domain.utils.types.Language;
@@ -108,9 +108,9 @@ public class RepositoryBuilder {
         }
     }
 
-    public RepositoryDTO buildDTO() {
+    public Repository buildDTO() {
         try {
-            return new RepositoryDTO(
+            return new Repository(
                     null,
                     owner,
                     name,
@@ -128,7 +128,7 @@ public class RepositoryBuilder {
                     watcherCount
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to build RepositoryDTO", e);
+            throw new RuntimeException("Failed to build Repository", e);
         }
     }
 
@@ -144,8 +144,8 @@ public class RepositoryBuilder {
         return repositories;
     }
 
-    public List<RepositoryDTO> buildDTOList(int count) {
-        List<RepositoryDTO> repositories = new ArrayList<>();
+    public List<Repository> buildDTOList(int count) {
+        List<Repository> repositories = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             repositories.add(new RepositoryBuilder()
                     .withId(id + "-" + i)

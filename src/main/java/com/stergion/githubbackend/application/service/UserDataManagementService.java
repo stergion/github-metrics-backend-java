@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.service;
 
 import com.stergion.githubbackend.domain.contirbutions.services.*;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.users.UserAlreadyExistsException;
@@ -122,15 +122,15 @@ public class UserDataManagementService {
         String login = user.login();
         // Get user repositories
         Log.debug("Fetching and saving repository info of '" + user.login() + "'");
-        List<RepositoryDTO> repos = repositoryService.fetchAndCreateUserRepositories(login,
+        List<Repository> repos = repositoryService.fetchAndCreateUserRepositories(login,
                                                              from, to)
-                                                     .collect()
-                                                     .asList()
-                                                     .map(lists -> lists.stream()
+                                                  .collect()
+                                                  .asList()
+                                                  .map(lists -> lists.stream()
                                                                         .flatMap(List::stream)
                                                                         .toList())
-                                                     .await()
-                                                     .indefinitely();
+                                                  .await()
+                                                  .indefinitely();
         Log.debugf("Number of repositories created: %d", repos.size());
 
         Log.debug("Updating repository references of '" + login + "'");
@@ -142,7 +142,7 @@ public class UserDataManagementService {
         // Get repositories user committed to
         Log.debug(
                 "Fetching and saving repository info on committed to repositories of '" + login + "'");
-        List<RepositoryDTO> reposCommited =
+        List<Repository> reposCommited =
                 repositoryService.fetchAndCreateUserRepositoriesCommited(
                                          login,
                                          from,
@@ -161,29 +161,29 @@ public class UserDataManagementService {
         Log.debugf("User '%s' updated:\n%s", user.login(), user);
 
         // Update Contributions
-        Multi<OperationResult<RepositoryDTO>> commitResult = performOperation(
+        Multi<OperationResult<Repository>> commitResult = performOperation(
                 OperationType.COMMIT,
                 repos,
                 repo -> commitService.fetchAndCreateCommits(login,
                         repo.owner(),
                         repo.name(),
                         from, to));
-        Multi<OperationResult<RepositoryDTO>> issueResult = performOperation(
+        Multi<OperationResult<Repository>> issueResult = performOperation(
                 OperationType.ISSUE,
                 repos,
                 repo -> issueService.fetchAndCreateIssues(login, from, to));
 
-        Multi<OperationResult<RepositoryDTO>> prResult = performOperation(
+        Multi<OperationResult<Repository>> prResult = performOperation(
                 OperationType.PULL_REQUEST,
                 repos,
                 repo -> pullRequestService.fetchAndCreatePullRequests(login, from, to));
 
-        Multi<OperationResult<RepositoryDTO>> prrResult = performOperation(
+        Multi<OperationResult<Repository>> prrResult = performOperation(
                 OperationType.PULL_REQUEST_REVIEW,
                 repos,
                 repo -> pullRequestReviewService.fetchAndCreatePullRequestReviews(login, from, to));
 
-        Multi<OperationResult<RepositoryDTO>> issueCommentResult = performOperation(
+        Multi<OperationResult<Repository>> issueCommentResult = performOperation(
                 OperationType.ISSUE_COMMENT,
                 repos,
                 repo -> issueCommentService.fetchAndCreateIssueComments(login, from, to));

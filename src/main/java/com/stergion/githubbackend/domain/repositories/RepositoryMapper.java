@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(config = MapStructConfig.class)
 public interface RepositoryMapper {
-    RepositoryDTO toDTO(RepositoryEntity repository);
+    Repository toDomain(RepositoryEntity repository);
 
-    RepositoryEntity toEntity(RepositoryDTO repositoryDTO);
+    RepositoryEntity toEntity(Repository repository);
 }

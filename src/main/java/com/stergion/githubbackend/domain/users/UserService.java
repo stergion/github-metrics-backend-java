@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.users;
 
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserEntity;
@@ -88,13 +88,13 @@ public class UserService {
         return repository.findByLogin(login) != null;
     }
 
-    public User updateRepositories(User user, List<RepositoryDTO> repos) {
+    public User updateRepositories(User user, List<Repository> repos) {
         if (repos == null || repos.isEmpty()) {
             Log.warn("Received null repository list for user: " + user.login());
             return user;
         }
 
-        List<ObjectId> ids = repos.stream().map(RepositoryDTO::id).toList();
+        List<ObjectId> ids = repos.stream().map(Repository::id).toList();
 
         return updateRepositoriesFromIds(user, ids);
     }
@@ -118,7 +118,7 @@ public class UserService {
         return mapper.toDomain(userEntity);
     }
 
-    public List<RepositoryDTO> getUserRepositories(String login) {
+    public List<Repository> getUserRepositories(String login) {
         UserEntity user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);

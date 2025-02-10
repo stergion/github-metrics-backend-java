@@ -13,7 +13,7 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public record RepositoryDTO(
+public record Repository(
         ObjectId id,
         @NotBlank
         String owner,
@@ -36,7 +36,7 @@ public record RepositoryDTO(
         int stargazerCount,
         int watcherCount
 ) {
-    public RepositoryDTO {
+    public Repository {
         labels = labels != null ? List.copyOf(labels) : List.of();
         languages = languages != null ? List.copyOf(languages) : List.of();
         topics = topics != null ? List.copyOf(topics) : List.of();
@@ -55,7 +55,7 @@ public record RepositoryDTO(
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof RepositoryDTO r)
+        return (o instanceof Repository r)
                 && owner.equals(r.owner)
                 && name.equals(r.name);
     }

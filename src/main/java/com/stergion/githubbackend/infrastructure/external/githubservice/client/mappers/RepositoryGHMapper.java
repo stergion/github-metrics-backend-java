@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.domain.utils.types.Language;
 import com.stergion.githubbackend.domain.utils.types.Topic;
@@ -24,7 +24,7 @@ public interface RepositoryGHMapper {
     @Mapping(target = "watcherCount", source = "watchers.totalCount")
     @Mapping(target = "languagesSize", source = "languages.totalSize")
     @Mapping(target = "languagesCount", source = "languages.totalCount")
-    RepositoryDTO toDTO(RepositoryGH repository);
+    Repository toDomain(RepositoryGH repository);
 
 
     default List<Topic> map(RepositoryGH.RepositoryTopicsConnection topicsConnection) {

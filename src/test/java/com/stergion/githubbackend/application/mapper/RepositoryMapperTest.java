@@ -2,7 +2,7 @@ package com.stergion.githubbackend.application.mapper;
 
 import com.stergion.githubbackend.application.response.NameWithOwnerResponse;
 import com.stergion.githubbackend.application.response.RepositoryResponse;
-import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
+import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.Label;
 import com.stergion.githubbackend.domain.utils.types.Language;
@@ -44,7 +44,7 @@ class RepositoryMapperTest {
                     new Language("Python", 500, 0.6f));
             var topics = List.of(new Topic("spring"), new Topic("web"));
 
-            var dto = new RepositoryDTO(
+            var dto = new Repository(
                     id,
                     owner,
                     name,
@@ -92,7 +92,7 @@ class RepositoryMapperTest {
         void shouldHandleNullCollections() {
             // Arrange
             var id = new ObjectId();
-            var dto = new RepositoryDTO(
+            var dto = new Repository(
                     id,
                     "owner",
                     "name",
@@ -125,7 +125,7 @@ class RepositoryMapperTest {
         void shouldHandleNullPrimaryLanguage() {
             // Arrange
             var id = new ObjectId();
-            var dto = new RepositoryDTO(
+            var dto = new Repository(
                     id,
                     "owner",
                     "name",
@@ -163,7 +163,7 @@ class RepositoryMapperTest {
             var id = new ObjectId();
             var owner = "testOwner";
             var name = "testRepo";
-            var dto = new RepositoryDTO(
+            var dto = new Repository(
                     id,
                     owner,
                     name,
