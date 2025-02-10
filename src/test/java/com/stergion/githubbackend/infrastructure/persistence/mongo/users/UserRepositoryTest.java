@@ -26,7 +26,7 @@ class UserRepositoryTest {
     @Inject
     UserRepository userRepository;
 
-    private User testUser;
+    private UserEntity testUser;
 
     @BeforeEach
     void setUp() {
@@ -45,7 +45,7 @@ class UserRepositoryTest {
 
             assertNotNull(testUser.id, "User ID should be generated");
 
-            User found = userRepository.findById(testUser.id);
+            UserEntity found = userRepository.findById(testUser.id);
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -74,7 +74,7 @@ class UserRepositoryTest {
             testUser.email = "updated@email.com";
             userRepository.update(testUser);
 
-            User updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id);
             assertEquals("Updated Name", updated.name, "Name should be updated");
             assertEquals("updated@email.com", updated.email, "Email should be updated");
         }
@@ -89,7 +89,7 @@ class UserRepositoryTest {
         void findByGitHubId() {
             userRepository.persist(testUser);
 
-            User found = userRepository.findByGitHubId(testUser.github.id);
+            UserEntity found = userRepository.findByGitHubId(testUser.github.id);
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -101,7 +101,7 @@ class UserRepositoryTest {
         void findByLogin() {
             userRepository.persist(testUser);
 
-            User found = userRepository.findByLogin(testUser.login);
+            UserEntity found = userRepository.findByLogin(testUser.login);
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -111,8 +111,8 @@ class UserRepositoryTest {
         @DisplayName("Should find users by email")
         void findByEmail() {
             // Create multiple users with the same email
-            User user1 = createTestUser(null);
-            User user2 = createTestUser(null);
+            UserEntity user1 = createTestUser(null);
+            UserEntity user2 = createTestUser(null);
             user2.login = "test-user-2";
             user2.name = "Test User 2";
             // Keep the same email for both users
@@ -120,7 +120,7 @@ class UserRepositoryTest {
             userRepository.persist(user1);
             userRepository.persist(user2);
 
-            List<User> found = userRepository.findByEmail(user1.email);
+            List<UserEntity> found = userRepository.findByEmail(user1.email);
 
             assertNotNull(found, "Found users should not be null");
             assertEquals(2, found.size(), "Should find both users with the same email");
@@ -146,7 +146,7 @@ class UserRepositoryTest {
             testUser.repositories.add(newRepoId);
             userRepository.update(testUser);
 
-            User updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id);
             assertTrue(updated.repositories.contains(newRepoId),
                     "User's repositories should contain the new repository ID");
         }
@@ -161,7 +161,7 @@ class UserRepositoryTest {
             testUser.repositories = List.of();
             userRepository.update(testUser);
 
-            User updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id);
             assertFalse(updated.repositories.contains(repoId),
                     "User's repositories should not contain the removed repository ID");
         }
@@ -174,7 +174,7 @@ class UserRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            User userWithNulls = createTestUser(null);
+            UserEntity userWithNulls = createTestUser(null);
             userWithNulls.bio = null;
             userWithNulls.twitterHandle = null;
             userWithNulls.websiteURL = null;
@@ -182,7 +182,7 @@ class UserRepositoryTest {
 
             userRepository.persist(userWithNulls);
 
-            User found = userRepository.findById(userWithNulls.id);
+            UserEntity found = userRepository.findById(userWithNulls.id);
             assertNotNull(found, "Found user should not be null");
             assertNull(found.bio, "Bio should be null");
             assertNull(found.twitterHandle, "Twitter handle should be null");
@@ -194,7 +194,7 @@ class UserRepositoryTest {
         @ValueSource(ints = {0, 1, 5})
         @DisplayName("Should handle different repository counts")
         void handleDifferentRepositoryCounts(int repoCount) {
-            User user = createTestUser(null);
+            UserEntity user = createTestUser(null);
             user.repositories = new ArrayList<>();
             for (int i = 0; i < repoCount; i++) {
                 user.repositories.add(new ObjectId());
@@ -202,7 +202,7 @@ class UserRepositoryTest {
 
             userRepository.persist(user);
 
-            User found = userRepository.findById(user.id);
+            UserEntity found = userRepository.findById(user.id);
             assertEquals(repoCount, found.repositories.size(),
                     "Should find correct number of repositories");
         }
@@ -226,7 +226,7 @@ class UserRepositoryTest {
 
             userRepository.update(testUser);
 
-            User updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id);
             assertEquals("Updated bio", updated.bio, "Bio should be updated");
             assertEquals("new_handle", updated.twitterHandle, "Twitter handle should be updated");
             assertEquals(URI.create("https://newwebsite.com"), updated.websiteURL,
@@ -250,7 +250,7 @@ class UserRepositoryTest {
                 testUser.updatedAt = null;
                 userRepository.persist(testUser);
 
-                User persisted = userRepository.findById(testUser.id);
+                UserEntity persisted = userRepository.findById(testUser.id);
                 assertNotNull(persisted.createdAt, "Creation date should be automatically set");
                 assertNotNull(persisted.updatedAt, "Update date should be automatically set");
                 assertTrue(
@@ -264,15 +264,15 @@ class UserRepositoryTest {
             @Test
             @DisplayName("Should set creation date on batch persist")
             void shouldSetCreationDateOnBatchPersist() {
-                User user1 = createTestUser(null);
-                User user2 = createTestUser(null);
+                UserEntity user1 = createTestUser(null);
+                UserEntity user2 = createTestUser(null);
                 user1.createdAt = null;
                 user2.createdAt = null;
                 user2.login = "test-user-2";
 
                 userRepository.persist(List.of(user1, user2));
 
-                List<User> persisted = userRepository.listAll();
+                List<UserEntity> persisted = userRepository.listAll();
                 assertEquals(2, persisted.size(), "Should persist both users");
                 persisted.forEach(user -> {
                     assertNotNull(user.createdAt, "Creation date should be set for all users");
@@ -289,7 +289,7 @@ class UserRepositoryTest {
                 testUser.createdAt = null;
                 userRepository.persistOrUpdate(testUser);
 
-                User persisted = userRepository.findById(testUser.id);
+                UserEntity persisted = userRepository.findById(testUser.id);
                 assertNotNull(persisted.createdAt, "Creation date should be set for new entity");
                 assertTrue(
                         Duration.between(LocalDateTime.now(), persisted.createdAt).getSeconds() < 5,
@@ -317,7 +317,7 @@ class UserRepositoryTest {
                 testUser.createdAt = LocalDateTime.now().plusDays(1); // Try to modify creation date
                 userRepository.persistOrUpdate(testUser);
 
-                User updated = userRepository.findById(testUser.id);
+                UserEntity updated = userRepository.findById(testUser.id);
                 assertTrue(
                         Duration.between(originalCreationDate, updated.createdAt).getSeconds() < 5,
                         "Creation date should be preserved for existing entity"
@@ -337,19 +337,19 @@ class UserRepositoryTest {
                 userRepository.persist(testUser);
                 LocalDateTime originalDate = testUser.createdAt;
 
-                User newUser = createTestUser(null);
+                UserEntity newUser = createTestUser(null);
                 newUser.login = "test-user-2";
                 newUser.createdAt = null;
 
                 userRepository.persistOrUpdate(List.of(testUser, newUser));
 
-                User existingUpdated = userRepository.findById(testUser.id);
+                UserEntity existingUpdated = userRepository.findById(testUser.id);
                 assertTrue(
                         Duration.between(originalDate, existingUpdated.createdAt).getSeconds() < 5,
                         "Should preserve creation date for existing user"
                           );
 
-                User newPersisted = userRepository.findByLogin("test-user-2");
+                UserEntity newPersisted = userRepository.findByLogin("test-user-2");
                 assertNotNull(newPersisted.createdAt,
                         "Should set creation date for new user");
                 assertTrue(
@@ -361,12 +361,12 @@ class UserRepositoryTest {
     }
 
     // Helper methods
-    private User createTestUser(ObjectId id) {
+    private UserEntity createTestUser(ObjectId id) {
         var github = new Github();
         github.id = "test-github-id";
         github.url = URI.create("https://github.com/test-user");
 
-        var user = new User();
+        var user = new UserEntity();
         user.id = id;
         user.login = "test-user";
         user.name = "Test User";

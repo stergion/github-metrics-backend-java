@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class UserRepository implements PanacheMongoRepository<User> {
+public class UserRepository implements PanacheMongoRepository<UserEntity> {
 
-    private void setTimestamps(User user) {
+    private void setTimestamps(UserEntity user) {
         if (user.id == null) {  // New user
             user.createdAt = LocalDateTime.now();
             user.updatedAt = user.createdAt;
         } else {  // Existing user
-            User originalUser = findById(user.id);
+            UserEntity originalUser = findById(user.id);
             if (originalUser == null) {
                 throw new RuntimeException("Could not find original user.");
             }
@@ -27,72 +27,72 @@ public class UserRepository implements PanacheMongoRepository<User> {
         }
     }
 
-    private void processUsersForPersistOrUpdate(Iterable<User> users) {
+    private void processUsersForPersistOrUpdate(Iterable<UserEntity> users) {
         users.forEach(this::setTimestamps);
     }
 
     @Override
-    public void persist(User user) {
+    public void persist(UserEntity user) {
         setTimestamps(user);
         PanacheMongoRepository.super.persist(user);
     }
 
     @Override
-    public void persist(Stream<User> users) {
+    public void persist(Stream<UserEntity> users) {
         users = users.peek(this::setTimestamps);
         PanacheMongoRepository.super.persist(users);
     }
 
     @Override
-    public void persist(Iterable<User> users) {
+    public void persist(Iterable<UserEntity> users) {
         processUsersForPersistOrUpdate(users);
         PanacheMongoRepository.super.persist(users);
     }
 
     @Override
-    public void persistOrUpdate(User user) {
+    public void persistOrUpdate(UserEntity user) {
         setTimestamps(user);
         PanacheMongoRepository.super.persistOrUpdate(user);
     }
 
     @Override
-    public void persistOrUpdate(Iterable<User> users) {
+    public void persistOrUpdate(Iterable<UserEntity> users) {
         processUsersForPersistOrUpdate(users);
         PanacheMongoRepository.super.persistOrUpdate(users);
     }
 
     @Override
-    public void persistOrUpdate(Stream<User> users) {
+    public void persistOrUpdate(Stream<UserEntity> users) {
         users = users.peek(this::setTimestamps);
         PanacheMongoRepository.super.persistOrUpdate(users);
     }
 
     @Override
-    public void persistOrUpdate(User firstEntity, User... entities) {
+    public void persistOrUpdate(UserEntity firstEntity, UserEntity... entities) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
     @Override
-    public void update(User user) {
+    public void update(UserEntity user) {
         setTimestamps(user);
         PanacheMongoRepository.super.update(user);
     }
 
     @Override
-    public void update(Iterable<User> users) {
+    public void update(Iterable<UserEntity> users) {
         processUsersForPersistOrUpdate(users);
         PanacheMongoRepository.super.update(users);
     }
 
     @Override
-    public void update(Stream<User> users) {
+    public void update(Stream<UserEntity> users) {
         users = users.peek(this::setTimestamps);
         PanacheMongoRepository.super.update(users);
     }
 
     @Override
-    public void update(User firstEntity, User... entities) {
+    public void update(UserEntity firstEntity, UserEntity... entities) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
@@ -115,15 +115,15 @@ public class UserRepository implements PanacheMongoRepository<User> {
                 "Raw updates not supported to protect data integrity");
     }
 
-    public User findByLogin(String login) {
+    public UserEntity findByLogin(String login) {
         return find("login", login).firstResult();
     }
 
-    public List<User> findByEmail(String email) {
+    public List<UserEntity> findByEmail(String email) {
         return list("email", email);
     }
 
-    public User findByGitHubId(String githubId) {
+    public UserEntity findByGitHubId(String githubId) {
         return find("github.id", githubId).firstResult();
     }
 

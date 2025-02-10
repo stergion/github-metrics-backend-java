@@ -3,7 +3,7 @@ package com.stergion.githubbackend.domain.users;
 import com.stergion.githubbackend.domain.repositories.RepositoryDTO;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserRepository;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -69,7 +69,7 @@ public class UserService {
     }
 
     public UserDTO getUser(String login) {
-        User user = repository.findByLogin(login);
+        UserEntity user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);
         }
@@ -77,7 +77,7 @@ public class UserService {
     }
 
     public ObjectId getUserId(@NotNull String login) {
-        User user = repository.findByLogin(login);
+        UserEntity user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);
         }
@@ -104,7 +104,7 @@ public class UserService {
             return userDTO;  // No changes needed
         }
 
-        User user = mapper.toEntity(userDTO);
+        UserEntity user = mapper.toEntity(userDTO);
         Set<ObjectId> uniqueIds = new HashSet<>(user.repositories);  // Start with existing repos
         uniqueIds.addAll(repoIds);  // Add new ones
 
@@ -119,7 +119,7 @@ public class UserService {
     }
 
     public List<RepositoryDTO> getUserRepositories(String login) {
-        User user = repository.findByLogin(login);
+        UserEntity user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);
         }

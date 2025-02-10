@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @MongoEntity(collection = "users")
-public class User {
+public class UserEntity {
     @NotNull
     public ObjectId id;
 
@@ -45,7 +45,7 @@ public class User {
     public String twitterHandle;
     public URI websiteURL;
 
-    public User() {
+    public UserEntity() {
         this.repositories = new ArrayList<>();
     }
 
@@ -80,7 +80,7 @@ public class User {
 
     @Override
     public final boolean equals(Object o) {
-        return (o instanceof User u)
+        return (o instanceof UserEntity u)
                 && login.equals(u.login);
     }
 
