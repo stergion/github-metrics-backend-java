@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReview
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestReviewSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReview;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestReviewRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class PullRequestReviewService
-        extends ContributionService<PullRequestReviewDTO, PullRequestReview> {
+        extends ContributionService<PullRequestReviewDTO, PullRequestReviewEntity> {
     @Inject
     PullRequestReviewMapper pullRequestReviewMapper;
     @Inject
@@ -33,13 +33,13 @@ public class PullRequestReviewService
     }
 
     @Override
-    protected PullRequestReview mapDtoToEntity(PullRequestReviewDTO dto, ObjectId userId,
-                                               ObjectId repoId) {
+    protected PullRequestReviewEntity mapDtoToEntity(PullRequestReviewDTO dto, ObjectId userId,
+                                                     ObjectId repoId) {
         return pullRequestReviewMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected PullRequestReviewDTO mapEntityToDto(PullRequestReview entity) {
+    protected PullRequestReviewDTO mapEntityToDto(PullRequestReviewEntity entity) {
         return pullRequestReviewMapper.toDTO(entity);
     }
 
