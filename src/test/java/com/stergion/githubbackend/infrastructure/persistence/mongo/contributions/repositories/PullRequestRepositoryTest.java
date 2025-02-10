@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
@@ -32,7 +32,7 @@ class PullRequestRepositoryTest {
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
-    private PullRequest testPullRequest;
+    private PullRequestEntity testPullRequest;
 
     @BeforeEach
     void setUp() {
@@ -51,9 +51,9 @@ class PullRequestRepositoryTest {
 
             assertNotNull(testPullRequest.id(), "Pull Request ID should be generated");
 
-            PullRequest found = pullRequestRepository.findById(testPullRequest.id())
-                                                     .await()
-                                                     .atMost(TIMEOUT);
+            PullRequestEntity found = pullRequestRepository.findById(testPullRequest.id())
+                                                           .await()
+                                                           .atMost(TIMEOUT);
             assertNotNull(found, "Found pull request should not be null");
             assertEquals(testPullRequest.id(), found.id());
             assertEquals(testPullRequest.userId(), found.userId());
@@ -83,9 +83,9 @@ class PullRequestRepositoryTest {
         void findByGitHubId() {
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            PullRequest found = pullRequestRepository.findByGitHubId(testPullRequest.github().id)
-                                                     .await()
-                                                     .atMost(TIMEOUT);
+            PullRequestEntity found = pullRequestRepository.findByGitHubId(testPullRequest.github().id)
+                                                           .await()
+                                                           .atMost(TIMEOUT);
             assertNotNull(found, "Found pull request should not be null");
             assertEquals(testPullRequest.id(), found.id());
             assertEquals(testPullRequest.userId(), found.userId());
@@ -99,9 +99,9 @@ class PullRequestRepositoryTest {
         void findByUserId() {
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            List<PullRequest> found = pullRequestRepository.findByUserId(TEST_USER_ID)
-                                                           .collect().asList()
-                                                           .await().atMost(TIMEOUT);
+            List<PullRequestEntity> found = pullRequestRepository.findByUserId(TEST_USER_ID)
+                                                                 .collect().asList()
+                                                                 .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one pull request");
             assertNotNull(found, "Found pull requests should not be null");
@@ -117,9 +117,9 @@ class PullRequestRepositoryTest {
         void findByRepoId() {
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            List<PullRequest> found = pullRequestRepository.findByRepoId(TEST_REPO_ID)
-                                                           .collect().asList()
-                                                           .await().atMost(TIMEOUT);
+            List<PullRequestEntity> found = pullRequestRepository.findByRepoId(TEST_REPO_ID)
+                                                                 .collect().asList()
+                                                                 .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one pull request");
             assertNotNull(found, "Found pull requests should not be null");
@@ -135,10 +135,10 @@ class PullRequestRepositoryTest {
         void findByUserAndRepoId() {
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            List<PullRequest> found = pullRequestRepository.findByUserAndRepoId(TEST_USER_ID,
+            List<PullRequestEntity> found = pullRequestRepository.findByUserAndRepoId(TEST_USER_ID,
                                                                    TEST_REPO_ID)
-                                                           .collect().asList()
-                                                           .await().atMost(TIMEOUT);
+                                                                 .collect().asList()
+                                                                 .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one pull request");
             assertNotNull(found, "Found pull requests should not be null");
@@ -243,9 +243,9 @@ class PullRequestRepositoryTest {
             testPullRequest.mergedAt = LocalDate.now();
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            PullRequest found = pullRequestRepository.findById(testPullRequest.id())
-                                                     .await()
-                                                     .atMost(TIMEOUT);
+            PullRequestEntity found = pullRequestRepository.findById(testPullRequest.id())
+                                                           .await()
+                                                           .atMost(TIMEOUT);
 
             assertNotNull(found, "Found pull request should not be null");
             assertEquals(PullRequestState.MERGED, found.state());
@@ -259,9 +259,9 @@ class PullRequestRepositoryTest {
             testPullRequest.closedAt = LocalDate.now();
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            PullRequest found = pullRequestRepository.findById(testPullRequest.id())
-                                                     .await()
-                                                     .atMost(TIMEOUT);
+            PullRequestEntity found = pullRequestRepository.findById(testPullRequest.id())
+                                                           .await()
+                                                           .atMost(TIMEOUT);
 
             assertNotNull(found, "Found pull request should not be null");
             assertEquals(PullRequestState.CLOSED, found.state());
@@ -276,7 +276,7 @@ class PullRequestRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            PullRequest prWithNulls = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
+            PullRequestEntity prWithNulls = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             prWithNulls.mergedAt = null;
             prWithNulls.closedAt = null;
             prWithNulls.updatedAt = null;
@@ -286,9 +286,9 @@ class PullRequestRepositoryTest {
 
             pullRequestRepository.persist(prWithNulls).await().atMost(TIMEOUT);
 
-            PullRequest found = pullRequestRepository.findById(prWithNulls.id())
-                                                     .await()
-                                                     .atMost(TIMEOUT);
+            PullRequestEntity found = pullRequestRepository.findById(prWithNulls.id())
+                                                           .await()
+                                                           .atMost(TIMEOUT);
 
             assertNotNull(found, "Found pull request should not be null");
             assertEquals(prWithNulls.id(), found.id());
@@ -316,9 +316,9 @@ class PullRequestRepositoryTest {
                                      .atMost(TIMEOUT);
             }
 
-            List<PullRequest> found = pullRequestRepository.findByUserId(TEST_USER_ID)
-                                                           .collect().asList()
-                                                           .await().atMost(TIMEOUT);
+            List<PullRequestEntity> found = pullRequestRepository.findByUserId(TEST_USER_ID)
+                                                                 .collect().asList()
+                                                                 .await().atMost(TIMEOUT);
             assertEquals(prCount, found.size(),
                     "Should find correct number of pull requests");
         }
@@ -334,14 +334,14 @@ class PullRequestRepositoryTest {
         pullRequestRepository.persist(createTestPullRequest(null, userId2, repoId2, Optional.of("5"))).await().atMost(TIMEOUT);
     }
 
-    private PullRequest createTestPullRequest(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
+    private PullRequestEntity createTestPullRequest(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
         var github = new Github();
         github.id = "test-github-" + suffix.orElse("id");
         github.url = URI.create("www.github.com/test-github-" + suffix.orElse("id"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 
-        var pullRequest = new PullRequest();
+        var pullRequest = new PullRequestEntity();
         pullRequest.id = id;
         pullRequest.userId = userId;
         pullRequest.repositoryId = repoId;

@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class PullRequestService extends ContributionService<PullRequestDTO, PullRequest> {
+public class PullRequestService extends ContributionService<PullRequestDTO, PullRequestEntity> {
     @Inject
     PullRequestMapper pullRequestMapper;
     @Inject
@@ -34,12 +34,12 @@ public class PullRequestService extends ContributionService<PullRequestDTO, Pull
     }
 
     @Override
-    protected PullRequest mapDtoToEntity(PullRequestDTO dto, ObjectId userId, ObjectId repoId) {
+    protected PullRequestEntity mapDtoToEntity(PullRequestDTO dto, ObjectId userId, ObjectId repoId) {
         return pullRequestMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected PullRequestDTO mapEntityToDto(PullRequest entity) {
+    protected PullRequestDTO mapEntityToDto(PullRequestEntity entity) {
         return pullRequestMapper.toDTO(entity);
     }
 

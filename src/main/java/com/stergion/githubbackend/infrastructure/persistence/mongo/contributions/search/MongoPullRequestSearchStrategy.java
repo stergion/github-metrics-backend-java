@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchS
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestField;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequest;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoPullRequestSearchStrategy
-        extends MongoContributionSearchStrategy<PullRequest, PullRequestSearchCriteria>
+        extends MongoContributionSearchStrategy<PullRequestEntity, PullRequestSearchCriteria>
         implements PullRequestSearchStrategy {
 
     public MongoPullRequestSearchStrategy(PullRequestRepository repository) {
