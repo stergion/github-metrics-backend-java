@@ -1,10 +1,10 @@
 package com.stergion.githubbackend.domain.contirbutions.search;
 
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
 import io.smallrye.mutiny.Uni;
 
-public interface ContributionSearchStrategy<T extends Contribution, U extends BaseSearchCriteria<?, ?>> {
+public interface ContributionSearchStrategy<T extends ContributionEntity, U extends BaseSearchCriteria<?, ?>> {
     /**
      * Performs a search based on the provided criteria
      *

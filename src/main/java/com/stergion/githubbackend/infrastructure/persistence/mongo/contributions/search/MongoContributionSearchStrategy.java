@@ -13,7 +13,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeableField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.TimeField;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.ContributionRepository;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public abstract class MongoContributionSearchStrategy<T extends Contribution,
+public abstract class MongoContributionSearchStrategy<T extends ContributionEntity,
         U extends BaseSearchCriteria<? extends RangeField, ? extends TimeField>>
         implements ContributionSearchStrategy<T, U> {
 
@@ -41,7 +41,7 @@ public abstract class MongoContributionSearchStrategy<T extends Contribution,
                                                             .getCodecRegistry() : null;
     }
 
-    private static <T extends Contribution> PagedResponse<T> createEmptyResponse(
+    private static <T extends ContributionEntity> PagedResponse<T> createEmptyResponse(
             BaseSearchCriteria<? extends RangeField, ? extends TimeField> criteria) {
         return PagedResponse.<T>builder()
                             .content(List.of())

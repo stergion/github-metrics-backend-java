@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @MongoEntity(collection = "commits")
-public non-sealed class Commit implements Contribution {
+public non-sealed class Commit implements ContributionEntity {
     public ObjectId id;
 
     @NotNull

@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.ContributionRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -25,7 +25,7 @@ import java.util.List;
  * @param <D> The DTO type (e.g., IssueDTO, CommitDTO)
  * @param <E> The Entity type (e.g., Issue, Commit)
  */
-public abstract class ContributionService<D extends ContributionDTO, E extends Contribution> {
+public abstract class ContributionService<D extends ContributionDTO, E extends ContributionEntity> {
     @Inject
     UserService userService;
 

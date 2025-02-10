@@ -2,7 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Contribution;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -12,7 +12,7 @@ import org.bson.types.ObjectId;
 import java.util.Arrays;
 import java.util.List;
 
-public sealed interface ContributionRepository<T extends Contribution>
+public sealed interface ContributionRepository<T extends ContributionEntity>
         extends ReactivePanacheMongoRepository<T>
         permits CommitRepository, IssueRepository, IssueCommentRepository, PullRequestRepository,
         PullRequestReviewRepository {
