@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.CommitEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
@@ -75,7 +75,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new commit successfully")
         void createCommit(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> commitRepository.persist(commit)),
@@ -94,7 +94,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find commit by ID")
         void findCommitById(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             asserter.execute(() -> Panache.withTransaction(() -> commitRepository.persist(commit)));
 
@@ -113,7 +113,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing commit")
         void updateCommit(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             asserter.execute(() -> Panache.withTransaction(() -> commitRepository.persist(commit)));
 
@@ -145,7 +145,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing commit")
         void deleteCommit(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             asserter.execute(() -> Panache.withTransaction(() -> commitRepository.persist(commit)));
             asserter.execute(() -> Panache.withTransaction(() ->
@@ -167,7 +167,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find commit by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             asserter.execute(() -> Panache.withTransaction(() -> commitRepository.persist(commit)));
 
@@ -191,7 +191,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find commits by user ID")
         void findByUserId(UniAsserter asserter) {
-            List<Commit> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
+            List<CommitEntity> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() ->
                     commitRepository.persist(commits)));
@@ -213,7 +213,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find commits by repository ID")
         void findByRepoId(UniAsserter asserter) {
-            List<Commit> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
+            List<CommitEntity> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() ->
                     commitRepository.persist(commits)));
@@ -235,7 +235,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find commits by user ID and repository ID")
         void findByUserIdAndRepoId(UniAsserter asserter) {
-            List<Commit> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
+            List<CommitEntity> commits = TestEntityCreators.createCommits(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() ->
                     commitRepository.persist(commits)));
@@ -285,8 +285,8 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void validateUniqueConstraints(UniAsserter asserter) {
-            Commit commit1 = TestEntityCreators.createCommit(testUser, testRepo);
-            Commit commit2 = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit1 = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit2 = TestEntityCreators.createCommit(testUser, testRepo);
             // Same githubId
             commit2.setGithubId(commit1.getGithubId());
 
@@ -310,7 +310,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should maintain correct count of relationships")
         void validateRelationshipCounts(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
             List<CommitComment> comments = TestEntityCreators.createCommitComments(3);
             List<AssociatedPullRequest> prs = TestEntityCreators.createAssociatedPullRequests(
                     2);
@@ -346,7 +346,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle commit with files")
         void commitWithFiles(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
             List<File> files = TestEntityCreators.createFiles(3);
 
             commit.setFiles(files);
@@ -376,7 +376,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle large commits")
         void handleLargeCommits(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
             List<File> files = TestEntityCreators.createFiles(100); // Large number of files
 
             commit.setFiles(files);
@@ -406,7 +406,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle commit with comments")
         void commitWithComments(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             List<CommitComment> comments = TestEntityCreators.createCommitComments(3);
 
@@ -432,7 +432,7 @@ class CommitRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle commit with associated pull requests")
         void commitWithPullRequests(UniAsserter asserter) {
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             List<AssociatedPullRequest> prs = TestEntityCreators.createAssociatedPullRequests(2);
 
@@ -457,7 +457,7 @@ class CommitRepositoryTest {
         @DisplayName("Should cascade delete commit relationships")
         void cascadeDeleteRelationships(UniAsserter asserter) {
             // Create commit with relationships
-            Commit commit = TestEntityCreators.createCommit(testUser, testRepo);
+            CommitEntity commit = TestEntityCreators.createCommit(testUser, testRepo);
 
             // Add commit comments
             CommitComment comment = TestEntityCreators.createCommitComment();

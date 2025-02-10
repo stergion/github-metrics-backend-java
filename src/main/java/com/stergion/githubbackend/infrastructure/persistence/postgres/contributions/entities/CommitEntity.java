@@ -19,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Commits")
-public class Commit extends ContributionEntity {
+public class CommitEntity extends ContributionEntity {
 
     @NotNull
     @PastOrPresent

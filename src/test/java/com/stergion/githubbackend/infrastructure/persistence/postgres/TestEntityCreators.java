@@ -61,8 +61,8 @@ public final class TestEntityCreators {
         return users;
     }
 
-    public static Commit createCommit(UserEntity user, RepositoryEntity repository) {
-        Commit commit = new Commit();
+    public static CommitEntity createCommit(UserEntity user, RepositoryEntity repository) {
+        CommitEntity commit = new CommitEntity();
         commit.setUser(user);
         commit.setRepository(repository);
         commit.setGithubId("test-commit-id");
@@ -74,8 +74,8 @@ public final class TestEntityCreators {
         return commit;
     }
 
-    public static Commit createCommit(UserEntity user, RepositoryEntity repository, String suffix) {
-        Commit commit = new Commit();
+    public static CommitEntity createCommit(UserEntity user, RepositoryEntity repository, String suffix) {
+        CommitEntity commit = new CommitEntity();
         commit.setUser(user);
         commit.setRepository(repository);
         commit.setCommittedDate(LocalDateTime.now());
@@ -88,8 +88,8 @@ public final class TestEntityCreators {
         return commit;
     }
 
-    public static List<Commit> createCommits(UserEntity user, RepositoryEntity repository, int count) {
-        List<Commit> commits = new ArrayList<>();
+    public static List<CommitEntity> createCommits(UserEntity user, RepositoryEntity repository, int count) {
+        List<CommitEntity> commits = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             commits.add(createCommit(user, repository, "commit-" + i));
         }
