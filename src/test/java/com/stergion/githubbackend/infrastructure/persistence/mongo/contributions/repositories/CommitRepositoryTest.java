@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
@@ -30,7 +30,7 @@ class CommitRepositoryTest {
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();
-    private Commit testCommit;
+    private CommitEntity testCommit;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +49,7 @@ class CommitRepositoryTest {
 
             assertNotNull(testCommit.id(), "Commit ID should be generated");
 
-            Commit found = commitRepository.findById(testCommit.id()).await().indefinitely();
+            CommitEntity found = commitRepository.findById(testCommit.id()).await().indefinitely();
             assertNotNull(found, "Found commit should not be null");
             assertEquals(testCommit.id(), found.id());
             assertEquals(testCommit.userId(), found.userId());
@@ -79,9 +79,9 @@ class CommitRepositoryTest {
         void findByGitHubId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            Commit found = commitRepository.findByGitHubId(testCommit.github().id)
-                                           .await()
-                                           .indefinitely();
+            CommitEntity found = commitRepository.findByGitHubId(testCommit.github().id)
+                                                 .await()
+                                                 .indefinitely();
             assertNotNull(found, "Found commit should not be null");
             assertEquals(testCommit.id(), found.id());
             assertEquals(testCommit.userId(), found.userId());
@@ -95,9 +95,9 @@ class CommitRepositoryTest {
         void findByUserId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            List<Commit> found = commitRepository.findByUserId(TEST_USER_ID)
-                                                 .subscribe().asIterable()
-                                                 .stream().toList();
+            List<CommitEntity> found = commitRepository.findByUserId(TEST_USER_ID)
+                                                       .subscribe().asIterable()
+                                                       .stream().toList();
 
             assertFalse(found.isEmpty(), "Should find at least one commit");
             assertNotNull(found, "Found commit should not be null");
@@ -113,9 +113,9 @@ class CommitRepositoryTest {
         void findByRepoId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            List<Commit> found = commitRepository.findByRepoId(TEST_REPO_ID)
-                                                 .subscribe().asIterable()
-                                                 .stream().toList();
+            List<CommitEntity> found = commitRepository.findByRepoId(TEST_REPO_ID)
+                                                       .subscribe().asIterable()
+                                                       .stream().toList();
 
             assertFalse(found.isEmpty(), "Should find at least one commit");
             assertNotNull(found, "Found commit should not be null");
@@ -131,9 +131,9 @@ class CommitRepositoryTest {
         void findByUserAndRepoId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            List<Commit> found = commitRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
-                                                 .subscribe().asIterable()
-                                                 .stream().toList();
+            List<CommitEntity> found = commitRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
+                                                       .subscribe().asIterable()
+                                                       .stream().toList();
 
             assertFalse(found.isEmpty(), "Should find at least one commit");
             assertNotNull(found, "Found commit should not be null");
@@ -186,10 +186,10 @@ class CommitRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            Commit commitWithNulls = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
+            CommitEntity commitWithNulls = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             commitRepository.persist(commitWithNulls).await().indefinitely();
 
-            Commit found = commitRepository.findById(commitWithNulls.id()).await().indefinitely();
+            CommitEntity found = commitRepository.findById(commitWithNulls.id()).await().indefinitely();
 
             assertNotNull(found, "Found commit should not be null");
             assertEquals(commitWithNulls.id(), found.id());
@@ -208,9 +208,9 @@ class CommitRepositoryTest {
                         Optional.of(String.valueOf(i)))).await().indefinitely();
             }
 
-            List<Commit> found = commitRepository.findByUserId(TEST_USER_ID)
-                                                 .subscribe().asIterable()
-                                                 .stream().toList();
+            List<CommitEntity> found = commitRepository.findByUserId(TEST_USER_ID)
+                                                       .subscribe().asIterable()
+                                                       .stream().toList();
             assertEquals(commitCount, found.size(),
                     "Should find correct number of commits");
         }
@@ -237,15 +237,15 @@ class CommitRepositoryTest {
     }
 
     // createTestCommit method remains unchanged
-    private Commit createTestCommit(ObjectId id, ObjectId userId, ObjectId repoId,
-                                    Optional<String> suffix) {
+    private CommitEntity createTestCommit(ObjectId id, ObjectId userId, ObjectId repoId,
+                                          Optional<String> suffix) {
         var github = new Github();
         github.id = "test-github-" + suffix.orElse("id");
         github.url = URI.create("www.github.com/test-github-" + suffix.orElse("url"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 
-        var commit = new Commit();
+        var commit = new CommitEntity();
         commit.id = id;
         commit.userId = userId;
         commit.repositoryId = repoId;

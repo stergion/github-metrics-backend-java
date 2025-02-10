@@ -23,7 +23,7 @@ import java.util.List;
  * only what they need to.
  *
  * @param <D> The DTO type (e.g., IssueDTO, CommitDTO)
- * @param <E> The Entity type (e.g., Issue, Commit)
+ * @param <E> The Entity type (e.g., Issue, CommitEntity)
  */
 public abstract class ContributionService<D extends ContributionDTO, E extends ContributionEntity> {
     @Inject

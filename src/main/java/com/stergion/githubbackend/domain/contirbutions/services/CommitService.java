@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;
 import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Commit;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.CommitRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class CommitService extends ContributionService<CommitDTO, Commit> {
+public class CommitService extends ContributionService<CommitDTO, CommitEntity> {
     @Inject
     CommitMapper commitMapper;
     @Inject
@@ -32,12 +32,12 @@ public class CommitService extends ContributionService<CommitDTO, Commit> {
 
 
     @Override
-    protected Commit mapDtoToEntity(CommitDTO dto, ObjectId userId, ObjectId repoId) {
+    protected CommitEntity mapDtoToEntity(CommitDTO dto, ObjectId userId, ObjectId repoId) {
         return commitMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected CommitDTO mapEntityToDto(Commit entity) {
+    protected CommitDTO mapEntityToDto(CommitEntity entity) {
         return commitMapper.toDTO(entity);
     }
 
