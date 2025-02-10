@@ -2,7 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequest;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
@@ -40,7 +40,7 @@ class PullRequestRepositoryTest {
     Mutiny.SessionFactory sessionFactory;
 
     private UserEntity testUser;
-    private Repository testRepo;
+    private RepositoryEntity testRepo;
 
     @BeforeEach
     @RunOnVertxContext

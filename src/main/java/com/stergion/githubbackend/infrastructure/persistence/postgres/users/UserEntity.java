@@ -2,7 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import io.quarkus.logging.Log;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -55,7 +55,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "repositoryId", referencedColumnName = "id")
     )
-    private final Set<Repository> repositories = new HashSet<>();
+    private final Set<RepositoryEntity> repositories = new HashSet<>();
 
     private URI avatarUrl;
     private String bio;
@@ -153,11 +153,11 @@ public class UserEntity {
         this.updatedAt = updatedAt;
     }
 
-    public Set<Repository> getRepositories() {
+    public Set<RepositoryEntity> getRepositories() {
         return Set.copyOf(repositories);
     }
 
-    public void setRepositories(Set<Repository> repositories) {
+    public void setRepositories(Set<RepositoryEntity> repositories) {
         this.repositories.clear();
         this.repositories.addAll(repositories);
     }

@@ -21,7 +21,7 @@ import java.util.UUID;
 @Table(name = "Repositories",
         indexes = {@Index(name = "idx_repository_owner", columnList = "owner")}
 )
-public class Repository {
+public class RepositoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -77,7 +77,7 @@ public class Repository {
     @Override
     public boolean equals(Object o) {
 
-        return (o instanceof Repository repo)
+        return (o instanceof RepositoryEntity repo)
                 && owner.equals(repo.owner)
                 && name.equals(repo.name);
     }

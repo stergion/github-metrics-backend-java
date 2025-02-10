@@ -1,8 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import jakarta.persistence.*;
-import org.hibernate.annotations.NaturalId;
 
 import java.util.UUID;
 

@@ -17,26 +17,26 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class RepositoryRepository implements PanacheRepositoryBase<Repository, UUID> {
+public class RepositoryRepository implements PanacheRepositoryBase<RepositoryEntity, UUID> {
     @Inject
     EntityManagerFactory em;
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
 
-    public Uni<Repository> findByGitHubId(String githubId) {
+    public Uni<RepositoryEntity> findByGitHubId(String githubId) {
         return find("githubId", githubId).firstResult();
     }
 
-    public Uni<List<Repository>> findByOwner(String owner) {
+    public Uni<List<RepositoryEntity>> findByOwner(String owner) {
         return find("owner", owner).list();
     }
 
-    public Uni<Repository> findByNameAndOwner(String owner, String name) {
+    public Uni<RepositoryEntity> findByNameAndOwner(String owner, String name) {
         return find("owner = ?1 and name = ?2", owner, name).firstResult();
     }
 
-    public Uni<List<Repository>> findByNameAndOwners(List<NameWithOwner> repos) {
+    public Uni<List<RepositoryEntity>> findByNameAndOwners(List<NameWithOwner> repos) {
 
         if (repos.isEmpty()) {
             return Uni.createFrom().item(Collections.emptyList());
@@ -44,8 +44,8 @@ public class RepositoryRepository implements PanacheRepositoryBase<Repository, U
 
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Repository> query = cb.createQuery(Repository.class);
-        Root<Repository> repositoryRoot = query.from(Repository.class);
+        CriteriaQuery<RepositoryEntity> query = cb.createQuery(RepositoryEntity.class);
+        Root<RepositoryEntity> repositoryRoot = query.from(RepositoryEntity.class);
 
         Predicate[] predicates = repos.stream()
                                       .map(r -> cb.and(

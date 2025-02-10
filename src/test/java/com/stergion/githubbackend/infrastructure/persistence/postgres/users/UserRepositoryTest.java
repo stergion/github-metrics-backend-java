@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.users;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
@@ -249,10 +249,10 @@ class UserRepositoryTest {
         @DisplayName("Should add repositories to user")
         void addRepositoriesToUser(UniAsserter asserter) {
             UserEntity user = TestEntityCreators.createUser();
-            Set<Repository> repositories = Set.of(
+            Set<RepositoryEntity> repositories = Set.of(
                     TestEntityCreators.createRepository("repo1"),
                     TestEntityCreators.createRepository("repo2")
-                                                 );
+                                                       );
 
             asserter.execute(() -> Panache.withTransaction(
                     () -> repositoryRepository.persist(repositories)));
@@ -265,7 +265,7 @@ class UserRepositoryTest {
             asserter.assertThat(
                     () -> userRepository.findById(user.getId()),
                     foundUser -> {
-                        Set<Repository> userRepos = foundUser.getRepositories();
+                        Set<RepositoryEntity> userRepos = foundUser.getRepositories();
                         assertEquals(2, userRepos.size());
                         assertTrue(userRepos.stream()
                                             .anyMatch(r -> r.getName().equals("repo1")));
@@ -282,10 +282,10 @@ class UserRepositoryTest {
         @DisplayName("Should remove repository from user")
         void removeRepositoryFromUser(UniAsserter asserter) {
             UserEntity user = TestEntityCreators.createUser();
-            Set<Repository> repositories = new HashSet<>(Set.of(
+            Set<RepositoryEntity> repositories = new HashSet<>(Set.of(
                     TestEntityCreators.createRepository("repo1"),
                     TestEntityCreators.createRepository("repo2")
-                                                               ));
+                                                                     ));
 
             asserter.execute(() -> Panache.withTransaction(
                     () -> repositoryRepository.persist(repositories)));
@@ -299,7 +299,7 @@ class UserRepositoryTest {
             asserter.assertThat(
                     () -> userRepository.findById(user.getId()),
                     foundUser -> {
-                        Set<Repository> userRepos = foundUser.getRepositories();
+                        Set<RepositoryEntity> userRepos = foundUser.getRepositories();
                         assertEquals(2, userRepos.size());
                     }
                                );
@@ -315,7 +315,7 @@ class UserRepositoryTest {
             asserter.assertThat(
                     () -> userRepository.findById(user.getId()),
                     foundUser -> {
-                        Set<Repository> userRepos = foundUser.getRepositories();
+                        Set<RepositoryEntity> userRepos = foundUser.getRepositories();
                         assertEquals(1, userRepos.size());
                         assertTrue(userRepos.stream()
                                             .anyMatch(r -> r.getName().equals("repo2")));

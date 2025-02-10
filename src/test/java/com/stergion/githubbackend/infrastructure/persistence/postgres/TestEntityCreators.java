@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.*;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
@@ -32,8 +32,8 @@ public final class TestEntityCreators {
         return createUser("testUser");
     }
 
-    public static Repository createRepository(String name, String owner) {
-        Repository repo = new Repository();
+    public static RepositoryEntity createRepository(String name, String owner) {
+        RepositoryEntity repo = new RepositoryEntity();
         repo.setName(name);
         repo.setOwner(owner);
         repo.setGithubId(owner + "-" + name + "-id");
@@ -41,12 +41,12 @@ public final class TestEntityCreators {
         return repo;
     }
 
-    public static Repository createRepository(String name) {
+    public static RepositoryEntity createRepository(String name) {
         return createRepository(name, "testOwner");
     }
 
-    public static List<Repository> createRepositories(int count) {
-        List<Repository> repositories = new ArrayList<>();
+    public static List<RepositoryEntity> createRepositories(int count) {
+        List<RepositoryEntity> repositories = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             repositories.add(createRepository("repo" + i));
         }
@@ -61,7 +61,7 @@ public final class TestEntityCreators {
         return users;
     }
 
-    public static Commit createCommit(UserEntity user, Repository repository) {
+    public static Commit createCommit(UserEntity user, RepositoryEntity repository) {
         Commit commit = new Commit();
         commit.setUser(user);
         commit.setRepository(repository);
@@ -74,7 +74,7 @@ public final class TestEntityCreators {
         return commit;
     }
 
-    public static Commit createCommit(UserEntity user, Repository repository, String suffix) {
+    public static Commit createCommit(UserEntity user, RepositoryEntity repository, String suffix) {
         Commit commit = new Commit();
         commit.setUser(user);
         commit.setRepository(repository);
@@ -88,7 +88,7 @@ public final class TestEntityCreators {
         return commit;
     }
 
-    public static List<Commit> createCommits(UserEntity user, Repository repository, int count) {
+    public static List<Commit> createCommits(UserEntity user, RepositoryEntity repository, int count) {
         List<Commit> commits = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             commits.add(createCommit(user, repository, "commit-" + i));
@@ -159,7 +159,7 @@ public final class TestEntityCreators {
         return files;
     }
 
-    public static Issue createIssue(UserEntity user, Repository repository, String suffix) {
+    public static Issue createIssue(UserEntity user, RepositoryEntity repository, String suffix) {
         Issue issue = new Issue();
         issue.setUser(user);
         issue.setRepository(repository);
@@ -174,7 +174,7 @@ public final class TestEntityCreators {
         return issue;
     }
 
-    public static List<Issue> createIssues(UserEntity user, Repository repository, int count) {
+    public static List<Issue> createIssues(UserEntity user, RepositoryEntity repository, int count) {
         List<Issue> issues = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             issues.add(createIssue(user, repository, "issue-" + i));
@@ -182,7 +182,7 @@ public final class TestEntityCreators {
         return issues;
     }
 
-    public static IssueComment createIssueComment(UserEntity user, Repository repository, String suffix) {
+    public static IssueComment createIssueComment(UserEntity user, RepositoryEntity repository, String suffix) {
         IssueComment comment = new IssueComment();
         comment.setUser(user);
         comment.setRepository(repository);
@@ -204,7 +204,7 @@ public final class TestEntityCreators {
         return comment;
     }
 
-    public static List<IssueComment> createIssueComments(UserEntity user, Repository repository, int count) {
+    public static List<IssueComment> createIssueComments(UserEntity user, RepositoryEntity repository, int count) {
         List<IssueComment> comments = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             comments.add(createIssueComment(user, repository, "comment-" + i));
@@ -212,7 +212,7 @@ public final class TestEntityCreators {
         return comments;
     }
 
-    public static PullRequest createPullRequest(UserEntity user, Repository repository, String suffix) {
+    public static PullRequest createPullRequest(UserEntity user, RepositoryEntity repository, String suffix) {
         PullRequest pr = new PullRequest();
         pr.setUser(user);
         pr.setRepository(repository);
@@ -230,7 +230,7 @@ public final class TestEntityCreators {
         return pr;
     }
 
-    public static List<PullRequest> createPullRequests(UserEntity user, Repository repository, int count) {
+    public static List<PullRequest> createPullRequests(UserEntity user, RepositoryEntity repository, int count) {
         List<PullRequest> pullRequests = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             pullRequests.add(createPullRequest(user, repository, "pr-" + i));
@@ -251,7 +251,7 @@ public final class TestEntityCreators {
         return comments;
     }
 
-    public static PullRequestReview createPullRequestReview(UserEntity user, Repository repository, String suffix) {
+    public static PullRequestReview createPullRequestReview(UserEntity user, RepositoryEntity repository, String suffix) {
         PullRequestReview review = new PullRequestReview();
         review.setUser(user);
         review.setRepository(repository);
@@ -266,7 +266,7 @@ public final class TestEntityCreators {
         return review;
     }
 
-    public static List<PullRequestReview> createPullRequestReviews(UserEntity user, Repository repository, int count) {
+    public static List<PullRequestReview> createPullRequestReviews(UserEntity user, RepositoryEntity repository, int count) {
         List<PullRequestReview> reviews = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             reviews.add(createPullRequestReview(user, repository, "review-" + i));
