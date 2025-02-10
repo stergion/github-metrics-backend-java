@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -76,7 +76,7 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof User user) && login.equals(user.login);
+        return (o instanceof UserEntity user) && login.equals(user.login);
     }
 
     @Override

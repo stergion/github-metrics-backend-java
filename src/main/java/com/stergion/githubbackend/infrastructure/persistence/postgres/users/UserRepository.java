@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class UserRepository implements PanacheRepositoryBase<User, UUID> {
+public class UserRepository implements PanacheRepositoryBase<UserEntity, UUID> {
 
-    public Uni<User> findByLogin(String login) {
+    public Uni<UserEntity> findByLogin(String login) {
         return find("login", login).firstResult();
     }
 
-    public Uni<List<User>> findByEmail(String email) {
+    public Uni<List<UserEntity>> findByEmail(String email) {
         return list("email", email);
     }
 
-    public Uni<User> findByGitHubId(String githubId) {
+    public Uni<UserEntity> findByGitHubId(String githubId) {
         return find("githubId", githubId).firstResult();
     }
 

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +27,7 @@ public abstract class Contribution {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "repositoryId", nullable = false)
@@ -56,11 +56,11 @@ public abstract class Contribution {
         this.id = id;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 

@@ -4,7 +4,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntity
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
@@ -35,7 +35,7 @@ class IssueCommentRepositoryTest {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
-    private User testUser;
+    private UserEntity testUser;
     private Repository testRepo;
 
     @BeforeEach

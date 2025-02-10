@@ -4,7 +4,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntity
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.Label;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.IssueState;
@@ -38,7 +38,7 @@ class IssueRepositoryTest {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
-    private User testUser;
+    private UserEntity testUser;
     private Repository testRepo;
 
     @BeforeEach

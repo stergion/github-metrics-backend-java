@@ -44,7 +44,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new user successfully")
         void createUser(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> userRepository.persist(user)),
@@ -62,7 +62,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find user by ID")
         void findUserById(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> userRepository.persist(user)));
@@ -82,7 +82,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing user")
         void updateUser(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
             String updatedName = "updatedName";
 
             asserter.execute(
@@ -111,7 +111,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing user")
         void deleteUser(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.execute(
                     () -> Panache.withTransaction(() -> userRepository.persist(user)));
@@ -135,7 +135,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find user by login")
         void findByLogin(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(user)));
 
@@ -160,10 +160,10 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find users by email")
         void findByEmail(UniAsserter asserter) {
-            User user1 = TestEntityCreators.createUser("tUser1");
+            UserEntity user1 = TestEntityCreators.createUser("tUser1");
             user1.setEmail("same@email.com");
 
-            User user2 = TestEntityCreators.createUser("tUser2");
+            UserEntity user2 = TestEntityCreators.createUser("tUser2");
             user2.setEmail("same@email.com");
 
             asserter.execute(() -> Panache.withTransaction(() ->
@@ -193,7 +193,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find user by GitHub ID")
         void findByGithubId(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(user)));
 
@@ -223,7 +223,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete user by login")
         void deleteByLogin(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
 
             asserter.execute(() -> Panache.withTransaction(() -> userRepository.persist(user)));
 
@@ -248,7 +248,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should add repositories to user")
         void addRepositoriesToUser(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
             Set<Repository> repositories = Set.of(
                     TestEntityCreators.createRepository("repo1"),
                     TestEntityCreators.createRepository("repo2")
@@ -281,7 +281,7 @@ class UserRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should remove repository from user")
         void removeRepositoryFromUser(UniAsserter asserter) {
-            User user = TestEntityCreators.createUser();
+            UserEntity user = TestEntityCreators.createUser();
             Set<Repository> repositories = new HashSet<>(Set.of(
                     TestEntityCreators.createRepository("repo1"),
                     TestEntityCreators.createRepository("repo2")

@@ -4,7 +4,7 @@ import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntity
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.Repository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
@@ -37,7 +37,7 @@ class CommitRepositoryTest {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
-    private User testUser;
+    private UserEntity testUser;
     private Repository testRepo;
 
     @BeforeEach
