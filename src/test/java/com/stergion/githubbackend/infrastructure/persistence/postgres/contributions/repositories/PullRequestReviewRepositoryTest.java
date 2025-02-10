@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestReview;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestReviewEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
@@ -75,7 +75,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new review successfully")
         void createReview(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             asserter.assertThat(
@@ -95,7 +95,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find review by ID")
         void findReviewById(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> reviewRepository.persist(review)));
@@ -116,7 +116,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing review")
         void updateReview(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> reviewRepository.persist(review)));
@@ -155,7 +155,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing review")
         void deleteReview(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> reviewRepository.persist(review)));
@@ -179,7 +179,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should manage review comments")
         void manageReviewComments(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
             List<PullRequestReviewComment> comments =
                     TestEntityCreators.createPullRequestReviewComments(
@@ -209,7 +209,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should cascade delete review comments")
         void cascadeDeleteComments(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
             List<PullRequestReviewComment> comments =
                     TestEntityCreators.createPullRequestReviewComments(
@@ -256,7 +256,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find review by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> reviewRepository.persist(review)));
@@ -282,7 +282,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find reviews by user ID")
         void findByUserId(UniAsserter asserter) {
-            List<PullRequestReview> reviews = TestEntityCreators.createPullRequestReviews(testUser,
+            List<PullRequestReviewEntity> reviews = TestEntityCreators.createPullRequestReviews(testUser,
                     testRepo, 3);
 
             asserter.execute(
@@ -306,7 +306,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find reviews by repository ID")
         void findByRepoId(UniAsserter asserter) {
-            List<PullRequestReview> reviews = TestEntityCreators.createPullRequestReviews(testUser,
+            List<PullRequestReviewEntity> reviews = TestEntityCreators.createPullRequestReviews(testUser,
                     testRepo, 3);
 
             asserter.execute(
@@ -330,7 +330,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find reviews by user ID and repository ID")
         void findByUserIdAndRepoId(UniAsserter asserter) {
-            List<PullRequestReview> reviews = TestEntityCreators.createPullRequestReviews(testUser,
+            List<PullRequestReviewEntity> reviews = TestEntityCreators.createPullRequestReviews(testUser,
                     testRepo, 3);
 
             asserter.execute(
@@ -366,28 +366,28 @@ class PullRequestReviewRepositoryTest {
         @DisplayName("Should fail when required fields are null")
         void validateRequiredFields(UniAsserter asserter) {
             // Test with null user
-            PullRequestReview reviewWithNullUser = TestEntityCreators.createPullRequestReview(
+            PullRequestReviewEntity reviewWithNullUser = TestEntityCreators.createPullRequestReview(
                     testUser, testRepo, "null-user");
             reviewWithNullUser.setUser(null);
 
             // Test with null repository
-            PullRequestReview reviewWithNullRepo = TestEntityCreators.createPullRequestReview(
+            PullRequestReviewEntity reviewWithNullRepo = TestEntityCreators.createPullRequestReview(
                     testUser, testRepo, "null-repo");
             reviewWithNullRepo.setRepository(null);
 
             // Test with null githubId and githubUrl
-            PullRequestReview reviewWithNullGithubId = TestEntityCreators.createPullRequestReview(
+            PullRequestReviewEntity reviewWithNullGithubId = TestEntityCreators.createPullRequestReview(
                     testUser, testRepo, "null-github-id");
             reviewWithNullGithubId.setGithubId(null);
             reviewWithNullGithubId.setGithubUrl(null);
 
             // Test with null createdAt
-            PullRequestReview reviewWithNullCreatedAt = TestEntityCreators.createPullRequestReview(
+            PullRequestReviewEntity reviewWithNullCreatedAt = TestEntityCreators.createPullRequestReview(
                     testUser, testRepo, "null-created-at");
             reviewWithNullCreatedAt.setCreatedAt(null);
 
             // Test with null pullRequest
-            PullRequestReview reviewWithNullPullRequest =
+            PullRequestReviewEntity reviewWithNullPullRequest =
                     TestEntityCreators.createPullRequestReview(
                             testUser, testRepo, "null-pull-request");
             reviewWithNullPullRequest.setPullRequest(null);
@@ -429,9 +429,9 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void validateUniqueConstraints(UniAsserter asserter) {
-            PullRequestReview review1 = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review1 = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
-            PullRequestReview review2 = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review2 = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "2");
 
             // Set same githubId and githubUrl for both reviews
@@ -459,7 +459,7 @@ class PullRequestReviewRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should handle review state transitions")
         void handleStateTransitions(UniAsserter asserter) {
-            PullRequestReview review = TestEntityCreators.createPullRequestReview(testUser,
+            PullRequestReviewEntity review = TestEntityCreators.createPullRequestReview(testUser,
                     testRepo, "1");
 
             // Initial state should be PENDING

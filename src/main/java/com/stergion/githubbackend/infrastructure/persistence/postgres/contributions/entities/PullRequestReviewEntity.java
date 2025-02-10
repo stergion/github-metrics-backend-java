@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "PullRequestReviews")
-public class PullRequestReview extends ContributionEntity {
+public class PullRequestReviewEntity extends ContributionEntity {
 
     @NotNull
     private PullRequestRef pullRequest;

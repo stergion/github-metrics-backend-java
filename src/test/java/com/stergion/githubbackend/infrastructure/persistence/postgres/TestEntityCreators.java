@@ -251,8 +251,8 @@ public final class TestEntityCreators {
         return comments;
     }
 
-    public static PullRequestReview createPullRequestReview(UserEntity user, RepositoryEntity repository, String suffix) {
-        PullRequestReview review = new PullRequestReview();
+    public static PullRequestReviewEntity createPullRequestReview(UserEntity user, RepositoryEntity repository, String suffix) {
+        PullRequestReviewEntity review = new PullRequestReviewEntity();
         review.setUser(user);
         review.setRepository(repository);
         review.setPullRequest(createPullRequestRef());
@@ -266,8 +266,8 @@ public final class TestEntityCreators {
         return review;
     }
 
-    public static List<PullRequestReview> createPullRequestReviews(UserEntity user, RepositoryEntity repository, int count) {
-        List<PullRequestReview> reviews = new ArrayList<>();
+    public static List<PullRequestReviewEntity> createPullRequestReviews(UserEntity user, RepositoryEntity repository, int count) {
+        List<PullRequestReviewEntity> reviews = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             reviews.add(createPullRequestReview(user, repository, "review-" + i));
         }
