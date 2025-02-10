@@ -159,8 +159,8 @@ public final class TestEntityCreators {
         return files;
     }
 
-    public static Issue createIssue(UserEntity user, RepositoryEntity repository, String suffix) {
-        Issue issue = new Issue();
+    public static IssueEntity createIssue(UserEntity user, RepositoryEntity repository, String suffix) {
+        IssueEntity issue = new IssueEntity();
         issue.setUser(user);
         issue.setRepository(repository);
         issue.setBody("Test issue body");
@@ -174,8 +174,8 @@ public final class TestEntityCreators {
         return issue;
     }
 
-    public static List<Issue> createIssues(UserEntity user, RepositoryEntity repository, int count) {
-        List<Issue> issues = new ArrayList<>();
+    public static List<IssueEntity> createIssues(UserEntity user, RepositoryEntity repository, int count) {
+        List<IssueEntity> issues = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             issues.add(createIssue(user, repository, "issue-" + i));
         }

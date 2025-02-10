@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Issues")
-public class Issue extends ContributionEntity {
+public class IssueEntity extends ContributionEntity {
 
     @NotNull
     @PastOrPresent

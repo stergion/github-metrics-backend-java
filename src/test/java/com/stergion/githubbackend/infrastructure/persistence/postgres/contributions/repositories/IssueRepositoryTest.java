@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
@@ -76,7 +76,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should create a new issue successfully")
         void createIssue(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             asserter.assertThat(
                     () -> Panache.withTransaction(() -> issueRepository.persist(issue)),
@@ -96,7 +96,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue by ID")
         void findIssueById(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issue)));
 
@@ -116,7 +116,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update existing issue")
         void updateIssue(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issue)));
 
@@ -157,7 +157,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should delete existing issue")
         void deleteIssue(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issue)));
             asserter.execute(() -> Panache.withTransaction(() ->
@@ -180,7 +180,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should add labels to issue")
         void addLabels(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
             List<Label> labels = TestEntityCreators.createLabels(3);
 
             issue.setLabels(labels);
@@ -207,7 +207,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should update issue labels")
         void updateLabels(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             // Create initial labels with "initial-" prefix
             List<Label> initialLabels = TestEntityCreators.createLabels(2);
@@ -258,7 +258,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should cascade delete labels when issue is deleted")
         void cascadeDeleteLabels(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
             List<Label> labels = TestEntityCreators.createLabels(2);
             issue.setLabels(labels);
 
@@ -298,7 +298,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issue by GitHub ID")
         void findByGitHubId(UniAsserter asserter) {
-            Issue issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue = TestEntityCreators.createIssue(testUser, testRepo, "1");
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issue)));
 
@@ -323,7 +323,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issues by user ID")
         void findByUserId(UniAsserter asserter) {
-            List<Issue> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
+            List<IssueEntity> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issues)));
 
@@ -343,7 +343,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issues by repository ID")
         void findByRepoId(UniAsserter asserter) {
-            List<Issue> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
+            List<IssueEntity> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issues)));
 
@@ -363,7 +363,7 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should find issues by user ID and repository ID")
         void findByUserIdAndRepoId(UniAsserter asserter) {
-            List<Issue> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
+            List<IssueEntity> issues = TestEntityCreators.createIssues(testUser, testRepo, 3);
 
             asserter.execute(() -> Panache.withTransaction(() -> issueRepository.persist(issues)));
 
@@ -390,23 +390,23 @@ class IssueRepositoryTest {
         @DisplayName("Should fail when required fields are null")
         void validateRequiredFields(UniAsserter asserter) {
             // Test with null user
-            Issue issueWithNullUser = TestEntityCreators.createIssue(testUser, testRepo,
+            IssueEntity issueWithNullUser = TestEntityCreators.createIssue(testUser, testRepo,
                     "null-user");
             issueWithNullUser.setUser(null);
 
             // Test with null repository
-            Issue issueWithNullRepo = TestEntityCreators.createIssue(testUser, testRepo,
+            IssueEntity issueWithNullRepo = TestEntityCreators.createIssue(testUser, testRepo,
                     "null-repo");
             issueWithNullRepo.setRepository(null);
 
             // Test with null githubId and githubUrl
-            Issue issueWithNullGithubId = TestEntityCreators.createIssue(testUser, testRepo,
+            IssueEntity issueWithNullGithubId = TestEntityCreators.createIssue(testUser, testRepo,
                     "null-github-id");
             issueWithNullGithubId.setGithubId(null);
             issueWithNullGithubId.setGithubUrl(null);
 
             // Test with null created date
-            Issue issueWithNullCreatedAt = TestEntityCreators.createIssue(testUser, testRepo,
+            IssueEntity issueWithNullCreatedAt = TestEntityCreators.createIssue(testUser, testRepo,
                     "null-created-at");
             issueWithNullCreatedAt.setCreatedAt(null);
 
@@ -439,8 +439,8 @@ class IssueRepositoryTest {
         @RunOnVertxContext
         @DisplayName("Should enforce unique constraints")
         void validateUniqueConstraints(UniAsserter asserter) {
-            Issue issue1 = TestEntityCreators.createIssue(testUser, testRepo, "1");
-            Issue issue2 = TestEntityCreators.createIssue(testUser, testRepo, "2");
+            IssueEntity issue1 = TestEntityCreators.createIssue(testUser, testRepo, "1");
+            IssueEntity issue2 = TestEntityCreators.createIssue(testUser, testRepo, "2");
             // Set same githubId and githubUrl for both issues
             issue2.setGithubId(issue1.getGithubId());
             issue2.setGithubUrl(issue1.getGithubUrl());
