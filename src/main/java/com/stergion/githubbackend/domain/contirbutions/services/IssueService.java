@@ -7,7 +7,7 @@ import com.stergion.githubbackend.domain.contirbutions.mappers.IssueMapper;
 import com.stergion.githubbackend.domain.contirbutions.search.IssueSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-public class IssueService extends ContributionService<IssueDTO, Issue> {
+public class IssueService extends ContributionService<IssueDTO, IssueEntity> {
     @Inject
     IssueMapper issueMapper;
     @Inject
@@ -31,12 +31,12 @@ public class IssueService extends ContributionService<IssueDTO, Issue> {
     }
 
     @Override
-    protected Issue mapDtoToEntity(IssueDTO dto, ObjectId userId, ObjectId repoId) {
+    protected IssueEntity mapDtoToEntity(IssueDTO dto, ObjectId userId, ObjectId repoId) {
         return issueMapper.toEntity(dto, userId, repoId);
     }
 
     @Override
-    protected IssueDTO mapEntityToDto(Issue entity) {
+    protected IssueDTO mapEntityToDto(IssueEntity entity) {
         return issueMapper.toDTO(entity);
     }
 

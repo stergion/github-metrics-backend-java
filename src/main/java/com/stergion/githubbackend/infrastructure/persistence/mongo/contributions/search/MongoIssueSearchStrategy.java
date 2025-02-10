@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.IssueSearchStrateg
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueField;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoIssueSearchStrategy
-        extends MongoContributionSearchStrategy<Issue, IssueSearchCriteria>
+        extends MongoContributionSearchStrategy<IssueEntity, IssueSearchCriteria>
         implements IssueSearchStrategy {
 
     public MongoIssueSearchStrategy(IssueRepository repository) {

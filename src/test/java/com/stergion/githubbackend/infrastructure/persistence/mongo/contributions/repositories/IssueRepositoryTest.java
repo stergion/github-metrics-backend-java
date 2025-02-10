@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Issue;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Label;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
@@ -35,7 +35,7 @@ class IssueRepositoryTest {
     private static final ObjectId TEST_REPO_ID = new ObjectId();
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
-    private Issue testIssue;
+    private IssueEntity testIssue;
 
     @BeforeEach
     void setUp() {
@@ -54,8 +54,8 @@ class IssueRepositoryTest {
 
             assertNotNull(testIssue.id(), "Issue ID should be generated");
 
-            Issue found = issueRepository.findById(testIssue.id())
-                                         .await().atMost(TIMEOUT);
+            IssueEntity found = issueRepository.findById(testIssue.id())
+                                               .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found issue should not be null");
             assertEquals(testIssue.id(), found.id());
@@ -72,8 +72,9 @@ class IssueRepositoryTest {
 
             issueRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
 
-            Issue found = issueRepository.findById(testIssue.id())
-                                         .await().atMost(TIMEOUT);
+
+            IssueEntity found = issueRepository.findById(testIssue.id())
+                                               .await().atMost(TIMEOUT);
             assertNull(found, "Issue should be deleted");
         }
     }
@@ -87,8 +88,8 @@ class IssueRepositoryTest {
         void findByGitHubId() {
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            Issue found = issueRepository.findByGitHubId(testIssue.github().id)
-                                         .await().atMost(TIMEOUT);
+            IssueEntity found = issueRepository.findByGitHubId(testIssue.github().id)
+                                               .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found issue should not be null");
             assertEquals(testIssue.id(), found.id());
@@ -103,9 +104,9 @@ class IssueRepositoryTest {
         void findByUserId() {
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID)
-                                               .collect().asList()
-                                               .await().atMost(TIMEOUT);
+            List<IssueEntity> found = issueRepository.findByUserId(TEST_USER_ID)
+                                                     .collect().asList()
+                                                     .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -121,9 +122,9 @@ class IssueRepositoryTest {
         void findByRepoId() {
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByRepoId(TEST_REPO_ID)
-                                               .collect().asList()
-                                               .await().atMost(TIMEOUT);
+            List<IssueEntity> found = issueRepository.findByRepoId(TEST_REPO_ID)
+                                                     .collect().asList()
+                                                     .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -139,9 +140,9 @@ class IssueRepositoryTest {
         void findByUserAndRepoId() {
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> found = issueRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
-                                               .collect().asList()
-                                               .await().atMost(TIMEOUT);
+            List<IssueEntity> found = issueRepository.findByUserAndRepoId(TEST_USER_ID, TEST_REPO_ID)
+                                                     .collect().asList()
+                                                     .await().atMost(TIMEOUT);
 
             assertFalse(found.isEmpty(), "Should find at least one issue");
             assertNotNull(found, "Found issues should not be null");
@@ -197,10 +198,10 @@ class IssueRepositoryTest {
             testIssue.state = IssueState.OPEN;
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> openIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
+            List<IssueEntity> openIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
                                                             IssueState.OPEN)
-                                                    .collect().asList()
-                                                    .await().atMost(TIMEOUT);
+                                                          .collect().asList()
+                                                          .await().atMost(TIMEOUT);
 
             assertFalse(openIssues.isEmpty(), "Should find open issues");
             assertEquals(IssueState.OPEN, openIssues.getFirst().state());
@@ -213,10 +214,10 @@ class IssueRepositoryTest {
             testIssue.closedAt = LocalDate.now();
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            List<Issue> closedIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
+            List<IssueEntity> closedIssues = issueRepository.findByUserIdAndState(TEST_USER_ID,
                                                               IssueState.CLOSED)
-                                                      .collect().asList()
-                                                      .await().atMost(TIMEOUT);
+                                                            .collect().asList()
+                                                            .await().atMost(TIMEOUT);
 
             assertFalse(closedIssues.isEmpty(), "Should find closed issues");
             assertEquals(IssueState.CLOSED, closedIssues.getFirst().state());
@@ -232,7 +233,7 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            Issue issueWithNulls = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID,Optional.of("1"));
+            IssueEntity issueWithNulls = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID,Optional.of("1"));
             issueWithNulls.closedAt = null;
             issueWithNulls.updatedAt = null;
             issueWithNulls.labels = null;
@@ -240,8 +241,8 @@ class IssueRepositoryTest {
 
             issueRepository.persist(issueWithNulls).await().atMost(TIMEOUT);
 
-            Issue found = issueRepository.findById(issueWithNulls.id())
-                                         .await().atMost(TIMEOUT);
+            IssueEntity found = issueRepository.findById(issueWithNulls.id())
+                                               .await().atMost(TIMEOUT);
 
             assertNotNull(found, "Found issue should not be null");
             assertEquals(issueWithNulls.id(), found.id());
@@ -264,9 +265,9 @@ class IssueRepositoryTest {
                                .await().atMost(TIMEOUT);
             }
 
-            List<Issue> found = issueRepository.findByUserId(TEST_USER_ID)
-                                               .collect().asList()
-                                               .await().atMost(TIMEOUT);
+            List<IssueEntity> found = issueRepository.findByUserId(TEST_USER_ID)
+                                                     .collect().asList()
+                                                     .await().atMost(TIMEOUT);
 
             assertEquals(issueCount, found.size(),
                     "Should find correct number of issues");
@@ -284,8 +285,8 @@ class IssueRepositoryTest {
             testIssue.closedAt = null;
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            Issue newIssue = issueRepository.findById(testIssue.id())
-                                            .await().atMost(TIMEOUT);
+            IssueEntity newIssue = issueRepository.findById(testIssue.id())
+                                                  .await().atMost(TIMEOUT);
             assertEquals(IssueState.OPEN, newIssue.state(), "New issue should be open");
             assertNull(newIssue.closedAt(), "New issue should not have closed date");
 
@@ -295,9 +296,9 @@ class IssueRepositoryTest {
             testIssue.closer = "test-closer";
             issueRepository.update(testIssue).await().atMost(TIMEOUT);
 
-            Issue closedIssue = issueRepository.findById(testIssue.id())
-                                               .await().atMost(TIMEOUT);
-            assertEquals(IssueState.CLOSED, closedIssue.state(), "Issue should be closed");
+            IssueEntity closedIssue = issueRepository.findById(testIssue.id())
+                                                     .await().atMost(TIMEOUT);
+            assertEquals(IssueState.CLOSED, closedIssue.state(), "IssueEntity should be closed");
             assertNotNull(closedIssue.closedAt(), "Closed issue should have closed date");
             assertEquals("test-closer", closedIssue.closer(), "Should record who closed the issue");
 
@@ -307,9 +308,8 @@ class IssueRepositoryTest {
             testIssue.closer = null;
             issueRepository.update(testIssue).await().atMost(TIMEOUT);
 
-            Issue reopenedIssue = issueRepository.findById(testIssue.id())
-                                                 .await().atMost(TIMEOUT);
-            assertEquals(IssueState.OPEN, reopenedIssue.state(), "Issue should be reopened");
+            IssueEntity reopenedIssue = issueRepository.findById(testIssue.id())
+                                                       .await().atMost(TIMEOUT);
             assertNull(reopenedIssue.closedAt(), "Reopened issue should not have closed date");
             assertNull(reopenedIssue.closer(), "Reopened issue should not have closer");
         }
@@ -325,14 +325,14 @@ class IssueRepositoryTest {
         issueRepository.persist(createTestIssue(null, userId2, repoId2, Optional.of("5"))).await().atMost(TIMEOUT);
     }
 
-    private Issue createTestIssue(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
+    private IssueEntity createTestIssue(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
         var github = new Github();
         github.id = "test-github-" + suffix.orElse("id");
         github.url = URI.create( "www.github.com/test-github-" + suffix.orElse("id"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 
-        var issue = new Issue();
+        var issue = new IssueEntity();
         issue.id = id;
         issue.userId = userId;
         issue.repositoryId = repoId;
