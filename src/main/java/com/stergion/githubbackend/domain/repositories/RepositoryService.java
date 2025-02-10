@@ -4,7 +4,7 @@ import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.utils.RepositoryIdCache;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.RepositoryClient;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryRepository;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,7 +27,7 @@ public class RepositoryService {
     RepositoryIdCache repositoryIdCache;
 
     public RepositoryDTO getRepository(String owner, String name) {
-        Repository repo = repoRepository.findByNameAndOwner(owner, name);
+        RepositoryEntity repo = repoRepository.findByNameAndOwner(owner, name);
         if (repo == null) {
             throw new RepositoryNotFoundException(owner, name);
         }
@@ -116,7 +116,7 @@ public class RepositoryService {
     }
 
     public List<RepositoryDTO> getRepositories(List<ObjectId> ids) {
-        List<Repository> repos = repoRepository.findById(ids);
+        List<RepositoryEntity> repos = repoRepository.findById(ids);
         return repos.stream()
                     .map(repoMapper::toDTO)
                     .toList();

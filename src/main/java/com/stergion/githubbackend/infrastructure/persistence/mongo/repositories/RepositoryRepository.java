@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class RepositoryRepository implements PanacheMongoRepository<Repository> {
-    public List<Repository> findById(List<ObjectId> ids) {
+public class RepositoryRepository implements PanacheMongoRepository<RepositoryEntity> {
+    public List<RepositoryEntity> findById(List<ObjectId> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();
         }
@@ -23,19 +23,19 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
         return list(new Document("$or", criteria));
     }
 
-    public Repository findByGitHubId(String gitHubId) {
+    public RepositoryEntity findByGitHubId(String gitHubId) {
         return find("github.id", gitHubId).firstResult();
     }
 
-    public List<Repository> findByOwner(String owner) {
+    public List<RepositoryEntity> findByOwner(String owner) {
         return find("owner", owner).list();
     }
 
-    public Repository findByNameAndOwner(String owner, String name) {
+    public RepositoryEntity findByNameAndOwner(String owner, String name) {
         return find("owner = ?1 and name = ?2", owner, name).firstResult();
     }
 
-    public List<Repository> findByNameAndOwners(List<NameWithOwner> repos) {
+    public List<RepositoryEntity> findByNameAndOwners(List<NameWithOwner> repos) {
         if (repos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -53,7 +53,7 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
         delete("owner", owner);
     }
 
-    public void save(Repository repository) {
+    public void save(RepositoryEntity repository) {
         var found = findByNameAndOwner(repository.owner, repository.name);
         if (found != null) {
             repository.id = found.id;
@@ -63,7 +63,7 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
         }
     }
 
-    public void save(List<Repository> repositories) {
+    public void save(List<RepositoryEntity> repositories) {
         if (repositories.isEmpty()) {
             return;
         }
@@ -72,16 +72,16 @@ public class RepositoryRepository implements PanacheMongoRepository<Repository> 
                                                           .map(r -> new NameWithOwner(r.owner,
                                                                   r.name))
                                                           .toList();
-        List<Repository> existingRepos = findByNameAndOwners(repoIds);
+        List<RepositoryEntity> existingRepos = findByNameAndOwners(repoIds);
 
-        Map<String, Repository> existingRepoMap = existingRepos.stream()
-                                                               .collect(Collectors.toMap(
+        Map<String, RepositoryEntity> existingRepoMap = existingRepos.stream()
+                                                                     .collect(Collectors.toMap(
                                                                        r -> r.owner + "/" + r.name,
                                                                        repo -> repo
                                                                                         ));
         repositories.forEach(newRepo -> {
             String key = newRepo.owner + "/" + newRepo.name;
-            Repository existingRepo = existingRepoMap.get(key);
+            RepositoryEntity existingRepo = existingRepoMap.get(key);
 
             if (existingRepo != null) {
                 // Update existing repository

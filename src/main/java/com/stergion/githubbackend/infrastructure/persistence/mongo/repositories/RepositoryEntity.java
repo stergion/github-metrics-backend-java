@@ -12,7 +12,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @MongoEntity(collection = "repositories")
-public class Repository {
+public class RepositoryEntity {
     @NotNull
     public ObjectId id;
 
@@ -79,7 +79,7 @@ public class Repository {
 
     @Override
     public final boolean equals(Object o) {
-        return (o instanceof Repository r)
+        return (o instanceof RepositoryEntity r)
                 && owner.equals(r.owner)
                 && name.equals(r.name);
     }

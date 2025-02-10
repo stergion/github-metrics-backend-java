@@ -1,12 +1,12 @@
 package com.stergion.githubbackend.domain.repositories;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.Repository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(config = MapStructConfig.class)
 public interface RepositoryMapper {
-    RepositoryDTO toDTO(Repository repository);
+    RepositoryDTO toDTO(RepositoryEntity repository);
 
-    Repository toEntity(RepositoryDTO repositoryDTO);
+    RepositoryEntity toEntity(RepositoryDTO repositoryDTO);
 }
