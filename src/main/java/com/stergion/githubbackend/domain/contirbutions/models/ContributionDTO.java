@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.domain.contirbutions.dto;
+package com.stergion.githubbackend.domain.contirbutions.models;
 
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;

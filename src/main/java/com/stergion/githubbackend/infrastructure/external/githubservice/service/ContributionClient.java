@@ -2,7 +2,7 @@ package com.stergion.githubbackend.infrastructure.external.githubservice.service
 
 import com.stergion.githubbackend.common.batch.BatchProcessor;
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.dto.*;
+import com.stergion.githubbackend.domain.contirbutions.models.*;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.GitHubServiceClient;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers.*;

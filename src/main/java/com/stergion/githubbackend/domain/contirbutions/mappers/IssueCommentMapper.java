@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.api.contributions;
 
 import com.stergion.githubbackend.application.request.search.IssueSearchRequest;
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.services.IssueService;

@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
 import com.stergion.githubbackend.domain.utils.types.IssueState;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.*;

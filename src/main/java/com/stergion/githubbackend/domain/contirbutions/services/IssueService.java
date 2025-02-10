@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.IssueFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueMapper;

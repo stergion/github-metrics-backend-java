@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.IssueCommentGH;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.GitHubNodeRef;
 import com.stergion.githubbackend.infrastructure.external.githubservice.client.models.success.helpers.Reactions;

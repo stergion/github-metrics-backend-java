@@ -1,17 +1,17 @@
-package com.stergion.githubbackend.domain.contirbutions.dto;
+package com.stergion.githubbackend.domain.contirbutions.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
-import com.stergion.githubbackend.domain.utils.types.Github;
-import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
+import com.stergion.githubbackend.domain.utils.types.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public record IssueCommentDTO(
+public record IssueDTO(
         ObjectId id,
         @NotNull
         String user,
@@ -26,24 +26,19 @@ public record IssueCommentDTO(
         @PastOrPresent
         LocalDate createdAt,
 
-        LocalDate publishedAt,
+        LocalDate closedAt,
         LocalDate updatedAt,
-        LocalDate lastEditedAt,
-        AssociatedIssue associatedIssue,
-        String body
+        IssueState state,
+        String title,
+        String body,
+        int reactionsCount,
+        List<Label> labels,
+        String closer
 ) implements ContributionDTO {
+    public IssueDTO {
+        labels = labels != null ? List.copyOf(labels) : List.of();
+    }
     private static final ObjectMapper mapper = JsonObjectMapper.create();
-
-    public record AssociatedIssue(IssueType type, Github github) {
-        @Override
-        public String toString() {
-            return "{type: " + type + ", github: " + github + "}";
-        }
-    }
-
-    public enum IssueType {
-        ISSUE, PULL_REQUEST,
-    }
 
     @Override
     public String toString() {

@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestDTO;
 import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.domain.utils.types.PullRequestCommit;
 import com.stergion.githubbackend.domain.utils.types.PullRequestState;

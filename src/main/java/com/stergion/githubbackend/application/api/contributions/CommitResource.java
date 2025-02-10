@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.api.contributions;
 
 import com.stergion.githubbackend.application.request.search.CommitSearchRequest;
-import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.services.CommitService;

@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.IssueCommentFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMapper;

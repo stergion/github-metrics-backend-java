@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.CommitFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;

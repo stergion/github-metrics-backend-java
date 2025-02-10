@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.external.githubservice.client.mappers;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.CommitDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.CommitDTO;
 import com.stergion.githubbackend.domain.utils.types.CommitComment;
 import com.stergion.githubbackend.domain.utils.types.File;
 import com.stergion.githubbackend.domain.utils.types.Github;

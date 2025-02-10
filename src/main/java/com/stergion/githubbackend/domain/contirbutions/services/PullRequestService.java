@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.fetch;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.dto.IssueCommentDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueCommentDTO;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.ContributionClient;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.application.api.contributions;
 
 import com.stergion.githubbackend.application.request.search.PullRequestSearchRequest;
-import com.stergion.githubbackend.domain.contirbutions.dto.PullRequestDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestDTO;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.services.PullRequestService;

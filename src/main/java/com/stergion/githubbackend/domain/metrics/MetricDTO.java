@@ -12,14 +12,14 @@ public record MetricDTO(
         @NotNull
         NameWithOwner repository
 ) {
-    static ObjectMapper mapper = JsonObjectMapper.create();
+    private static final ObjectMapper mapper = JsonObjectMapper.create();
 
     @Override
     public String toString() {
         try {
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            return "{\"login\": %s, \"repository\": %s}".formatted(login, repository);
+            return "{\"login\": %s, \"nameWithOwner\": %s}".formatted(login, repository);
         }
     }
 }

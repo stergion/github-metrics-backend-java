@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.dto.ContributionDTO;
+import com.stergion.githubbackend.domain.contirbutions.models.ContributionDTO;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
