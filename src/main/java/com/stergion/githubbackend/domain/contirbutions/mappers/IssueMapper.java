@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapStructConfig.class)
 public interface IssueMapper {
     @Mapping(target = "user", source = "user.login")
-    Issue toDTO(IssueEntity issue);
+    Issue toDomain(IssueEntity issue);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "issueDTO.user")
-    IssueEntity toEntity(Issue issueDTO, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "user.login", source = "issue.user")
+    IssueEntity toEntity(Issue issue, ObjectId userId, ObjectId repositoryId);
 }

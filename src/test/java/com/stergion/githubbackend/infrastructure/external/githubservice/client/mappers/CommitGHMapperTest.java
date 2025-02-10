@@ -77,7 +77,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        Commit result = mapper.toDTO(commit, userLogin, new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDomain(commit, userLogin, new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);
@@ -128,7 +128,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        Commit result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDomain(commit, "testUser", new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);
@@ -205,7 +205,7 @@ class CommitGHMapperTest {
         );
 
         // Act
-        Commit result = mapper.toDTO(commit, "testUser", new NameWithOwner("owner", "repo"));
+        Commit result = mapper.toDomain(commit, "testUser", new NameWithOwner("owner", "repo"));
 
         // Assert
         assertNotNull(result);

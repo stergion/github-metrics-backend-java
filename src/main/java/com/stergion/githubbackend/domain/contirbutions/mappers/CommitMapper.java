@@ -11,9 +11,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapStructConfig.class)
 public interface CommitMapper {
     @Mapping(target = "user", source = "user.login")
-    Commit toDTO(CommitEntity commit);
+    Commit toDomain(CommitEntity commit);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "commitDTO.user")
-    CommitEntity toEntity(Commit commitDTO, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "user.login", source = "commit.user")
+    CommitEntity toEntity(Commit commit, ObjectId userId, ObjectId repositoryId);
 }

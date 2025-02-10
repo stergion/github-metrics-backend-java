@@ -15,7 +15,7 @@ public interface IssueCommentGHMapper {
     @Mapping(target = "github.url", source = "issueComment.url")
     @Mapping(target = "repository.owner", source = "issueComment.repository.owner.login")
     @Mapping(target = "associatedIssue", expression = "java(mapAssociatedIssue(issueComment))")
-    IssueComment toDTO(IssueCommentGH issueComment, String login);
+    IssueComment toDomain(IssueCommentGH issueComment, String login);
 
 
     default IssueComment.AssociatedIssue mapAssociatedIssue(IssueCommentGH issueComment) {

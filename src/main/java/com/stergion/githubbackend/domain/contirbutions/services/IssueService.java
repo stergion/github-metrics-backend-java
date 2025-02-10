@@ -31,13 +31,13 @@ public class IssueService extends ContributionService<Issue, IssueEntity> {
     }
 
     @Override
-    protected IssueEntity mapDtoToEntity(Issue dto, ObjectId userId, ObjectId repoId) {
-        return issueMapper.toEntity(dto, userId, repoId);
+    protected IssueEntity mapDomainToEntity(Issue issue, ObjectId userId, ObjectId repoId) {
+        return issueMapper.toEntity(issue, userId, repoId);
     }
 
     @Override
-    protected Issue mapEntityToDto(IssueEntity entity) {
-        return issueMapper.toDTO(entity);
+    protected Issue mapEntityToDomain(IssueEntity entity) {
+        return issueMapper.toDomain(entity);
     }
 
     public Multi<List<Issue>> fetchAndCreateIssues(String login, LocalDateTime from,
@@ -52,6 +52,6 @@ public class IssueService extends ContributionService<Issue, IssueEntity> {
 
     public Uni<PagedResponse<Issue>> search(IssueSearchCriteria criteria) {
         return searchStrategy.search(criteria)
-                             .map(response -> PagedResponse.map(response, issueMapper::toDTO));
+                             .map(response -> PagedResponse.map(response, issueMapper::toDomain));
     }
 }

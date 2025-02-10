@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapStructConfig.class)
 public interface PullRequestMapper {
     @Mapping(target = "user", source = "user.login")
-    PullRequest toDTO(PullRequestEntity pullRequest);
+    PullRequest toDomain(PullRequestEntity pullRequest);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "pullRequestDTO.user")
-    PullRequestEntity toEntity(PullRequest pullRequestDTO, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "user.login", source = "pullRequest.user")
+    PullRequestEntity toEntity(PullRequest pullRequest, ObjectId userId, ObjectId repositoryId);
 }

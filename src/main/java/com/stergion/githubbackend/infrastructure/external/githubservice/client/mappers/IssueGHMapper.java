@@ -19,7 +19,7 @@ public interface IssueGHMapper {
     @Mapping(target = "repository.owner", source = "issue.repository.owner.login")
     @Mapping(target = "closer", expression = "java(getCloserLogin(issue))")
     @Mapping(target = "reactionsCount", source = "issue.reactions.totalCount")
-    Issue toDTO(IssueGH issue, String login);
+    Issue toDomain(IssueGH issue, String login);
 
 
     default String getCloserLogin(IssueGH issue) {

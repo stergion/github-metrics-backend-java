@@ -24,7 +24,7 @@ public interface PullRequestGHMapper {
     @Mapping(target = "reactionsCount", source = "pullRequest.reactions.totalCount")
     @Mapping(target = "closingIssuesReferences", source = "pullRequest.closingIssuesReferences.nodes")
     @Mapping(target = "closingIssuesReferencesCount", source = "pullRequest.closingIssuesReferences.totalCount")
-    PullRequest toDTO(PullRequestGH pullRequest, String login);
+    PullRequest toDomain(PullRequestGH pullRequest, String login);
 
 
     default List<Github> map(PullRequestGH.ClosingIssuesReferences refs) {

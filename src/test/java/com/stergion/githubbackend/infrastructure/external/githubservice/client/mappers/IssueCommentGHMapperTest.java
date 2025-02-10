@@ -32,25 +32,25 @@ class IssueCommentGHMapperTest {
         var commentGH = createFullCommentWithPullRequest(date);
 
         // When
-        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment ic = mapper.toDomain(commentGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertEquals(TEST_LOGIN, dto.user());
-        assertEquals("test-repo", dto.repository().name());
-        assertEquals("owner", dto.repository().owner());
-        assertEquals("123", dto.github().id());
-        assertEquals(URI.create("https://example.com"), dto.github().url());
-        assertEquals(date, dto.createdAt());
-        assertEquals(date.plusDays(1), dto.updatedAt());
-        assertEquals(date.plusDays(2), dto.publishedAt());
-        assertEquals(date.plusDays(3), dto.lastEditedAt());
-        assertEquals("Test body", dto.body());
+        assertNotNull(ic);
+        assertEquals(TEST_LOGIN, ic.user());
+        assertEquals("test-repo", ic.repository().name());
+        assertEquals("owner", ic.repository().owner());
+        assertEquals("123", ic.github().id());
+        assertEquals(URI.create("https://example.com"), ic.github().url());
+        assertEquals(date, ic.createdAt());
+        assertEquals(date.plusDays(1), ic.updatedAt());
+        assertEquals(date.plusDays(2), ic.publishedAt());
+        assertEquals(date.plusDays(3), ic.lastEditedAt());
+        assertEquals("Test body", ic.body());
 
         // Verify associated pull request
-        assertNotNull(dto.associatedIssue());
-        assertEquals(IssueComment.IssueType.PULL_REQUEST, dto.associatedIssue().type());
-        assertEquals("pr-123", dto.associatedIssue().github().id());
+        assertNotNull(ic.associatedIssue());
+        assertEquals(IssueComment.IssueType.PULL_REQUEST, ic.associatedIssue().type());
+        assertEquals("pr-123", ic.associatedIssue().github().id());
     }
 
     @Test
@@ -61,20 +61,20 @@ class IssueCommentGHMapperTest {
         var commentGH = createFullCommentWithIssue(date);
 
         // When
-        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment ic = mapper.toDomain(commentGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertEquals(TEST_LOGIN, dto.user());
-        assertEquals("test-repo", dto.repository().name());
-        assertEquals("owner", dto.repository().owner());
-        assertEquals("123", dto.github().id());
-        assertEquals(URI.create("https://example.com"), dto.github().url());
+        assertNotNull(ic);
+        assertEquals(TEST_LOGIN, ic.user());
+        assertEquals("test-repo", ic.repository().name());
+        assertEquals("owner", ic.repository().owner());
+        assertEquals("123", ic.github().id());
+        assertEquals(URI.create("https://example.com"), ic.github().url());
 
         // Verify associated issue
-        assertNotNull(dto.associatedIssue());
-        assertEquals(IssueComment.IssueType.ISSUE, dto.associatedIssue().type());
-        assertEquals("issue-123", dto.associatedIssue().github().id());
+        assertNotNull(ic.associatedIssue());
+        assertEquals(IssueComment.IssueType.ISSUE, ic.associatedIssue().type());
+        assertEquals("issue-123", ic.associatedIssue().github().id());
     }
 
     @Test
@@ -85,16 +85,16 @@ class IssueCommentGHMapperTest {
         var commentGH = createMinimalComment(date);
 
         // When
-        IssueComment dto = mapper.toDTO(commentGH, TEST_LOGIN);
+        IssueComment ic = mapper.toDomain(commentGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertEquals(TEST_LOGIN, dto.user());
-        assertEquals(date, dto.createdAt());
-        assertEquals(date, dto.updatedAt());
-        assertNull(dto.publishedAt());
-        assertNull(dto.lastEditedAt());
-        assertNull(dto.associatedIssue());
+        assertNotNull(ic);
+        assertEquals(TEST_LOGIN, ic.user());
+        assertEquals(date, ic.createdAt());
+        assertEquals(date, ic.updatedAt());
+        assertNull(ic.publishedAt());
+        assertNull(ic.lastEditedAt());
+        assertNull(ic.associatedIssue());
     }
 
     private IssueCommentGH createFullCommentWithPullRequest(LocalDate date) {

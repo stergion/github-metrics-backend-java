@@ -25,7 +25,7 @@ public interface CommitGHMapper {
     @Mapping(target = "associatedPullRequest", source = "commit.associatedPullRequests.nodes")
     @Mapping(target = "associatedPullRequestsCount", expression = "java" +
             "(getAssociatedPullRequestsCount(commit))")
-    Commit toDTO(CommitGH commit, String login, NameWithOwner repository);
+    Commit toDomain(CommitGH commit, String login, NameWithOwner repository);
 
 
     default List<CommitComment> map(CommitGH.CommentsConnection comments) {

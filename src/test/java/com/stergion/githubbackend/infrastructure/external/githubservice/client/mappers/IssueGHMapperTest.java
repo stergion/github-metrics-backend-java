@@ -31,29 +31,29 @@ class IssueGHMapperTest {
         var issueGH = createFullIssue(date);
 
         // When
-        Issue dto = mapper.toDTO(issueGH, TEST_LOGIN);
+        Issue issue = mapper.toDomain(issueGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertEquals(TEST_LOGIN, dto.user());
-        assertEquals("test-repo", dto.repository().name());
-        assertEquals("owner", dto.repository().owner());
-        assertEquals("123", dto.github().id());
-        assertEquals(URI.create("https://example.com"), dto.github().url());
-        assertEquals(date, dto.createdAt());
-        assertEquals(date, dto.updatedAt());
-        assertEquals(date, dto.closedAt());
-        assertEquals(IssueState.CLOSED, dto.state());
-        assertEquals("Test Issue", dto.title());
-        assertEquals("Test body", dto.body());
-        assertEquals(5, dto.reactionsCount());
-        assertEquals("closer", dto.closer());
+        assertNotNull(issue);
+        assertEquals(TEST_LOGIN, issue.user());
+        assertEquals("test-repo", issue.repository().name());
+        assertEquals("owner", issue.repository().owner());
+        assertEquals("123", issue.github().id());
+        assertEquals(URI.create("https://example.com"), issue.github().url());
+        assertEquals(date, issue.createdAt());
+        assertEquals(date, issue.updatedAt());
+        assertEquals(date, issue.closedAt());
+        assertEquals(IssueState.CLOSED, issue.state());
+        assertEquals("Test Issue", issue.title());
+        assertEquals("Test body", issue.body());
+        assertEquals(5, issue.reactionsCount());
+        assertEquals("closer", issue.closer());
 
         // Verify labels
-        assertEquals(2, dto.labels().size());
-        assertTrue(dto.labels().stream().anyMatch(l -> l.name().equals("bug")));
-        assertTrue(dto.labels().stream().anyMatch(l -> l.name().equals("feature")));
-        assertEquals("Bug description", dto.labels().stream()
+        assertEquals(2, issue.labels().size());
+        assertTrue(issue.labels().stream().anyMatch(l -> l.name().equals("bug")));
+        assertTrue(issue.labels().stream().anyMatch(l -> l.name().equals("feature")));
+        assertEquals("Bug description", issue.labels().stream()
                                            .filter(l -> l.name().equals("bug"))
                                            .findFirst()
                                            .get()
@@ -68,14 +68,14 @@ class IssueGHMapperTest {
         var issueGH = createMinimalIssue(date);
 
         // When
-        Issue dto = mapper.toDTO(issueGH, TEST_LOGIN);
+        Issue issue = mapper.toDomain(issueGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertNotNull(dto.labels());
-        assertTrue(dto.labels().isEmpty());
-        assertNull(dto.closer());
-        assertEquals(0, dto.reactionsCount());
+        assertNotNull(issue);
+        assertNotNull(issue.labels());
+        assertTrue(issue.labels().isEmpty());
+        assertNull(issue.closer());
+        assertEquals(0, issue.reactionsCount());
     }
 
     private IssueGH createFullIssue(LocalDate date) {

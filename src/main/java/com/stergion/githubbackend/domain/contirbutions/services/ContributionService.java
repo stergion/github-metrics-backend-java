@@ -22,7 +22,7 @@ import java.util.List;
  * Uses the Template Method pattern to allow specific contribution services to customize
  * only what they need to.
  *
- * @param <D> The DTO type (e.g., Issue, Commit)
+ * @param <D> The domain model type (e.g., Issue, Commit)
  * @param <E> The Entity type (e.g., IssueEntity, CommitEntity)
  */
 public abstract class ContributionService<D extends Contribution, E extends ContributionEntity> {
@@ -63,31 +63,31 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     }
 
     /**
-     * Converts DTOs to entities using the appropriate mapper.
+     * Converts domain models to entities using the appropriate mapper.
      * Uses the nameWithOwner cache to efficiently handle nameWithOwner references.
      */
     private List<E> convertToEntities(List<D> batch) {
         return batch.stream()
-                    .map(dto -> mapDtoToEntity(dto,
-                            userService.getUserId(dto.user()),
-                            repositoryService.getRepositoryId(dto.repository())))
+                    .map(domain -> mapDomainToEntity(domain,
+                            userService.getUserId(domain.user()),
+                            repositoryService.getRepositoryId(domain.repository())))
                     .toList();
     }
 
     /**
      * This is the only method that specific contribution services need to implement.
-     * It defines how to map from a DTO to an entity using the appropriate mapper.
+     * It defines how to map from a domain model to an entity using the appropriate mapper.
      */
-    protected abstract E mapDtoToEntity(D dto, ObjectId userId, ObjectId repoId);
+    protected abstract E mapDomainToEntity(D domain, ObjectId userId, ObjectId repoId);
 
-    protected abstract D mapEntityToDto(E entity);
+    protected abstract D mapEntityToDomain(E entity);
 
     /**
      * Processes a batch of contributions:
      * 1. Ensures referenced repositories exist
-     * 2. Converts DTOs to entities
+     * 2. Converts domain models to entities
      * 3. Persists entities
-     * 4. Maps back to DTOs for return
+     * 4. Maps back to domain models for return
      */
     protected Uni<List<D>> createContributions(List<D> contributions) {
         return Multi.createFrom().item(contributions)
@@ -97,7 +97,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
                     .map(this::convertToEntities)
                     .call(repository::persist)
                     .map(entities -> entities.stream()
-                                             .map(this::mapEntityToDto)
+                                             .map(this::mapEntityToDomain)
                                              .toList());
     }
 
@@ -106,7 +106,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      */
     public Uni<D> getContribution(ObjectId id) {
         return repository.findById(id)
-                         .map(this::mapEntityToDto);
+                         .map(this::mapEntityToDomain);
 
     }
 
@@ -116,7 +116,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     public Multi<D> getUserContributions(String login) {
         ObjectId userId = userService.getUserId(login);
         return repository.findByUserId(userId)
-                         .map(this::mapEntityToDto);
+                         .map(this::mapEntityToDomain);
     }
 
     public Multi<D> getUserContributions(String login, String owner, String name) {
@@ -124,7 +124,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
         ObjectId repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
 
         return repository.findByUserAndRepoId(userId, repoId)
-                         .map(this::mapEntityToDto);
+                         .map(this::mapEntityToDomain);
     }
 
     /**

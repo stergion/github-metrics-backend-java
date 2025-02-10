@@ -33,14 +33,14 @@ public class PullRequestReviewService
     }
 
     @Override
-    protected PullRequestReviewEntity mapDtoToEntity(PullRequestReview dto, ObjectId userId,
-                                                     ObjectId repoId) {
-        return pullRequestReviewMapper.toEntity(dto, userId, repoId);
+    protected PullRequestReviewEntity mapDomainToEntity(PullRequestReview pullRequestReview, ObjectId userId,
+                                                        ObjectId repoId) {
+        return pullRequestReviewMapper.toEntity(pullRequestReview, userId, repoId);
     }
 
     @Override
-    protected PullRequestReview mapEntityToDto(PullRequestReviewEntity entity) {
-        return pullRequestReviewMapper.toDTO(entity);
+    protected PullRequestReview mapEntityToDomain(PullRequestReviewEntity entity) {
+        return pullRequestReviewMapper.toDomain(entity);
     }
 
     public Multi<List<PullRequestReview>> fetchAndCreatePullRequestReviews(String login,
@@ -57,6 +57,6 @@ public class PullRequestReviewService
             PullRequestReviewSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
-                                     pullRequestReviewMapper::toDTO));
+                                     pullRequestReviewMapper::toDomain));
     }
 }

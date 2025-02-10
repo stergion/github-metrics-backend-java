@@ -33,13 +33,13 @@ public class IssueCommentService extends ContributionService<IssueComment, Issue
 
 
     @Override
-    protected IssueCommentEntity mapDtoToEntity(IssueComment dto, ObjectId userId, ObjectId repoId) {
-        return issueCommentMapper.toEntity(dto, userId, repoId);
+    protected IssueCommentEntity mapDomainToEntity(IssueComment issueComment, ObjectId userId, ObjectId repoId) {
+        return issueCommentMapper.toEntity(issueComment, userId, repoId);
     }
 
     @Override
-    protected IssueComment mapEntityToDto(IssueCommentEntity entity) {
-        return issueCommentMapper.toDTO(entity);
+    protected IssueComment mapEntityToDomain(IssueCommentEntity entity) {
+        return issueCommentMapper.toDomain(entity);
     }
 
     public Multi<List<IssueComment>> fetchAndCreateIssueComments(String login,
@@ -56,6 +56,6 @@ public class IssueCommentService extends ContributionService<IssueComment, Issue
     public Uni<PagedResponse<IssueComment>> search(IssueCommentSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
-                                     issueCommentMapper::toDTO));
+                                     issueCommentMapper::toDomain));
     }
 }

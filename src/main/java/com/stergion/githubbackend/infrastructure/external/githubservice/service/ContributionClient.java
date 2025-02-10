@@ -47,7 +47,7 @@ public class ContributionClient {
                      .map(event -> transformer.transform(event, CommitGH.class))
                      .filter(Optional::isPresent)
                      .map(Optional::get)
-                     .map(commitGH -> commitMapper.toDTO(commitGH, login,
+                     .map(commitGH -> commitMapper.toDomain(commitGH, login,
                              new NameWithOwner(owner, name)));
     }
 
@@ -61,7 +61,7 @@ public class ContributionClient {
                            .map(event -> transformer.transform(event, CommitGH.class));
 
         return batchProcessor.processBatch(stream)
-                             .transform(commitGH -> commitMapper.toDTO(commitGH, login, repo))
+                             .transform(commitGH -> commitMapper.toDomain(commitGH, login, repo))
                              .toMulti();
     }
 
@@ -70,7 +70,7 @@ public class ContributionClient {
                      .map(event -> transformer.transform(event, IssueGH.class))
                      .filter(Optional::isPresent)
                      .map(Optional::get)
-                     .map(issueGH -> issueMapper.toDTO(issueGH, login));
+                     .map(issueGH -> issueMapper.toDomain(issueGH, login));
     }
 
     public Multi<List<Issue>> getIssuesBatched(String login, LocalDateTime from, LocalDateTime to,
@@ -81,7 +81,7 @@ public class ContributionClient {
                            .map(event -> transformer.transform(event, IssueGH.class));
 
         return batchProcessor.processBatch(stream)
-                             .transform(issueGH -> issueMapper.toDTO(issueGH, login))
+                             .transform(issueGH -> issueMapper.toDomain(issueGH, login))
                              .toMulti();
 
     }
@@ -92,7 +92,7 @@ public class ContributionClient {
                      .map(event -> transformer.transform(event, PullRequestGH.class))
                      .filter(Optional::isPresent)
                      .map(Optional::get)
-                     .map(pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login));
+                     .map(pullRequestGH -> pullRequestMapper.toDomain(pullRequestGH, login));
     }
 
     public Multi<List<PullRequest>> getPullRequestsBatched(String login,
@@ -105,7 +105,7 @@ public class ContributionClient {
 
         return batchProcessor.processBatch(stream)
                              .transform(
-                                     pullRequestGH -> pullRequestMapper.toDTO(pullRequestGH, login))
+                                     pullRequestGH -> pullRequestMapper.toDomain(pullRequestGH, login))
                              .toMulti();
     }
 
@@ -115,7 +115,7 @@ public class ContributionClient {
                      .map(event -> transformer.transform(event, PullRequestReviewGH.class))
                      .filter(Optional::isPresent)
                      .map(Optional::get)
-                     .map(reviewGH -> pullRequestReviewMapper.toDTO(reviewGH, login));
+                     .map(reviewGH -> pullRequestReviewMapper.toDomain(reviewGH, login));
     }
 
     public Multi<List<PullRequestReview>> getPullRequestReviewsBatched(String login,
@@ -129,7 +129,7 @@ public class ContributionClient {
 
         return batchProcessor.processBatch(stream)
                              .transform(
-                                     reviewGH -> pullRequestReviewMapper.toDTO(reviewGH, login))
+                                     reviewGH -> pullRequestReviewMapper.toDomain(reviewGH, login))
                              .toMulti();
     }
 
@@ -138,7 +138,7 @@ public class ContributionClient {
                      .map(event -> transformer.transform(event, IssueCommentGH.class))
                      .filter(Optional::isPresent)
                      .map(Optional::get)
-                     .map(commentGH -> issueCommentMapper.toDTO(commentGH, login));
+                     .map(commentGH -> issueCommentMapper.toDomain(commentGH, login));
     }
 
     public Multi<List<IssueComment>> getIssueCommentsBatched(String login,
@@ -150,7 +150,7 @@ public class ContributionClient {
                            .map(event -> transformer.transform(event, IssueCommentGH.class));
 
         return batchProcessor.processBatch(stream)
-                             .transform(commentGH -> issueCommentMapper.toDTO(commentGH, login))
+                             .transform(commentGH -> issueCommentMapper.toDomain(commentGH, login))
                              .toMulti();
     }
 }

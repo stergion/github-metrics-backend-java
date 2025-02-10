@@ -32,7 +32,7 @@ public class UserGHMapperTest {
                 new URI("https://website.url")
         );
 
-        // Map to DTO
+        // Map to domain
         User result = mapper.toDomain(userGH);
 
         // Verify each field is mapped correctly

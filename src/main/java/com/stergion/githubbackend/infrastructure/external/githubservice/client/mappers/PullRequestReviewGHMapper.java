@@ -17,7 +17,7 @@ public interface PullRequestReviewGHMapper {
     @Mapping(target = "repository.owner", source = "pullRequestReview.repository.owner.login")
     @Mapping(target = "github.id", source = "pullRequestReview.id")
     @Mapping(target = "github.url", source = "pullRequestReview.url")
-    PullRequestReview toDTO(PullRequestReviewGH pullRequestReview, String login);
+    PullRequestReview toDomain(PullRequestReviewGH pullRequestReview, String login);
 
 
     default List<PullRequestReviewComment> map(PullRequestReviewGH.CommentsConnection comments) {

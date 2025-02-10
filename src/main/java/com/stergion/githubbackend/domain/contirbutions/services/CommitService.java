@@ -32,13 +32,13 @@ public class CommitService extends ContributionService<Commit, CommitEntity> {
 
 
     @Override
-    protected CommitEntity mapDtoToEntity(Commit dto, ObjectId userId, ObjectId repoId) {
-        return commitMapper.toEntity(dto, userId, repoId);
+    protected CommitEntity mapDomainToEntity(Commit commit, ObjectId userId, ObjectId repoId) {
+        return commitMapper.toEntity(commit, userId, repoId);
     }
 
     @Override
-    protected Commit mapEntityToDto(CommitEntity entity) {
-        return commitMapper.toDTO(entity);
+    protected Commit mapEntityToDomain(CommitEntity entity) {
+        return commitMapper.toDomain(entity);
     }
 
     public Multi<List<Commit>> fetchAndCreateCommits(String login,
@@ -56,6 +56,6 @@ public class CommitService extends ContributionService<Commit, CommitEntity> {
 
     public Uni<PagedResponse<Commit>> search(CommitSearchCriteria criteria) {
         return searchStrategy.search(criteria)
-                             .map(response -> PagedResponse.map(response, commitMapper::toDTO));
+                             .map(response -> PagedResponse.map(response, commitMapper::toDomain));
     }
 }

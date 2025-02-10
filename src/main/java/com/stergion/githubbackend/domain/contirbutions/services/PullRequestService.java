@@ -34,13 +34,13 @@ public class PullRequestService extends ContributionService<PullRequest, PullReq
     }
 
     @Override
-    protected PullRequestEntity mapDtoToEntity(PullRequest dto, ObjectId userId, ObjectId repoId) {
-        return pullRequestMapper.toEntity(dto, userId, repoId);
+    protected PullRequestEntity mapDomainToEntity(PullRequest pullRequest, ObjectId userId, ObjectId repoId) {
+        return pullRequestMapper.toEntity(pullRequest, userId, repoId);
     }
 
     @Override
-    protected PullRequest mapEntityToDto(PullRequestEntity entity) {
-        return pullRequestMapper.toDTO(entity);
+    protected PullRequest mapEntityToDomain(PullRequestEntity entity) {
+        return pullRequestMapper.toDomain(entity);
     }
 
     public Multi<List<PullRequest>> fetchAndCreatePullRequests(String login,
@@ -57,6 +57,6 @@ public class PullRequestService extends ContributionService<PullRequest, PullReq
     public Uni<PagedResponse<PullRequest>> search(PullRequestSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
-                                     pullRequestMapper::toDTO));
+                                     pullRequestMapper::toDomain));
     }
 }

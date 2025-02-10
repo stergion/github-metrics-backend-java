@@ -33,42 +33,42 @@ class PullRequestGHMapperTest {
         var pullRequestGH = createFullPullRequest(date);
 
         // When
-        PullRequest dto = mapper.toDTO(pullRequestGH, TEST_LOGIN);
+        PullRequest pr = mapper.toDomain(pullRequestGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertEquals(TEST_LOGIN, dto.user());
-        assertEquals("test-repo", dto.repository().name());
-        assertEquals("owner", dto.repository().owner());
-        assertEquals("123", dto.github().id());
-        assertEquals(URI.create("https://example.com"), dto.github().url());
-        assertEquals(date, dto.createdAt());
-        assertEquals(date, dto.updatedAt());
-        assertEquals(date, dto.mergedAt());
-        assertEquals(date, dto.closedAt());
-        assertEquals(PullRequestState.OPEN, dto.state());
-        assertEquals("Test PR", dto.title());
+        assertNotNull(pr);
+        assertEquals(TEST_LOGIN, pr.user());
+        assertEquals("test-repo", pr.repository().name());
+        assertEquals("owner", pr.repository().owner());
+        assertEquals("123", pr.github().id());
+        assertEquals(URI.create("https://example.com"), pr.github().url());
+        assertEquals(date, pr.createdAt());
+        assertEquals(date, pr.updatedAt());
+        assertEquals(date, pr.mergedAt());
+        assertEquals(date, pr.closedAt());
+        assertEquals(PullRequestState.OPEN, pr.state());
+        assertEquals("Test PR", pr.title());
 
         // Verify labels
-        assertEquals(2, dto.labels().size());
-        assertTrue(dto.labels().stream().anyMatch(l -> l.name().equals("bug")));
-        assertTrue(dto.labels().stream().anyMatch(l -> l.name().equals("feature")));
-        assertEquals("Bug description", dto.labels().stream()
+        assertEquals(2, pr.labels().size());
+        assertTrue(pr.labels().stream().anyMatch(l -> l.name().equals("bug")));
+        assertTrue(pr.labels().stream().anyMatch(l -> l.name().equals("feature")));
+        assertEquals("Bug description", pr.labels().stream()
                                            .filter(l -> l.name().equals("bug"))
                                            .findFirst()
                                            .get()
                                            .description());
 
         // Verify commits
-        assertEquals(1, dto.commits().size());
-        PullRequestCommit commit = dto.commits().getFirst();
+        assertEquals(1, pr.commits().size());
+        PullRequestCommit commit = pr.commits().getFirst();
         assertEquals("commit1", commit.github().id());
         assertEquals(10, commit.additions());
         assertEquals(5, commit.deletions());
 
         // Verify closing issues
-        assertEquals(1, dto.closingIssuesReferences().size());
-        Github issue = dto.closingIssuesReferences().getFirst();
+        assertEquals(1, pr.closingIssuesReferences().size());
+        Github issue = pr.closingIssuesReferences().getFirst();
         assertEquals("issue1", issue.id());
         assertEquals(URI.create("https://example.com/issue1"), issue.url());
     }
@@ -81,14 +81,14 @@ class PullRequestGHMapperTest {
         var pullRequestGH = createMinimalPullRequest(date);
 
         // When
-        PullRequest dto = mapper.toDTO(pullRequestGH, TEST_LOGIN);
+        PullRequest pr = mapper.toDomain(pullRequestGH, TEST_LOGIN);
 
         // Then
-        assertNotNull(dto);
-        assertNotNull(dto.labels());
-        assertNotNull(dto.closingIssuesReferences());
-        assertTrue(dto.labels().isEmpty());
-        assertTrue(dto.closingIssuesReferences().isEmpty());
+        assertNotNull(pr);
+        assertNotNull(pr.labels());
+        assertNotNull(pr.closingIssuesReferences());
+        assertTrue(pr.labels().isEmpty());
+        assertTrue(pr.closingIssuesReferences().isEmpty());
     }
 
     private PullRequestGH createFullPullRequest(LocalDate date) {

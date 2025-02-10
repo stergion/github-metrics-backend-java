@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapStructConfig.class)
 public interface IssueCommentMapper {
     @Mapping(target = "user", source = "user.login")
-    IssueComment toDTO(IssueCommentEntity issueComment);
+    IssueComment toDomain(IssueCommentEntity issueComment);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "issueCommentDTO.user")
-    IssueCommentEntity toEntity(IssueComment issueCommentDTO, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "user.login", source = "issueComment.user")
+    IssueCommentEntity toEntity(IssueComment issueComment, ObjectId userId, ObjectId repositoryId);
 }
