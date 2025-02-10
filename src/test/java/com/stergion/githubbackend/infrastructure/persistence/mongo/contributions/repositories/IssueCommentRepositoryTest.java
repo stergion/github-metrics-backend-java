@@ -2,8 +2,8 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueComment;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -18,6 +18,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +37,7 @@ class IssueCommentRepositoryTest {
     @BeforeEach
     void setUp() {
         issueCommentRepository.deleteAll().await().atMost(TIMEOUT);
-        testComment = createTestComment(null, TEST_USER_ID, TEST_REPO_ID);
+        testComment = createTestComment(null, TEST_USER_ID, TEST_REPO_ID, Optional.empty());
     }
 
     @Nested
@@ -191,7 +192,7 @@ class IssueCommentRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            IssueComment commentWithNulls = createTestComment(null, TEST_USER_ID, TEST_REPO_ID);
+            IssueComment commentWithNulls = createTestComment(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             issueCommentRepository.persist(commentWithNulls).await().atMost(TIMEOUT);
 
             IssueComment found = issueCommentRepository.findById(commentWithNulls.id())
@@ -210,7 +211,8 @@ class IssueCommentRepositoryTest {
         @DisplayName("Should handle different comment counts")
         void handleDifferentCommentCounts(int commentCount) {
             for (int i = 0; i < commentCount; i++) {
-                issueCommentRepository.persist(createTestComment(null, TEST_USER_ID, TEST_REPO_ID))
+                issueCommentRepository.persist(createTestComment(null, TEST_USER_ID, TEST_REPO_ID,
+                                              Optional.of(String.valueOf(i))))
                                       .await().atMost(TIMEOUT);
             }
 
@@ -274,22 +276,25 @@ class IssueCommentRepositoryTest {
     // Helper methods
     private void persistTestComments(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                      ObjectId repoId2) {
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId1))
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId1, Optional.of("1")))
                               .await().atMost(TIMEOUT);
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId2))
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId2, Optional.of("2")))
                               .await().atMost(TIMEOUT);
-        issueCommentRepository.persist(createTestComment(null, userId1, repoId2))
+        issueCommentRepository.persist(createTestComment(null, userId1, repoId2, Optional.of("3")))
                               .await().atMost(TIMEOUT);
-        issueCommentRepository.persist(createTestComment(null, userId2, repoId1))
+        issueCommentRepository.persist(createTestComment(null, userId2, repoId1, Optional.of("4")))
                               .await().atMost(TIMEOUT);
-        issueCommentRepository.persist(createTestComment(null, userId2, repoId2))
+        issueCommentRepository.persist(createTestComment(null, userId2, repoId2, Optional.of("5")))
                               .await().atMost(TIMEOUT);
     }
 
-    private IssueComment createTestComment(ObjectId id, ObjectId userId, ObjectId repoId) {
+    private IssueComment createTestComment(ObjectId id, ObjectId userId, ObjectId repoId,
+                                           Optional<String> suffix) {
         var github = new Github();
-        github.id = "test-github-id";
-        github.url = URI.create("https://github.com/test-user/test-repo/issues/1#issuecomment-1");
+        github.id = "test-github-" + suffix.orElse("id");
+        github.url = URI.create(
+                "https://github.com/test-user/test-repo/issues/issuecomment-" + suffix.orElse(
+                        "id"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 

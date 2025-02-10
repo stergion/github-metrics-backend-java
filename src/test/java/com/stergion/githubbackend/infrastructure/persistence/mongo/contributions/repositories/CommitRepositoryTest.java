@@ -2,8 +2,8 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
+import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -14,8 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +35,7 @@ class CommitRepositoryTest {
     @BeforeEach
     void setUp() {
         commitRepository.deleteAll().await().indefinitely();
-        testCommit = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID);
+        testCommit = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID, Optional.empty());
     }
 
     @Nested
@@ -184,7 +186,7 @@ class CommitRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            Commit commitWithNulls = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID);
+            Commit commitWithNulls = createTestCommit(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             commitRepository.persist(commitWithNulls).await().indefinitely();
 
             Commit found = commitRepository.findById(commitWithNulls.id()).await().indefinitely();
@@ -202,8 +204,8 @@ class CommitRepositoryTest {
         @DisplayName("Should handle different commit counts")
         void handleDifferentCommitCounts(int commitCount) {
             for (int i = 0; i < commitCount; i++) {
-                commitRepository.persist(createTestCommit(null, TEST_USER_ID, TEST_REPO_ID))
-                                .await().indefinitely();
+                commitRepository.persist(createTestCommit(null, TEST_USER_ID, TEST_REPO_ID,
+                        Optional.of(String.valueOf(i)))).await().indefinitely();
             }
 
             List<Commit> found = commitRepository.findByUserId(TEST_USER_ID)
@@ -217,17 +219,29 @@ class CommitRepositoryTest {
     // Helper methods
     private void persistTestCommits(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                     ObjectId repoId2) {
-        commitRepository.persist(createTestCommit(null, userId1, repoId1)).await().indefinitely();
-        commitRepository.persist(createTestCommit(null, userId1, repoId2)).await().indefinitely();
-        commitRepository.persist(createTestCommit(null, userId1, repoId2)).await().indefinitely();
-        commitRepository.persist(createTestCommit(null, userId2, repoId1)).await().indefinitely();
-        commitRepository.persist(createTestCommit(null, userId2, repoId2)).await().indefinitely();
+        commitRepository.persist(createTestCommit(null, userId1, repoId1, Optional.of("1")))
+                        .await()
+                        .indefinitely();
+        commitRepository.persist(createTestCommit(null, userId1, repoId2, Optional.of("2")))
+                        .await()
+                        .indefinitely();
+        commitRepository.persist(createTestCommit(null, userId1, repoId2, Optional.of("3")))
+                        .await()
+                        .indefinitely();
+        commitRepository.persist(createTestCommit(null, userId2, repoId1, Optional.of("4")))
+                        .await()
+                        .indefinitely();
+        commitRepository.persist(createTestCommit(null, userId2, repoId2, Optional.of("5")))
+                        .await()
+                        .indefinitely();
     }
 
     // createTestCommit method remains unchanged
-    private Commit createTestCommit(ObjectId id, ObjectId userId, ObjectId repoId) {
+    private Commit createTestCommit(ObjectId id, ObjectId userId, ObjectId repoId,
+                                    Optional<String> suffix) {
         var github = new Github();
-        github.id = "test-github-id";
+        github.id = "test-github-" + suffix.orElse("id");
+        github.url = URI.create("www.github.com/test-github-" + suffix.orElse("url"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 

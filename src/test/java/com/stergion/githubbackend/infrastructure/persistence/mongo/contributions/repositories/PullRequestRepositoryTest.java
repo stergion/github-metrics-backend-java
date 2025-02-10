@@ -14,9 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +37,7 @@ class PullRequestRepositoryTest {
     @BeforeEach
     void setUp() {
         pullRequestRepository.deleteAll().await().indefinitely();
-        testPullRequest = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID);
+        testPullRequest = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID, Optional.empty());
     }
 
     @Nested
@@ -193,14 +195,14 @@ class PullRequestRepositoryTest {
             // Create PRs in different states
             ObjectId userId = new ObjectId();
 
-            var openPR = createTestPullRequest(null, userId, TEST_REPO_ID);
+            var openPR = createTestPullRequest(null, userId, TEST_REPO_ID, Optional.of("open-1"));
             openPR.state = PullRequestState.OPEN;
 
-            var closedPR = createTestPullRequest(null, userId, TEST_REPO_ID);
+            var closedPR = createTestPullRequest(null, userId, TEST_REPO_ID, Optional.of("closed-1"));
             closedPR.state = PullRequestState.CLOSED;
             closedPR.closedAt = LocalDate.now();
 
-            var mergedPR = createTestPullRequest(null, userId, TEST_REPO_ID);
+            var mergedPR = createTestPullRequest(null, userId, TEST_REPO_ID, Optional.of("merged-1"));
             mergedPR.state = PullRequestState.MERGED;
             mergedPR.mergedAt = LocalDate.now();
 
@@ -274,7 +276,7 @@ class PullRequestRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            PullRequest prWithNulls = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID);
+            PullRequest prWithNulls = createTestPullRequest(null, TEST_USER_ID, TEST_REPO_ID, Optional.of("1"));
             prWithNulls.mergedAt = null;
             prWithNulls.closedAt = null;
             prWithNulls.updatedAt = null;
@@ -309,7 +311,7 @@ class PullRequestRepositoryTest {
             for (int i = 0; i < prCount; i++) {
                 pullRequestRepository.persist(
                                              createTestPullRequest(null, TEST_USER_ID,
-                                                     TEST_REPO_ID))
+                                                     TEST_REPO_ID, Optional.of(String.valueOf(i))))
                                      .await()
                                      .atMost(TIMEOUT);
             }
@@ -325,16 +327,17 @@ class PullRequestRepositoryTest {
     // Helper methods
     private void persistTestPullRequests(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                          ObjectId repoId2) {
-        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId1)).await().atMost(TIMEOUT);
-        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId2)).await().atMost(TIMEOUT);
-        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId2)).await().atMost(TIMEOUT);
-        pullRequestRepository.persist(createTestPullRequest(null, userId2, repoId1)).await().atMost(TIMEOUT);
-        pullRequestRepository.persist(createTestPullRequest(null, userId2, repoId2)).await().atMost(TIMEOUT);
+        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId1, Optional.of("1"))).await().atMost(TIMEOUT);
+        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId2, Optional.of("2"))).await().atMost(TIMEOUT);
+        pullRequestRepository.persist(createTestPullRequest(null, userId1, repoId2, Optional.of("3"))).await().atMost(TIMEOUT);
+        pullRequestRepository.persist(createTestPullRequest(null, userId2, repoId1, Optional.of("4"))).await().atMost(TIMEOUT);
+        pullRequestRepository.persist(createTestPullRequest(null, userId2, repoId2, Optional.of("5"))).await().atMost(TIMEOUT);
     }
 
-    private PullRequest createTestPullRequest(ObjectId id, ObjectId userId, ObjectId repoId) {
+    private PullRequest createTestPullRequest(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
         var github = new Github();
-        github.id = "test-github-id";
+        github.id = "test-github-" + suffix.orElse("id");
+        github.url = URI.create("www.github.com/test-github-" + suffix.orElse("id"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 

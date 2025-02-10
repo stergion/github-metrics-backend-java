@@ -16,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +40,7 @@ class IssueRepositoryTest {
     @BeforeEach
     void setUp() {
         issueRepository.deleteAll().await().indefinitely();
-        testIssue = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID);
+        testIssue = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID,Optional.empty());
     }
 
     @Nested
@@ -230,7 +232,7 @@ class IssueRepositoryTest {
         @Test
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
-            Issue issueWithNulls = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID);
+            Issue issueWithNulls = createTestIssue(null, TEST_USER_ID, TEST_REPO_ID,Optional.of("1"));
             issueWithNulls.closedAt = null;
             issueWithNulls.updatedAt = null;
             issueWithNulls.labels = null;
@@ -258,7 +260,7 @@ class IssueRepositoryTest {
         @DisplayName("Should handle different issue counts")
         void handleDifferentIssueCounts(int issueCount) {
             for (int i = 0; i < issueCount; i++) {
-                issueRepository.persist(createTestIssue(null, TEST_USER_ID, TEST_REPO_ID))
+                issueRepository.persist(createTestIssue(null, TEST_USER_ID, TEST_REPO_ID, Optional.of(String.valueOf(i))))
                                .await().atMost(TIMEOUT);
             }
 
@@ -316,16 +318,17 @@ class IssueRepositoryTest {
     // Helper methods
     private void persistTestIssues(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                    ObjectId repoId2) {
-        issueRepository.persist(createTestIssue(null, userId1, repoId1)).await().atMost(TIMEOUT);
-        issueRepository.persist(createTestIssue(null, userId1, repoId2)).await().atMost(TIMEOUT);
-        issueRepository.persist(createTestIssue(null, userId1, repoId2)).await().atMost(TIMEOUT);
-        issueRepository.persist(createTestIssue(null, userId2, repoId1)).await().atMost(TIMEOUT);
-        issueRepository.persist(createTestIssue(null, userId2, repoId2)).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId1, repoId1, Optional.of("1"))).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId1, repoId2, Optional.of("2"))).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId1, repoId2, Optional.of("3"))).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId2, repoId1, Optional.of("4"))).await().atMost(TIMEOUT);
+        issueRepository.persist(createTestIssue(null, userId2, repoId2, Optional.of("5"))).await().atMost(TIMEOUT);
     }
 
-    private Issue createTestIssue(ObjectId id, ObjectId userId, ObjectId repoId) {
+    private Issue createTestIssue(ObjectId id, ObjectId userId, ObjectId repoId, Optional<String> suffix) {
         var github = new Github();
-        github.id = "test-github-id";
+        github.id = "test-github-" + suffix.orElse("id");
+        github.url = URI.create( "www.github.com/test-github-" + suffix.orElse("id"));
         var userWithLogin = new UserWithLogin("test-user");
         var nameWithOwner = new NameWithOwner("test-repo", "test-user");
 

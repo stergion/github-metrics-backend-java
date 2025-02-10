@@ -16,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +39,7 @@ class PullRequestReviewRepositoryTest {
     @BeforeEach
     void setUp() {
         pullRequestReviewRepository.deleteAll().await().indefinitely();
-        testReview = createTestPullRequestReview(null, TEST_USER_ID, TEST_REPO_ID);
+        testReview = createTestPullRequestReview(null, TEST_USER_ID, TEST_REPO_ID, Optional.empty());
     }
 
     @Nested
@@ -196,14 +198,14 @@ class PullRequestReviewRepositoryTest {
             // Create reviews in different states
             ObjectId userId = new ObjectId();
 
-            var pendingReview = createTestPullRequestReview(null, userId, TEST_REPO_ID);
+            var pendingReview = createTestPullRequestReview(null, userId, TEST_REPO_ID, Optional.of("pending-1"));
             pendingReview.state = PullRequestReviewState.PENDING;
 
-            var approvedReview = createTestPullRequestReview(null, userId, TEST_REPO_ID);
+            var approvedReview = createTestPullRequestReview(null, userId, TEST_REPO_ID, Optional.of("approved-1"));
             approvedReview.state = PullRequestReviewState.APPROVED;
             approvedReview.submittedAt = LocalDate.now();
 
-            var changesReview = createTestPullRequestReview(null, userId, TEST_REPO_ID);
+            var changesReview = createTestPullRequestReview(null, userId, TEST_REPO_ID, Optional.of("changes-1"));
             changesReview.state = PullRequestReviewState.CHANGES_REQUESTED;
             changesReview.submittedAt = LocalDate.now();
 
@@ -284,7 +286,7 @@ class PullRequestReviewRepositoryTest {
         @DisplayName("Should handle null values in optional fields")
         void handleNullOptionalFields() {
             PullRequestReview reviewWithNulls = createTestPullRequestReview(null, TEST_USER_ID,
-                    TEST_REPO_ID);
+                    TEST_REPO_ID, Optional.of("1"));
             reviewWithNulls.submittedAt = null;
             reviewWithNulls.updatedAt = null;
             reviewWithNulls.publishedAt = null;
@@ -319,7 +321,8 @@ class PullRequestReviewRepositoryTest {
             for (int i = 0; i < reviewCount; i++) {
                 pullRequestReviewRepository.persist(
                                                    createTestPullRequestReview(null, TEST_USER_ID
-                                                           , TEST_REPO_ID))
+                                                           , TEST_REPO_ID, Optional.of(
+                                                                   String.valueOf(i))))
                                            .await()
                                            .atMost(TIMEOUT);
             }
@@ -382,27 +385,28 @@ class PullRequestReviewRepositoryTest {
     // Helper methods
     private void persistTestReviews(ObjectId userId1, ObjectId userId2, ObjectId repoId1,
                                     ObjectId repoId2) {
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId1))
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId1, Optional.of("1")))
                                    .await()
                                    .atMost(TIMEOUT);
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2))
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2, Optional.of("2")))
                                    .await()
                                    .atMost(TIMEOUT);
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2))
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId1, repoId2, Optional.of("3")))
                                    .await()
                                    .atMost(TIMEOUT);
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId1))
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId1, Optional.of("4")))
                                    .await()
                                    .atMost(TIMEOUT);
-        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId2))
+        pullRequestReviewRepository.persist(createTestPullRequestReview(null, userId2, repoId2, Optional.of("5")))
                                    .await()
                                    .atMost(TIMEOUT);
     }
 
     private PullRequestReview createTestPullRequestReview(ObjectId id, ObjectId userId,
-                                                          ObjectId repoId) {
+                                                          ObjectId repoId, Optional<String> suffix) {
         var github = new Github();
-        github.id = "test-github-id";
+        github.id = "test-github-" + suffix.orElse("id");
+        github.url = URI.create("www.github.com/test-github-" + suffix.orElse("id"));
         var pullRequestGithub = new Github();
         pullRequestGithub.id = "test-pr-github-id";
         var userWithLogin = new UserWithLogin("test-user");
