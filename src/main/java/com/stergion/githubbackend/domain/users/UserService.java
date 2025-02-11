@@ -4,7 +4,7 @@ import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.MongoUserRepository;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ public class UserService {
     UserMapper mapper;
 
     @Inject
-    UserRepository repository;
+    MongoUserRepository repository;
     @Inject
     RepositoryService repositoryService;
 
