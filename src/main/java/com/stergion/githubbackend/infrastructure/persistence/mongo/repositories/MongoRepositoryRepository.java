@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class RepositoryRepository implements PanacheMongoRepository<RepositoryEntity> {
+public class MongoRepositoryRepository implements PanacheMongoRepository<RepositoryEntity> {
     public List<RepositoryEntity> findById(List<ObjectId> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();

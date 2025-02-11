@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.utils.RepositoryIdCache;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.RepositoryClient;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.MongoRepositoryRepository;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,7 +19,7 @@ public class RepositoryService {
     @Inject
     RepositoryClient repoClient;
     @Inject
-    RepositoryRepository repoRepository;
+    MongoRepositoryRepository repoRepository;
 
     @Inject
     RepositoryMapper repoMapper;
