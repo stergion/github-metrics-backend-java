@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrate
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.CommitRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoCommitRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +26,7 @@ public class CommitService extends ContributionService<Commit, CommitEntity> {
     CommitSearchStrategy searchStrategy;
 
     @Inject
-    public CommitService(CommitRepository commitRepository, CommitFetchStrategy fetchStrategy) {
+    public CommitService(MongoCommitRepository commitRepository, CommitFetchStrategy fetchStrategy) {
         super(commitRepository, fetchStrategy);
     }
 

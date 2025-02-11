@@ -6,7 +6,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSear
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
 
@@ -17,7 +17,7 @@ public class MongoIssueSearchStrategy
         extends MongoContributionSearchStrategy<IssueEntity, IssueSearchCriteria>
         implements IssueSearchStrategy {
 
-    public MongoIssueSearchStrategy(IssueRepository repository) {
+    public MongoIssueSearchStrategy(MongoIssueRepository repository) {
         super(repository);
     }
 

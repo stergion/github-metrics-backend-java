@@ -7,8 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.types.ObjectId;
 
 @ApplicationScoped
-public final class PullRequestReviewRepository
-        implements ContributionRepository<PullRequestReviewEntity> {
+public final class MongoPullRequestReviewRepository
+        implements MongoContributionRepository<PullRequestReviewEntity> {
     public Multi<PullRequestReviewEntity> findByUserIdAndState(ObjectId testUserId,
                                                                PullRequestReviewState prReviewState) {
         return find("userId =?1 and state =?2", testUserId, prReviewState).stream();

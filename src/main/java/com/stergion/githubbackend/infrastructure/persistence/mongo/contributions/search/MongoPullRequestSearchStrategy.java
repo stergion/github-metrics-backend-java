@@ -6,7 +6,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullReque
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
 
@@ -17,7 +17,7 @@ public class MongoPullRequestSearchStrategy
         extends MongoContributionSearchStrategy<PullRequestEntity, PullRequestSearchCriteria>
         implements PullRequestSearchStrategy {
 
-    public MongoPullRequestSearchStrategy(PullRequestRepository repository) {
+    public MongoPullRequestSearchStrategy(MongoPullRequestRepository repository) {
         super(repository);
     }
 

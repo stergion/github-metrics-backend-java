@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.ContributionRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoContributionRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -32,14 +32,14 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     @Inject
     RepositoryService repositoryService;
 
-    protected ContributionRepository<E> repository;
+    protected MongoContributionRepository<E> repository;
     protected FetchStrategy<D> fetchStrategy;
 
     protected ContributionService() {
         // Empty constructor for CDI
     }
 
-    protected ContributionService(ContributionRepository<E> repository,
+    protected ContributionService(MongoContributionRepository<E> repository,
                                   FetchStrategy<D> fetchStrategy) {
         this.repository = repository;
         this.fetchStrategy = fetchStrategy;

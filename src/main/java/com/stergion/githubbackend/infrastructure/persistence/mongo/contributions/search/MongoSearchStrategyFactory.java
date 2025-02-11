@@ -11,15 +11,15 @@ import jakarta.inject.Inject;
 @Database(DatabaseType.MONGO)
 public class MongoSearchStrategyFactory implements SearchStrategyFactory {
     @Inject
-    CommitRepository commitRepository;
+    MongoCommitRepository commitRepository;
     @Inject
-    IssueRepository issueRepository;
+    MongoIssueRepository issueRepository;
     @Inject
-    PullRequestRepository pullRequestRepository;
+    MongoPullRequestRepository pullRequestRepository;
     @Inject
-    PullRequestReviewRepository pullRequestReviewRepository;
+    MongoPullRequestReviewRepository pullRequestReviewRepository;
     @Inject
-    IssueCommentRepository issueCommentRepository;
+    MongoIssueCommentRepository issueCommentRepository;
 
     @Override
     public CommitSearchStrategy createCommitSearchStrategy() {

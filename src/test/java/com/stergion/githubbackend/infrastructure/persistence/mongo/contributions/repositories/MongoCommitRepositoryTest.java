@@ -22,11 +22,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@DisplayName("CommitRepository Tests")
-class CommitRepositoryTest {
+@DisplayName("MongoCommitRepository Tests")
+class MongoCommitRepositoryTest {
 
     @Inject
-    CommitRepository commitRepository;
+    MongoCommitRepository commitRepository;
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();

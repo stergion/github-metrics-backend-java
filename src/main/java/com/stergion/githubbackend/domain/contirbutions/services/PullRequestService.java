@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +26,7 @@ public class PullRequestService extends ContributionService<PullRequest, PullReq
     PullRequestSearchStrategy searchStrategy;
 
     @Inject
-    public PullRequestService(PullRequestRepository pullRequestRepository,
+    public PullRequestService(MongoPullRequestRepository pullRequestRepository,
                               PullRequestFetchStrategy fetchStrategy,
                               PullRequestMapper pullRequestMapper) {
         super(pullRequestRepository, fetchStrategy);

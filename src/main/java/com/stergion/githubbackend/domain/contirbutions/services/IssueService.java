@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.IssueSearchStrateg
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +26,7 @@ public class IssueService extends ContributionService<Issue, IssueEntity> {
     IssueSearchStrategy searchStrategy;
 
     @Inject
-    public IssueService(IssueRepository issueRepository, IssueFetchStrategy fetchStrategy) {
+    public IssueService(MongoIssueRepository issueRepository, IssueFetchStrategy fetchStrategy) {
         super(issueRepository, fetchStrategy);
     }
 

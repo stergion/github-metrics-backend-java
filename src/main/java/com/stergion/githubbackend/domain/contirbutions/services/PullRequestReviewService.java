@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestReviewSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestReviewRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestReviewRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,7 +27,7 @@ public class PullRequestReviewService
     PullRequestReviewSearchStrategy searchStrategy;
 
     @Inject
-    public PullRequestReviewService(PullRequestReviewRepository pullRequestReviewRepository,
+    public PullRequestReviewService(MongoPullRequestReviewRepository pullRequestReviewRepository,
                                     PullRequestReviewFetchStrategy fetchStrategy) {
         super(pullRequestReviewRepository, fetchStrategy);
     }

@@ -14,7 +14,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeableFi
 import com.stergion.githubbackend.domain.contirbutions.search.fields.TimeField;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.ContributionRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoContributionRepository;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import org.bson.Document;
@@ -32,10 +32,10 @@ public abstract class MongoContributionSearchStrategy<T extends ContributionEnti
         U extends BaseSearchCriteria<? extends RangeField, ? extends TimeField>>
         implements ContributionSearchStrategy<T, U> {
 
-    protected final ContributionRepository<T> repository;
+    protected final MongoContributionRepository<T> repository;
     private final CodecRegistry codecRegistry;
 
-    protected MongoContributionSearchStrategy(ContributionRepository<T> repository) {
+    protected MongoContributionSearchStrategy(MongoContributionRepository<T> repository) {
         this.repository = repository;
         this.codecRegistry = repository != null ? repository.mongoCollection()
                                                             .getCodecRegistry() : null;

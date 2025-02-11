@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearch
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueCommentRepository;
 import io.quarkus.logging.Log;
 import org.bson.conversions.Bson;
 
@@ -16,7 +16,7 @@ public class MongoIssueCommentSearchStrategy
         extends MongoContributionSearchStrategy<IssueCommentEntity, IssueCommentSearchCriteria>
         implements IssueCommentSearchStrategy {
 
-    public MongoIssueCommentSearchStrategy(IssueCommentRepository repository) {
+    public MongoIssueCommentSearchStrategy(MongoIssueCommentRepository repository) {
         super(repository);
     }
 

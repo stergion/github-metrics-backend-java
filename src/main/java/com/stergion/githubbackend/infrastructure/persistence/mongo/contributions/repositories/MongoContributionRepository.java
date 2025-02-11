@@ -12,10 +12,10 @@ import org.bson.types.ObjectId;
 import java.util.Arrays;
 import java.util.List;
 
-public sealed interface ContributionRepository<T extends ContributionEntity>
+public sealed interface MongoContributionRepository<T extends ContributionEntity>
         extends ReactivePanacheMongoRepository<T>
-        permits CommitRepository, IssueRepository, IssueCommentRepository, PullRequestRepository,
-        PullRequestReviewRepository {
+        permits MongoCommitRepository, MongoIssueRepository, MongoIssueCommentRepository, MongoPullRequestRepository,
+        MongoPullRequestReviewRepository {
 
     default Uni<T> findById(ObjectId id) {
         return find("_id", id).firstResult();

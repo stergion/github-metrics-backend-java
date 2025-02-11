@@ -8,7 +8,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearch
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueCommentRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +26,7 @@ public class IssueCommentService extends ContributionService<IssueComment, Issue
     IssueCommentSearchStrategy searchStrategy;
 
     @Inject
-    public IssueCommentService(IssueCommentRepository issueCommentRepository,
+    public IssueCommentService(MongoIssueCommentRepository issueCommentRepository,
                                IssueCommentFetchStrategy fetchStrategy) {
         super(issueCommentRepository, fetchStrategy);
     }
