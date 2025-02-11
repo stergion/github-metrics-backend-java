@@ -67,7 +67,7 @@ class IssueCommentRepositoryTest {
         void deleteByUserId() {
             issueCommentRepository.persist(testComment).await().atMost(TIMEOUT);
 
-            issueCommentRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
+            issueCommentRepository.deleteByUserId(TEST_USER_ID).await().atMost(TIMEOUT);
 
             IssueCommentEntity found = issueCommentRepository.findById(testComment.id())
                                                              .await().atMost(TIMEOUT);

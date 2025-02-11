@@ -50,7 +50,7 @@ public sealed interface ContributionRepository<T extends ContributionEntity>
 
     }
 
-    default Uni<Void> delete(ObjectId userId) {
+    default Uni<Void> deleteByUserId(ObjectId userId) {
         return delete("userId = ?1", userId).replaceWithVoid();
     }
 }

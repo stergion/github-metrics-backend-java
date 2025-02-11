@@ -143,6 +143,6 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     }
 
     public Uni<Void> deleteUserContributions(ObjectId userId) {
-        return repository.delete(userId);
+        return repository.deleteByUserId(userId);
     }
 }

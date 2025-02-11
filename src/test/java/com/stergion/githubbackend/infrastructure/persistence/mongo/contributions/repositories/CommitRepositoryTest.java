@@ -63,7 +63,7 @@ class CommitRepositoryTest {
         void deleteByUserId() {
             commitRepository.persist(testCommit).await().indefinitely();
 
-            commitRepository.delete(TEST_USER_ID).await().indefinitely();
+            commitRepository.deleteByUserId(TEST_USER_ID).await().indefinitely();
 
             assertNull(commitRepository.findById(testCommit.id()).await().indefinitely(),
                     "Commit should be deleted");

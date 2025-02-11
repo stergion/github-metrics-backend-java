@@ -69,7 +69,7 @@ class PullRequestReviewRepositoryTest {
         void deleteByUserId() {
             pullRequestReviewRepository.persist(testReview).await().atMost(TIMEOUT);
 
-            pullRequestReviewRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
+            pullRequestReviewRepository.deleteByUserId(TEST_USER_ID).await().atMost(TIMEOUT);
 
             assertNull(
                     pullRequestReviewRepository.findById(testReview.id()).await().atMost(TIMEOUT),

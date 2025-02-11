@@ -70,7 +70,7 @@ class IssueRepositoryTest {
         void deleteByUserId() {
             issueRepository.persist(testIssue).await().atMost(TIMEOUT);
 
-            issueRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
+            issueRepository.deleteByUserId(TEST_USER_ID).await().atMost(TIMEOUT);
 
 
             IssueEntity found = issueRepository.findById(testIssue.id())

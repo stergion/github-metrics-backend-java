@@ -67,7 +67,7 @@ class PullRequestRepositoryTest {
         void deleteByUserId() {
             pullRequestRepository.persist(testPullRequest).await().atMost(TIMEOUT);
 
-            pullRequestRepository.delete(TEST_USER_ID).await().atMost(TIMEOUT);
+            pullRequestRepository.deleteByUserId(TEST_USER_ID).await().atMost(TIMEOUT);
 
             assertNull(pullRequestRepository.findById(testPullRequest.id()).await().atMost(TIMEOUT),
                     "Pull request should be deleted");
