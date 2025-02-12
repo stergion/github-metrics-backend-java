@@ -33,9 +33,8 @@ public class PullRequestReviewService
     }
 
     @Override
-    protected PullRequestReviewEntity mapDomainToEntity(PullRequestReview pullRequestReview, ObjectId userId,
-                                                        ObjectId repoId) {
-        return pullRequestReviewMapper.toEntity(pullRequestReview, userId, repoId);
+    protected PullRequestReviewEntity mapDomainToEntity(PullRequestReview pullRequestReview) {
+        return pullRequestReviewMapper.toEntity(pullRequestReview);
     }
 
     @Override

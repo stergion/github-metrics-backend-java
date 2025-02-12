@@ -32,8 +32,8 @@ public class CommitService extends ContributionService<Commit, CommitEntity> {
 
 
     @Override
-    protected CommitEntity mapDomainToEntity(Commit commit, ObjectId userId, ObjectId repoId) {
-        return commitMapper.toEntity(commit, userId, repoId);
+    protected CommitEntity mapDomainToEntity(Commit commit) {
+        return commitMapper.toEntity(commit);
     }
 
     @Override

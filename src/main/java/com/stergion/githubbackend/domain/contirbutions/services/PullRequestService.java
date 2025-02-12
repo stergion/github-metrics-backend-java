@@ -34,8 +34,8 @@ public class PullRequestService extends ContributionService<PullRequest, PullReq
     }
 
     @Override
-    protected PullRequestEntity mapDomainToEntity(PullRequest pullRequest, ObjectId userId, ObjectId repoId) {
-        return pullRequestMapper.toEntity(pullRequest, userId, repoId);
+    protected PullRequestEntity mapDomainToEntity(PullRequest pullRequest) {
+        return pullRequestMapper.toEntity(pullRequest);
     }
 
     @Override

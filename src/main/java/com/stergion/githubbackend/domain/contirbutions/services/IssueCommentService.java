@@ -33,8 +33,8 @@ public class IssueCommentService extends ContributionService<IssueComment, Issue
 
 
     @Override
-    protected IssueCommentEntity mapDomainToEntity(IssueComment issueComment, ObjectId userId, ObjectId repoId) {
-        return issueCommentMapper.toEntity(issueComment, userId, repoId);
+    protected IssueCommentEntity mapDomainToEntity(IssueComment issueComment) {
+        return issueCommentMapper.toEntity(issueComment);
     }
 
     @Override

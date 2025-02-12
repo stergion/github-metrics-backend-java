@@ -1,9 +1,11 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
 import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
-import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
+import com.stergion.githubbackend.domain.contirbutions.models.RepositoryProjection;
+import com.stergion.githubbackend.domain.contirbutions.models.UserProjection;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
@@ -56,7 +58,8 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
                     .onItem().transformToUniAndMerge(
                         repo -> Uni.createFrom().item(repo)
                                    .emitOn(Infrastructure.getDefaultWorkerPool())
-                                   .map(repositoryService::fetchAndCreateRepository)
+                                   .map(r -> repositoryService.fetchAndCreateRepository(r.owner(),
+                                           r.name()))
                                                     )
                     .collect().asList()
                     .replaceWithVoid();
@@ -83,7 +86,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      * This is the only method that specific contribution services need to implement.
      * It defines how to map from a domain model to an entity using the appropriate mapper.
      */
-    protected abstract E mapDomainToEntity(D domain, ObjectId userId, ObjectId repoId);
+    protected abstract E mapDomainToEntity(D domain);
 
     protected abstract D mapEntityToDomain(E entity);
 

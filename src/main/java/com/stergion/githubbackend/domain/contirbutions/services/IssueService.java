@@ -31,8 +31,8 @@ public class IssueService extends ContributionService<Issue, IssueEntity> {
     }
 
     @Override
-    protected IssueEntity mapDomainToEntity(Issue issue, ObjectId userId, ObjectId repoId) {
-        return issueMapper.toEntity(issue, userId, repoId);
+    protected IssueEntity mapDomainToEntity(Issue issue) {
+        return issueMapper.toEntity(issue);
     }
 
     @Override

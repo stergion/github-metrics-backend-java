@@ -10,10 +10,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(config = MapStructConfig.class)
 public interface CommitMapper {
-    @Mapping(target = "user", source = "user.login")
+    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "repository.id", source = "repositoryId")
     Commit toDomain(CommitEntity commit);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "commit.user")
-    CommitEntity toEntity(Commit commit, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "repositoryId", source = "repository.id")
+    CommitEntity toEntity(Commit commit);
 }

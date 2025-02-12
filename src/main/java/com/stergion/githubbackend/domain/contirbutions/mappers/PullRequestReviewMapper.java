@@ -3,16 +3,16 @@ package com.stergion.githubbackend.domain.contirbutions.mappers;
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
-import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(config = MapStructConfig.class)
 public interface PullRequestReviewMapper {
-    @Mapping(target = "user", source = "user.login")
+    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "repository.id", source = "repositoryId")
     PullRequestReview toDomain(PullRequestReviewEntity pullRequestReview);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user.login", source = "pullRequestReview.user")
-    PullRequestReviewEntity toEntity(PullRequestReview pullRequestReview, ObjectId userId, ObjectId repositoryId);
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "repositoryId", source = "repository.id")
+    PullRequestReviewEntity toEntity(PullRequestReview pullRequestReview);
 }
