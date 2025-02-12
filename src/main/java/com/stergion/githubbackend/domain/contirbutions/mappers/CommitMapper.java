@@ -2,13 +2,13 @@ package com.stergion.githubbackend.domain.contirbutions.mappers;
 
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
+import com.stergion.githubbackend.common.mappers.ObjectIdMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
-import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(config = MapStructConfig.class)
+@Mapper(config = MapStructConfig.class, uses = ObjectIdMapper.class)
 public interface CommitMapper {
     @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "repository.id", source = "repositoryId")
