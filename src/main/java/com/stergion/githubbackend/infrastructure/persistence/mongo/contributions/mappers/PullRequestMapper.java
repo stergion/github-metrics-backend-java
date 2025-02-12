@@ -1,7 +1,7 @@
 package com.stergion.githubbackend.domain.contirbutions.mappers;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.common.mappers.ObjectIdMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.mapper.ObjectIdMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
 import org.mapstruct.Mapper;

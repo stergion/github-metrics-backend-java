@@ -1,9 +1,9 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Label;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Language;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Topic;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Label;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Language;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Topic;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

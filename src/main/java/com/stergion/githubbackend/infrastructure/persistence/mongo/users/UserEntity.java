@@ -1,6 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Github;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

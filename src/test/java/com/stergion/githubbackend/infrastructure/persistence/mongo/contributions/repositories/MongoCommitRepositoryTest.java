@@ -1,8 +1,8 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.Github;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.UserWithLogin;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.UserWithLogin;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

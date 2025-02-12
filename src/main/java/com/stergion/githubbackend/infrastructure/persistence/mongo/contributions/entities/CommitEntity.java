@@ -1,6 +1,9 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities;
 
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.CommitComment;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.File;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.UserWithLogin;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.validation.constraints.NotNull;

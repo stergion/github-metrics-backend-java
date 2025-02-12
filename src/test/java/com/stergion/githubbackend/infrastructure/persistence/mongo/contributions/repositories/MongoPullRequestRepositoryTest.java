@@ -1,7 +1,10 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Github;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.Label;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.PullRequestCommit;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.UserWithLogin;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes.*;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.utils.types.PullRequestState;
 import io.quarkus.test.junit.QuarkusTest;

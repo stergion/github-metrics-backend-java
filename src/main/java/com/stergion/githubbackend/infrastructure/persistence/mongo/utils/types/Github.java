@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.infrastructure.persistence.mongo.utilityTypes;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types;
 
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
