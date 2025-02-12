@@ -14,8 +14,8 @@ import java.util.List;
 
 public sealed interface MongoContributionRepository<T extends ContributionEntity>
         extends ReactivePanacheMongoRepository<T>
-        permits MongoCommitRepository, MongoIssueRepository, MongoIssueCommentRepository, MongoPullRequestRepository,
-        MongoPullRequestReviewRepository {
+        permits MongoCommitRepository, MongoIssueRepository, MongoIssueCommentRepository,
+        MongoPullRequestRepository, MongoPullRequestReviewRepository {
 
     default Uni<T> findById(ObjectId id) {
         return find("_id", id).firstResult();
@@ -48,6 +48,10 @@ public sealed interface MongoContributionRepository<T extends ContributionEntity
                                 .select().distinct()
                                 .collect().asList();
 
+    }
+
+    default Uni<Long> deleteById(List<ObjectId> ids) {
+        return delete("id=?1", ids);
     }
 
     default Uni<Void> deleteByUserId(ObjectId userId) {
