@@ -13,9 +13,11 @@ import java.util.List;
 @Mapper(config = MapStructConfig.class)
 public interface IssueGHMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", source = "login")
+    @Mapping(target = "user.id", ignore = true)
+    @Mapping(target = "user.login", source = "login")
     @Mapping(target = "github.id", source = "issue.id")
     @Mapping(target = "github.url", source = "issue.url")
+    @Mapping(target = "repository.id", ignore = true)
     @Mapping(target = "repository.owner", source = "issue.repository.owner.login")
     @Mapping(target = "closer", expression = "java(getCloserLogin(issue))")
     @Mapping(target = "reactionsCount", source = "issue.reactions.totalCount")

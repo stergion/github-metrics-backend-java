@@ -13,7 +13,9 @@ import java.util.List;
 @Mapper(config = MapStructConfig.class)
 public interface PullRequestReviewGHMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", source = "login")
+    @Mapping(target = "user.id", ignore = true)
+    @Mapping(target = "user.login", source = "login")
+    @Mapping(target = "repository.id", ignore = true)
     @Mapping(target = "repository.owner", source = "pullRequestReview.repository.owner.login")
     @Mapping(target = "github.id", source = "pullRequestReview.id")
     @Mapping(target = "github.url", source = "pullRequestReview.url")

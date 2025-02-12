@@ -17,7 +17,9 @@ import java.util.List;
 @Mapper(config = MapStructConfig.class)
 public interface CommitGHMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", source = "login")
+    @Mapping(target = "user.id", ignore = true)
+    @Mapping(target = "user.login", source = "login")
+    @Mapping(target = "repository.id", ignore = true)
     @Mapping(target = "github.id", source = "commit.id")
     @Mapping(target = "github.url", source = "commit.commitUrl")
     @Mapping(target = "filesCount", expression = "java(getFilesCount(commit))")

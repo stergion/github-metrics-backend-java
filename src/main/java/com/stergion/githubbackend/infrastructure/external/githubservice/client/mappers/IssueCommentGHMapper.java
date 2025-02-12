@@ -10,9 +10,11 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapStructConfig.class)
 public interface IssueCommentGHMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", source = "login")
+    @Mapping(target = "user.id", ignore = true)
+    @Mapping(target = "user.login", source = "login")
     @Mapping(target = "github.id", source = "issueComment.id")
     @Mapping(target = "github.url", source = "issueComment.url")
+    @Mapping(target = "repository.id", ignore = true)
     @Mapping(target = "repository.owner", source = "issueComment.repository.owner.login")
     @Mapping(target = "associatedIssue", expression = "java(mapAssociatedIssue(issueComment))")
     IssueComment toDomain(IssueCommentGH issueComment, String login);
