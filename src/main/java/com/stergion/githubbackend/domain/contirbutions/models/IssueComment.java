@@ -4,35 +4,71 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.domain.utils.types.Github;
-import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 
-public record IssueComment(
-        ObjectId id,
-        @NotNull
-        String user,
+public non-sealed class IssueComment extends Contribution {
+    @NotNull
+    @PastOrPresent
+    LocalDate createdAt;
 
-        @NotNull
-        NameWithOwner repository,
+    LocalDate publishedAt;
+    LocalDate updatedAt;
+    LocalDate lastEditedAt;
+    AssociatedIssue associatedIssue;
+    String body;
 
-        @NotNull
-        Github github,
-
-        @NotNull
-        @PastOrPresent
-        LocalDate createdAt,
-
-        LocalDate publishedAt,
-        LocalDate updatedAt,
-        LocalDate lastEditedAt,
-        AssociatedIssue associatedIssue,
-        String body
-) implements Contribution {
     private static final ObjectMapper mapper = JsonObjectMapper.create();
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(LocalDate publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDate getLastEditedAt() {
+        return lastEditedAt;
+    }
+
+    public void setLastEditedAt(LocalDate lastEditedAt) {
+        this.lastEditedAt = lastEditedAt;
+    }
+
+    public AssociatedIssue getAssociatedIssue() {
+        return associatedIssue;
+    }
+
+    public void setAssociatedIssue(AssociatedIssue associatedIssue) {
+        this.associatedIssue = associatedIssue;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public record AssociatedIssue(IssueType type, Github github) {
         @Override

@@ -36,26 +36,28 @@ class PullRequestReviewGHMapperTest {
 
         // Then
         assertNotNull(review);
-        assertEquals(TEST_LOGIN, review.user());
-        assertEquals("test-repo", review.repository().name());
-        assertEquals("owner", review.repository().owner());
-        assertEquals("123", review.github().id());
-        assertEquals(URI.create("https://example.com"), review.github().url());
-        assertEquals("pr123", review.pullRequest().id());
-        assertEquals(URI.create("https://example.com/pr"), review.pullRequest().url());
-        assertEquals(date, review.createdAt());
-        assertEquals(date, review.updatedAt());
-        assertEquals(date, review.publishedAt());
-        assertEquals(date, review.submittedAt());
-        assertEquals(date, review.lastEditedAt());
-        assertEquals(PullRequestReviewState.APPROVED, review.state());
-        assertEquals("Review body", review.body());
+        assertNull(review.getUser().id());
+        assertNull(review.getRepository().id());
+        assertEquals(TEST_LOGIN, review.getUser().login());
+        assertEquals("test-repo", review.getRepository().name());
+        assertEquals("owner", review.getRepository().owner());
+        assertEquals("123", review.getGithub().id());
+        assertEquals(URI.create("https://example.com"), review.getGithub().url());
+        assertEquals("pr123", review.getPullRequest().id());
+        assertEquals(URI.create("https://example.com/pr"), review.getPullRequest().url());
+        assertEquals(date, review.getCreatedAt());
+        assertEquals(date, review.getUpdatedAt());
+        assertEquals(date, review.getPublishedAt());
+        assertEquals(date, review.getSubmittedAt());
+        assertEquals(date, review.getLastEditedAt());
+        assertEquals(PullRequestReviewState.APPROVED, review.getState());
+        assertEquals("Review body", review.getBody());
 
         // Verify comments
-        assertNotNull(review.comments());
-        assertEquals(1, review.comments().size());
+        assertNotNull(review.getComments());
+        assertEquals(1, review.getComments().size());
 
-        PullRequestReviewComment comment = review.comments().getFirst();
+        PullRequestReviewComment comment = review.getComments().getFirst();
         assertEquals("comment-author", comment.login());
         assertEquals("comment1", comment.github().id());
         assertEquals("Comment body", comment.body());
@@ -74,11 +76,11 @@ class PullRequestReviewGHMapperTest {
 
         // Then
         assertNotNull(review);
-        assertNotNull(review.comments());
-        assertTrue(review.comments().isEmpty());
-        assertNull(review.publishedAt());
-        assertNull(review.submittedAt());
-        assertNull(review.lastEditedAt());
+        assertNotNull(review.getComments());
+        assertTrue(review.getComments().isEmpty());
+        assertNull(review.getPublishedAt());
+        assertNull(review.getSubmittedAt());
+        assertNull(review.getLastEditedAt());
     }
 
     private PullRequestReviewGH createFullPullRequestReview(LocalDate date) {

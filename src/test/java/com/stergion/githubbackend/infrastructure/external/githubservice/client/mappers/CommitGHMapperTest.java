@@ -81,26 +81,28 @@ class CommitGHMapperTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(userLogin, result.user());
-        assertEquals("owner", result.repository().owner());
-        assertEquals("repo", result.repository().name());
-        assertEquals("123", result.github().id());
-        assertEquals(commitUrl, result.github().url());
-        assertEquals(committedDate, result.committedDate());
-        assertEquals(10, result.additions());
-        assertEquals(5, result.deletions());
-        assertEquals(1, result.commentsCount());
-        assertEquals(1, result.filesCount());
+        assertNull(result.getUser().id());
+        assertNull(result.getRepository().id());
+        assertEquals(userLogin, result.getUser().login());
+        assertEquals("owner", result.getRepository().owner());
+        assertEquals("repo", result.getRepository().name());
+        assertEquals("123", result.getGithub().id());
+        assertEquals(commitUrl, result.getGithub().url());
+        assertEquals(committedDate, result.getCommittedDate());
+        assertEquals(10, result.getAdditions());
+        assertEquals(5, result.getDeletions());
+        assertEquals(1, result.getCommentsCount());
+        assertEquals(1, result.getFilesCount());
 
         // Verify comment mapping
-        assertFalse(result.comments().isEmpty());
-        CommitComment mappedComment = result.comments().getFirst();
+        assertFalse(result.getComments().isEmpty());
+        CommitComment mappedComment = result.getComments().getFirst();
         assertEquals("commenter", mappedComment.author());
         assertEquals("Test comment", mappedComment.body());
 
         // Verify file mapping
-        assertFalse(result.files().isEmpty());
-        File mappedFile = result.files().getFirst();
+        assertFalse(result.getFiles().isEmpty());
+        File mappedFile = result.getFiles().getFirst();
         assertEquals("test.java", mappedFile.fileName());
         assertEquals("test", mappedFile.baseName());
         assertEquals("java", mappedFile.extension());
@@ -132,12 +134,12 @@ class CommitGHMapperTest {
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.comments().isEmpty());
-        assertTrue(result.files().isEmpty());
-        assertTrue(result.associatedPullRequest().isEmpty());
-        assertEquals(0, result.commentsCount());
-        assertEquals(0, result.filesCount());
-        assertEquals(0, result.associatedPullRequestsCount());
+        assertTrue(result.getComments().isEmpty());
+        assertTrue(result.getFiles().isEmpty());
+        assertTrue(result.getAssociatedPullRequest().isEmpty());
+        assertEquals(0, result.getCommentsCount());
+        assertEquals(0, result.getFilesCount());
+        assertEquals(0, result.getAssociatedPullRequestsCount());
     }
 
     @Test
@@ -209,8 +211,8 @@ class CommitGHMapperTest {
 
         // Assert
         assertNotNull(result);
-        assertFalse(result.associatedPullRequest().isEmpty());
-        Github mappedPr = result.associatedPullRequest().getFirst();
+        assertFalse(result.getAssociatedPullRequest().isEmpty());
+        Github mappedPr = result.getAssociatedPullRequest().getFirst();
         assertEquals("pr123", mappedPr.id());
         assertEquals(new URI("https://github.com/test/pull/1"), mappedPr.url());
     }

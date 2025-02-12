@@ -51,7 +51,7 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      */
     private Uni<Void> ensureRepositoriesExist(List<D> batch) {
         return Multi.createFrom().iterable(batch)
-                    .map(D::repository)
+                    .map(D::getRepository)
                     .select().distinct()
                     .onItem().transformToUniAndMerge(
                         repo -> Uni.createFrom().item(repo)
@@ -68,9 +68,14 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      */
     private List<E> convertToEntities(List<D> batch) {
         return batch.stream()
-                    .map(domain -> mapDomainToEntity(domain,
-                            userService.getUserId(domain.user()),
-                            repositoryService.getRepositoryId(domain.repository())))
+                .peek(d -> {
+                    var user = userService.getUser(d.getUser().login());
+                    d.setUser(new UserProjection(user.id(), user.login(), user.name()));
+
+                    var repo = repositoryService.getRepository(d.getRepository().owner(), d.getRepository().name());
+                    d.setRepository(new RepositoryProjection(repo.id(), repo.owner(), repo.name()));
+                })
+                    .map(this::mapDomainToEntity)
                     .toList();
     }
 

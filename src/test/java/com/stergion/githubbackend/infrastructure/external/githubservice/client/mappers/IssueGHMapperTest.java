@@ -35,25 +35,27 @@ class IssueGHMapperTest {
 
         // Then
         assertNotNull(issue);
-        assertEquals(TEST_LOGIN, issue.user());
-        assertEquals("test-repo", issue.repository().name());
-        assertEquals("owner", issue.repository().owner());
-        assertEquals("123", issue.github().id());
-        assertEquals(URI.create("https://example.com"), issue.github().url());
-        assertEquals(date, issue.createdAt());
-        assertEquals(date, issue.updatedAt());
-        assertEquals(date, issue.closedAt());
-        assertEquals(IssueState.CLOSED, issue.state());
-        assertEquals("Test Issue", issue.title());
-        assertEquals("Test body", issue.body());
-        assertEquals(5, issue.reactionsCount());
-        assertEquals("closer", issue.closer());
+        assertNull(issue.getUser().id());
+        assertNull(issue.getRepository().id());
+        assertEquals(TEST_LOGIN, issue.getUser().login());
+        assertEquals("test-repo", issue.getRepository().name());
+        assertEquals("owner", issue.getRepository().owner());
+        assertEquals("123", issue.getGithub().id());
+        assertEquals(URI.create("https://example.com"), issue.getGithub().url());
+        assertEquals(date, issue.getCreatedAt());
+        assertEquals(date, issue.getUpdatedAt());
+        assertEquals(date, issue.getClosedAt());
+        assertEquals(IssueState.CLOSED, issue.getState());
+        assertEquals("Test Issue", issue.getTitle());
+        assertEquals("Test body", issue.getBody());
+        assertEquals(5, issue.getReactionsCount());
+        assertEquals("closer", issue.getCloser());
 
         // Verify labels
-        assertEquals(2, issue.labels().size());
-        assertTrue(issue.labels().stream().anyMatch(l -> l.name().equals("bug")));
-        assertTrue(issue.labels().stream().anyMatch(l -> l.name().equals("feature")));
-        assertEquals("Bug description", issue.labels().stream()
+        assertEquals(2, issue.getLabels().size());
+        assertTrue(issue.getLabels().stream().anyMatch(l -> l.name().equals("bug")));
+        assertTrue(issue.getLabels().stream().anyMatch(l -> l.name().equals("feature")));
+        assertEquals("Bug description", issue.getLabels().stream()
                                            .filter(l -> l.name().equals("bug"))
                                            .findFirst()
                                            .get()
@@ -72,10 +74,10 @@ class IssueGHMapperTest {
 
         // Then
         assertNotNull(issue);
-        assertNotNull(issue.labels());
-        assertTrue(issue.labels().isEmpty());
-        assertNull(issue.closer());
-        assertEquals(0, issue.reactionsCount());
+        assertNotNull(issue.getLabels());
+        assertTrue(issue.getLabels().isEmpty());
+        assertNull(issue.getCloser());
+        assertEquals(0, issue.getReactionsCount());
     }
 
     private IssueGH createFullIssue(LocalDate date) {
