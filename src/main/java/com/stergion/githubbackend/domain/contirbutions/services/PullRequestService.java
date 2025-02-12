@@ -1,19 +1,18 @@
 package com.stergion.githubbackend.domain.contirbutions.services;
 
-import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.PullRequestFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
+import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.PullRequestSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,22 +25,13 @@ public class PullRequestService extends ContributionService<PullRequest, PullReq
     PullRequestSearchStrategy searchStrategy;
 
     @Inject
-    public PullRequestService(MongoPullRequestRepository pullRequestRepository,
+    public PullRequestService(PullRequestRepository pullRequestRepository,
                               PullRequestFetchStrategy fetchStrategy,
                               PullRequestMapper pullRequestMapper) {
         super(pullRequestRepository, fetchStrategy);
         this.pullRequestMapper = pullRequestMapper;
     }
 
-    @Override
-    protected PullRequestEntity mapDomainToEntity(PullRequest pullRequest) {
-        return pullRequestMapper.toEntity(pullRequest);
-    }
-
-    @Override
-    protected PullRequest mapEntityToDomain(PullRequestEntity entity) {
-        return pullRequestMapper.toDomain(entity);
-    }
 
     public Multi<List<PullRequest>> fetchAndCreatePullRequests(String login,
                                                                LocalDateTime from,

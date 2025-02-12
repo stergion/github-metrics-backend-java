@@ -4,11 +4,11 @@ import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.IssueCommentFetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMapper;
+import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueCommentRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,21 +26,11 @@ public class IssueCommentService extends ContributionService<IssueComment, Issue
     IssueCommentSearchStrategy searchStrategy;
 
     @Inject
-    public IssueCommentService(MongoIssueCommentRepository issueCommentRepository,
+    public IssueCommentService(IssueCommentRepository issueCommentRepository,
                                IssueCommentFetchStrategy fetchStrategy) {
         super(issueCommentRepository, fetchStrategy);
     }
 
-
-    @Override
-    protected IssueCommentEntity mapDomainToEntity(IssueComment issueComment) {
-        return issueCommentMapper.toEntity(issueComment);
-    }
-
-    @Override
-    protected IssueComment mapEntityToDomain(IssueCommentEntity entity) {
-        return issueCommentMapper.toDomain(entity);
-    }
 
     public Multi<List<IssueComment>> fetchAndCreateIssueComments(String login,
                                                                  LocalDateTime from,

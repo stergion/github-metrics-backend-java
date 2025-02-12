@@ -6,11 +6,11 @@ import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
 import com.stergion.githubbackend.domain.contirbutions.models.RepositoryProjection;
 import com.stergion.githubbackend.domain.contirbutions.models.UserProjection;
+import com.stergion.githubbackend.domain.contirbutions.repositories.ContributionRepository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoContributionRepository;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -34,14 +34,14 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     @Inject
     RepositoryService repositoryService;
 
-    protected MongoContributionRepository<E> repository;
+    protected ContributionRepository<D> repository;
     protected FetchStrategy<D> fetchStrategy;
 
     protected ContributionService() {
         // Empty constructor for CDI
     }
 
-    protected ContributionService(MongoContributionRepository<E> repository,
+    protected ContributionService(ContributionRepository<D> repository,
                                   FetchStrategy<D> fetchStrategy) {
         this.repository = repository;
         this.fetchStrategy = fetchStrategy;
@@ -66,31 +66,6 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     }
 
     /**
-     * Converts domain models to entities using the appropriate mapper.
-     * Uses the nameWithOwner cache to efficiently handle nameWithOwner references.
-     */
-    private List<E> convertToEntities(List<D> batch) {
-        return batch.stream()
-                .peek(d -> {
-                    var user = userService.getUser(d.getUser().login());
-                    d.setUser(new UserProjection(user.id(), user.login(), user.name()));
-
-                    var repo = repositoryService.getRepository(d.getRepository().owner(), d.getRepository().name());
-                    d.setRepository(new RepositoryProjection(repo.id(), repo.owner(), repo.name()));
-                })
-                    .map(this::mapDomainToEntity)
-                    .toList();
-    }
-
-    /**
-     * This is the only method that specific contribution services need to implement.
-     * It defines how to map from a domain model to an entity using the appropriate mapper.
-     */
-    protected abstract E mapDomainToEntity(D domain);
-
-    protected abstract D mapEntityToDomain(E entity);
-
-    /**
      * Processes a batch of contributions:
      * 1. Ensures referenced repositories exist
      * 2. Converts domain models to entities
@@ -102,19 +77,14 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
                     .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
                     .toUni()
                     .chain(ignored -> Uni.createFrom().item(contributions))
-                    .map(this::convertToEntities)
-                    .call(repository::persist)
-                    .map(entities -> entities.stream()
-                                             .map(this::mapEntityToDomain)
-                                             .toList());
+                    .call(item -> repository.persist(item));
     }
 
     /**
      * Get a single contribution by ID
      */
     public Uni<D> getContribution(ObjectId id) {
-        return repository.findById(id)
-                         .map(this::mapEntityToDomain);
+        return repository.findById(id.toHexString());
 
     }
 
@@ -123,16 +93,14 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      */
     public Multi<D> getUserContributions(String login) {
         ObjectId userId = userService.getUserId(login);
-        return repository.findByUserId(userId)
-                         .map(this::mapEntityToDomain);
+        return repository.findByUserId(userId.toHexString());
     }
 
     public Multi<D> getUserContributions(String login, String owner, String name) {
         ObjectId userId = userService.getUserId(login);
         ObjectId repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
 
-        return repository.findByUserAndRepoId(userId, repoId)
-                         .map(this::mapEntityToDomain);
+        return repository.findByUserAndRepoId(userId.toHexString(), repoId.toHexString());
     }
 
     /**
@@ -147,10 +115,11 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     }
 
     public Uni<List<ObjectId>> getRepositoryIds(ObjectId userId) {
-        return repository.getRepositoryIds(userId);
+        return repository.getRepositoryIds(userId.toHexString())
+                         .map(list -> list.stream().map(ObjectId::new).toList());
     }
 
     public Uni<Void> deleteUserContributions(ObjectId userId) {
-        return repository.deleteByUserId(userId);
+        return repository.deleteByUserId(userId.toHexString());
     }
 }
