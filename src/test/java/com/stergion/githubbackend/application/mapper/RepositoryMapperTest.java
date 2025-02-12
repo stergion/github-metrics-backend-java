@@ -45,7 +45,7 @@ class RepositoryMapperTest {
             var topics = List.of(new Topic("spring"), new Topic("web"));
 
             var repo = new Repository(
-                    id,
+                    id.toHexString(),
                     owner,
                     name,
                     github,
@@ -93,7 +93,7 @@ class RepositoryMapperTest {
             // Arrange
             var id = new ObjectId();
             var repo = new Repository(
-                    id,
+                    id.toHexString(),
                     "owner",
                     "name",
                     new Github("123", URI.create("https://github.com/owner/name")),
@@ -126,7 +126,7 @@ class RepositoryMapperTest {
             // Arrange
             var id = new ObjectId();
             var repo = new Repository(
-                    id,
+                    id.toHexString(),
                     "owner",
                     "name",
                     new Github("123", URI.create("https://github.com/owner/name")),
@@ -164,7 +164,7 @@ class RepositoryMapperTest {
             var owner = "testOwner";
             var name = "testRepo";
             var repo = new Repository(
-                    id,
+                    id.toHexString(),
                     owner,
                     name,
                     new Github("123", URI.create("https://github.com/testOwner/testRepo")),

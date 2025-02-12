@@ -11,7 +11,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 import org.jboss.resteasy.reactive.common.NotImplementedYet;
 
 import java.time.LocalDateTime;
@@ -215,7 +214,7 @@ public class UserDataManagementService {
 
         completion.await().indefinitely();
         Log.debug("Updating repository references of '" + login + "'");
-        Set<ObjectId> reposUpd = HashSet.newHashSet(1000);
+        Set<String> reposUpd = HashSet.newHashSet(1000);
         reposUpd.addAll(commitService.getRepositoryIds(user.id()).await().indefinitely());
         reposUpd.addAll(issueService.getRepositoryIds(user.id()).await().indefinitely());
         reposUpd.addAll(pullRequestService.getRepositoryIds(user.id()).await().indefinitely());

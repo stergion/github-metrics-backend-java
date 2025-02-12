@@ -37,7 +37,7 @@ public interface UserMapper {
         }
 
         // Create a map of repositories by their ID for efficient lookup
-        Map<ObjectId, NameWithOwner> repoMap = repositories.stream()
+        Map<String, NameWithOwner> repoMap = repositories.stream()
                                                            .collect(Collectors.toMap(
                                                                    Repository::id,
                                                                    repo -> new NameWithOwner(

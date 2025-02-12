@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import org.bson.types.ObjectId;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record User(
-        ObjectId id,
+        String id,
         @NotBlank
         String login,
 
@@ -36,7 +35,7 @@ public record User(
         LocalDateTime updatedAt,
 
         @NotNull
-        List<ObjectId> repositories,
+        List<String> repositories,
 
         URI avatarURL,
         String bio,

@@ -70,7 +70,7 @@ public class UserService {
         return user;
     }
 
-    public ObjectId getUserId(@NotNull String login) {
+    public String getUserId(@NotNull String login) {
         User user = repository.findByLogin(login);
         if (user == null) {
             throw new UserNotFoundException(login);
@@ -88,17 +88,17 @@ public class UserService {
             return user;
         }
 
-        List<ObjectId> ids = repos.stream().map(Repository::id).toList();
+        List<String> ids = repos.stream().map(Repository::id).toList();
 
         return updateRepositoriesFromIds(user, ids);
     }
 
-    public User updateRepositoriesFromIds(User user, List<ObjectId> repoIds) {
+    public User updateRepositoriesFromIds(User user, List<String> repoIds) {
         if (repoIds == null || repoIds.isEmpty()) {
             return user;  // No changes needed
         }
 
-        Set<ObjectId> uniqueIds = new HashSet<>(
+        Set<String> uniqueIds = new HashSet<>(
                 user.repositories());  // Start with existing repos
         uniqueIds.addAll(repoIds);  // Add new ones
 
@@ -120,7 +120,7 @@ public class UserService {
             throw new UserNotFoundException(login);
         }
 
-        List<ObjectId> repoIds = user.repositories();
+        List<String> repoIds = user.repositories();
         return repositoryService.getRepositories(repoIds);
     }
 

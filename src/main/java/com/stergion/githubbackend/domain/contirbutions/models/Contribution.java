@@ -2,12 +2,11 @@ package com.stergion.githubbackend.domain.contirbutions.models;
 
 import com.stergion.githubbackend.domain.utils.types.Github;
 import jakarta.validation.constraints.NotNull;
-import org.bson.types.ObjectId;
 
 public sealed abstract class Contribution
         permits Commit, Issue, PullRequest, PullRequestReview,
         IssueComment {
-    ObjectId id;
+    String id;
 
     @NotNull
     UserProjection user;
@@ -17,11 +16,11 @@ public sealed abstract class Contribution
 
     Github github;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -15,7 +15,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -83,8 +82,8 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
     /**
      * Get a single contribution by ID
      */
-    public Uni<D> getContribution(ObjectId id) {
-        return repository.findById(id.toHexString());
+    public Uni<D> getContribution(String id) {
+        return repository.findById(id);
 
     }
 
@@ -92,15 +91,15 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
      * Get all contributions for a user
      */
     public Multi<D> getUserContributions(String login) {
-        ObjectId userId = userService.getUserId(login);
-        return repository.findByUserId(userId.toHexString());
+        String userId = userService.getUserId(login);
+        return repository.findByUserId(userId);
     }
 
     public Multi<D> getUserContributions(String login, String owner, String name) {
-        ObjectId userId = userService.getUserId(login);
-        ObjectId repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
+        String userId = userService.getUserId(login);
+        String repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
 
-        return repository.findByUserAndRepoId(userId.toHexString(), repoId.toHexString());
+        return repository.findByUserAndRepoId(userId, repoId);
     }
 
     /**
@@ -114,12 +113,12 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
                 .flatMap(Uni::toMulti);
     }
 
-    public Uni<List<ObjectId>> getRepositoryIds(ObjectId userId) {
-        return repository.getRepositoryIds(userId.toHexString())
-                         .map(list -> list.stream().map(ObjectId::new).toList());
+    public Uni<List<String>> getRepositoryIds(String userId) {
+        return repository.getRepositoryIds(userId)
+                         .map(list -> list.stream().map(String::new).toList());
     }
 
-    public Uni<Void> deleteUserContributions(ObjectId userId) {
-        return repository.deleteByUserId(userId.toHexString());
+    public Uni<Void> deleteUserContributions(String userId) {
+        return repository.deleteByUserId(userId);
     }
 }

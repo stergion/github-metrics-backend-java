@@ -16,18 +16,18 @@ public class RepositoryIdCache {
     @ConfigProperty(name = "repository.cache.size", defaultValue = "1000")
     int capacity;
 
-    private Map<NameWithOwner, ObjectId> repoIdCache;
+    private Map<NameWithOwner, String> repoIdCache;
 
     @PostConstruct
     void init() {
         this.repoIdCache = new ConcurrentHashMap<>(capacity);
     }
 
-    public ObjectId get(NameWithOwner nameWithOwner) {
+    public String get(NameWithOwner nameWithOwner) {
         return repoIdCache.get(nameWithOwner);
     }
 
-    public Map<NameWithOwner, ObjectId> getAll(Collection<NameWithOwner> repos) {
+    public Map<NameWithOwner, String> getAll(Collection<NameWithOwner> repos) {
         return repos.stream()
                     .filter(repoIdCache::containsKey)
                     .collect(Collectors.toMap(
@@ -36,11 +36,11 @@ public class RepositoryIdCache {
                                              ));
     }
 
-    public void put(NameWithOwner nameWithOwner, ObjectId id) {
+    public void put(NameWithOwner nameWithOwner, String id) {
         repoIdCache.put(nameWithOwner, id);
     }
 
-    public void putAll(Map<NameWithOwner, ObjectId> entries) {
+    public void putAll(Map<NameWithOwner, String> entries) {
         repoIdCache.putAll(entries);
     }
 }

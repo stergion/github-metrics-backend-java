@@ -9,12 +9,11 @@ import com.stergion.githubbackend.domain.utils.types.Language;
 import com.stergion.githubbackend.domain.utils.types.Topic;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public record Repository(
-        ObjectId id,
+        String id,
         @NotBlank
         String owner,
 
@@ -56,8 +55,8 @@ public record Repository(
     @Override
     public boolean equals(Object o) {
         return (o instanceof Repository r)
-                && owner.equals(r.owner)
-                && name.equals(r.name);
+               && owner.equals(r.owner)
+               && name.equals(r.name);
     }
 
     @Override

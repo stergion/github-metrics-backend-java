@@ -8,7 +8,6 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,8 +33,8 @@ public class RepositoryService {
         return repo;
     }
 
-    public ObjectId getRepositoryId(NameWithOwner repo) {
-        ObjectId id = repositoryIdCache.get(repo);
+    public String getRepositoryId(NameWithOwner repo) {
+        String id = repositoryIdCache.get(repo);
         if (id != null) {
             return id;
         }
@@ -106,9 +105,7 @@ public class RepositoryService {
         return repos.map(this::createRepositories);
     }
 
-    public List<Repository> getRepositories(List<ObjectId> ids) {
-        return repoRepository.findById(ids.stream()
-                                          .map(ObjectId::toHexString)
-                                          .toList());
+    public List<Repository> getRepositories(List<String> ids) {
+        return repoRepository.findById(ids);
     }
 }

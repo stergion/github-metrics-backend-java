@@ -30,10 +30,10 @@ public class UserMapperTest {
     @BeforeEach
     void setUp() {
         // Setup test user
-        var repo1Id = new ObjectId();
-        var repo2Id = new ObjectId();
+        var repo1Id = (new ObjectId()).toHexString();
+        var repo2Id = (new ObjectId()).toHexString();
         testUser = new User(
-                new ObjectId(),
+                (new ObjectId()).toHexString(),
                 "testuser",
                 "Test User",
                 new Github("123", URI.create("https://github.com/testuser")),
@@ -119,7 +119,7 @@ public class UserMapperTest {
     @Test
     void testToResponse_repositoryMappingVerification() {
         // Create a repository that's not in the user's repository list
-        ObjectId nonUserRepoId = new ObjectId();
+        String nonUserRepoId = (new ObjectId()).toHexString();
         Repository nonUserRepo = new Repository(
                 nonUserRepoId,
                 "otheruser",
@@ -187,7 +187,7 @@ public class UserMapperTest {
     @Test
     void testToResponse_withNullOptionalFields() {
         User userWithNulls = new User(
-                new ObjectId(),
+                (new ObjectId()).toHexString(),
                 "testuser",
                 "Test User",
                 new Github("123", URI.create("https://github.com/testuser")),
