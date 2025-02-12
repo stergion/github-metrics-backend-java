@@ -4,7 +4,7 @@ import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;
 
 @MapperConfig(
-        componentModel = "cdi",
+        componentModel = "jakarta-cdi",
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.WARN
 )
