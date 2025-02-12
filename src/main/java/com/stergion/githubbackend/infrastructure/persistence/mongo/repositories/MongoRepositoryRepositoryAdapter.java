@@ -4,11 +4,13 @@ import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryMapper;
 import com.stergion.githubbackend.domain.repositories.RepositoryRepository;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
+@ApplicationScoped
 public class MongoRepositoryRepositoryAdapter implements RepositoryRepository {
     @Inject
     MongoRepositoryRepository repository;
