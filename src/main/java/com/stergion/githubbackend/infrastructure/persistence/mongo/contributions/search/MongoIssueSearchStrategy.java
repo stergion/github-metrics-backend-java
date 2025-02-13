@@ -8,11 +8,13 @@ import com.stergion.githubbackend.domain.contirbutions.search.fields.IssueField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueRepository;
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ApplicationScoped
 public class MongoIssueSearchStrategy
         extends MongoContributionSearchStrategy<IssueEntity, IssueSearchCriteria>
         implements IssueSearchStrategy {

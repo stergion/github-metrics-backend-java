@@ -1,13 +1,14 @@
 package com.stergion.githubbackend.domain.contirbutions.repositories;
 
-import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import java.util.List;
 
-public interface ContributionRepository<T extends Contribution> {
+public interface ContributionRepository<T extends Contribution, C extends BaseSearchCriteria<?, ?>> {
     Uni<T> persist(T contribution);
 
     Uni<Void> persist(List<T> contributions);
@@ -31,4 +32,6 @@ public interface ContributionRepository<T extends Contribution> {
     Uni<List<String>> getRepositoryIds(String userId);
 
     Uni<Void> deleteByUserId(String id);
+
+    Uni<PagedResponse<T>> search(C criteria);
 }

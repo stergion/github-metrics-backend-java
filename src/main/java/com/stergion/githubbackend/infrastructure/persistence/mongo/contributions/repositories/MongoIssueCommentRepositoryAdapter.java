@@ -3,7 +3,11 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.IssueCommentMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoIssueCommentSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,6 +23,9 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
 
     @Inject
     IssueCommentMapper mapper;
+
+    @Inject
+    MongoIssueCommentSearchStrategy searchStrategy;
 
 
     @Override
@@ -98,5 +105,12 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
     @Override
     public Uni<Void> deleteByUserId(String id) {
         return repository.deleteByUserId(new ObjectId(id));
+    }
+
+    @Override
+    public Uni<PagedResponse<IssueComment>> search(IssueCommentSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response,
+                                     mapper::toDomain));
     }
 }

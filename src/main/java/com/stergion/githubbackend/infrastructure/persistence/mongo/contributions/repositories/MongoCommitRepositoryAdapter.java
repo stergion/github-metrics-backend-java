@@ -3,7 +3,11 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.contirbutions.repositories.CommitRepository;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.CommitMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoCommitSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,6 +23,9 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
 
     @Inject
     CommitMapper mapper;
+
+    @Inject
+    MongoCommitSearchStrategy searchStrategy;
 
 
     @Override
@@ -99,4 +106,12 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
     public Uni<Void> deleteByUserId(String id) {
         return repository.deleteByUserId(new ObjectId(id));
     }
+
+    @Override
+    public Uni<PagedResponse<Commit>> search(CommitSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response,
+                                     mapper::toDomain));
+    }
+
 }

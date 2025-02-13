@@ -4,13 +4,12 @@ import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
-import com.stergion.githubbackend.domain.contirbutions.models.RepositoryProjection;
-import com.stergion.githubbackend.domain.contirbutions.models.UserProjection;
 import com.stergion.githubbackend.domain.contirbutions.repositories.ContributionRepository;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -26,21 +25,20 @@ import java.util.List;
  * @param <D> The domain model type (e.g., Issue, Commit)
  * @param <E> The Entity type (e.g., IssueEntity, CommitEntity)
  */
-public abstract class ContributionService<D extends Contribution, E extends ContributionEntity> {
+public abstract class ContributionService<D extends Contribution, C extends BaseSearchCriteria<?,
+        ?>> {
+    protected ContributionRepository<D, C> repository;
+    protected FetchStrategy<D> fetchStrategy;
     @Inject
     UserService userService;
-
     @Inject
     RepositoryService repositoryService;
-
-    protected ContributionRepository<D> repository;
-    protected FetchStrategy<D> fetchStrategy;
 
     protected ContributionService() {
         // Empty constructor for CDI
     }
 
-    protected ContributionService(ContributionRepository<D> repository,
+    protected ContributionService(ContributionRepository<D, C> repository,
                                   FetchStrategy<D> fetchStrategy) {
         this.repository = repository;
         this.fetchStrategy = fetchStrategy;
@@ -120,5 +118,9 @@ public abstract class ContributionService<D extends Contribution, E extends Cont
 
     public Uni<Void> deleteUserContributions(String userId) {
         return repository.deleteByUserId(userId);
+    }
+
+    public Uni<PagedResponse<D>> search(C searchCriteria) {
+        return repository.search(searchCriteria);
     }
 }

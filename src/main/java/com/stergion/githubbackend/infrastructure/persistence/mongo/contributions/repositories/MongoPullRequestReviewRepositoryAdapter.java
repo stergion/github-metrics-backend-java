@@ -3,7 +3,11 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.contribution
 
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestReviewRepository;
+import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.PullRequestReviewMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoPullRequestReviewSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,6 +23,9 @@ public class MongoPullRequestReviewRepositoryAdapter implements PullRequestRevie
 
     @Inject
     PullRequestReviewMapper mapper;
+
+    @Inject
+    MongoPullRequestReviewSearchStrategy searchStrategy;
 
 
     @Override
@@ -98,5 +105,12 @@ public class MongoPullRequestReviewRepositoryAdapter implements PullRequestRevie
     @Override
     public Uni<Void> deleteByUserId(String id) {
         return repository.deleteByUserId(new ObjectId(id));
+    }
+
+    @Override
+    public Uni<PagedResponse<PullRequestReview>> search(PullRequestReviewSearchCriteria criteria) {
+        return searchStrategy.search(criteria)
+                             .map(response -> PagedResponse.map(response,
+                                     mapper::toDomain));
     }
 }
