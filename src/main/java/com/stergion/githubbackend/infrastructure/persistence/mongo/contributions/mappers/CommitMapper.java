@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.domain.contirbutions.mappers;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers;
 
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;

@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
 import com.stergion.githubbackend.domain.users.User;
-import com.stergion.githubbackend.domain.users.UserMapper;
 import com.stergion.githubbackend.domain.users.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

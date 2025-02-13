@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.mappers.CommitMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.Commit;
 import com.stergion.githubbackend.domain.contirbutions.repositories.CommitRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;

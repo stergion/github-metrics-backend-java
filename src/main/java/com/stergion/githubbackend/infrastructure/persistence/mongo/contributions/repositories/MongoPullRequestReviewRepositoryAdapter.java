@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestReviewMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
 import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestReviewRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;

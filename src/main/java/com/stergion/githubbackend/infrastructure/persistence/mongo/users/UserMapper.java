@@ -1,8 +1,8 @@
-package com.stergion.githubbackend.domain.users;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
-import com.stergion.githubbackend.common.mappers.ObjectIdMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserEntity;
+import com.stergion.githubbackend.domain.users.User;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.mapper.ObjectIdMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

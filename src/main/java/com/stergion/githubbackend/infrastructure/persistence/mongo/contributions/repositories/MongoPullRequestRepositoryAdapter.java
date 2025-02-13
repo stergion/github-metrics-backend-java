@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.mappers.PullRequestMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
 import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;

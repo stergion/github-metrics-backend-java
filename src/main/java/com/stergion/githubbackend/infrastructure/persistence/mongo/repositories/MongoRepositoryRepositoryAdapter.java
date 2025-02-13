@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories;
 
 import com.stergion.githubbackend.domain.repositories.Repository;
-import com.stergion.githubbackend.domain.repositories.RepositoryMapper;
 import com.stergion.githubbackend.domain.repositories.RepositoryRepository;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import jakarta.enterprise.context.ApplicationScoped;

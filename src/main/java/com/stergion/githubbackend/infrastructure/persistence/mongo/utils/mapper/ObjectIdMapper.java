@@ -1,5 +1,6 @@
-package com.stergion.githubbackend.common.mappers;
+package com.stergion.githubbackend.infrastructure.persistence.mongo.utils.mapper;
 
+import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 

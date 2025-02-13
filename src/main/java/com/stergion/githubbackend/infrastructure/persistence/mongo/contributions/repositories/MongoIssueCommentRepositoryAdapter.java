@@ -1,7 +1,6 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.mappers.IssueCommentMapper;
 import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
 import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
