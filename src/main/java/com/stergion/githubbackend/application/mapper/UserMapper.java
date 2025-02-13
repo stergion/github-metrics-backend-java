@@ -5,7 +5,6 @@ import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
