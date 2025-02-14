@@ -32,8 +32,12 @@ public abstract class MongoContributionSearchStrategy<T extends ContributionEnti
         U extends BaseSearchCriteria<? extends RangeField, ? extends TimeField>>
         implements ContributionSearchStrategy<T, U> {
 
-    protected final MongoContributionRepository<T> repository;
-    private final CodecRegistry codecRegistry;
+    protected MongoContributionRepository<T> repository;
+    protected CodecRegistry codecRegistry;
+
+    protected MongoContributionSearchStrategy() {
+        // no-args constructor for CDI
+    }
 
     protected MongoContributionSearchStrategy(MongoContributionRepository<T> repository) {
         this.repository = repository;
@@ -215,7 +219,7 @@ public abstract class MongoContributionSearchStrategy<T extends ContributionEnti
             public String toString() {
                 try {
                     return MAPPER.writeValueAsString(this);
-                }catch (Exception ignored) {
+                } catch (Exception ignored) {
                     return super.toString();
                 }
             }
