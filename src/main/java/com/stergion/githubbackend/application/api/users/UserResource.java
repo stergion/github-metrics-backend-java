@@ -82,7 +82,7 @@ public class UserResource {
     @Path("/repositories")
     public RestResponse<List<?>> getUserRepositories(String login,
                                                      @RestQuery @DefaultValue("basic") String detail) {
-        Log.info("Getting user: " + login + " repositories");
+        Log.info("Getting repositories of user: " + login);
 
         var detailLevel = DetailLevel.fromString(detail);
         List<Repository> repos = userService.getUserRepositories(login);
