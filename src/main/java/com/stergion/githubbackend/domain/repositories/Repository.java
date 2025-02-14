@@ -10,6 +10,7 @@ import com.stergion.githubbackend.domain.utils.types.Topic;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record Repository(
@@ -36,9 +37,9 @@ public record Repository(
         int watcherCount
 ) {
     public Repository {
-        labels = labels != null ? List.copyOf(labels) : List.of();
-        languages = languages != null ? List.copyOf(languages) : List.of();
-        topics = topics != null ? List.copyOf(topics) : List.of();
+        labels = labels != null ? new ArrayList<>(List.copyOf(labels)) : new ArrayList<>();
+        languages = languages != null ? new ArrayList<>(List.copyOf(languages)) : new ArrayList<>();
+        topics = topics != null ? new ArrayList<>(List.copyOf(topics)) : new ArrayList<>();
     }
 
     private static final ObjectMapper mapper = JsonObjectMapper.create();

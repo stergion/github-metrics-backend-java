@@ -11,6 +11,7 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public record User(
         URI websiteURL
 ) {
     public User {
-        repositories = repositories != null ? List.copyOf(repositories) : List.of();
+        repositories = repositories != null ? new ArrayList<>(List.copyOf(repositories)) : new ArrayList<>();
     }
 
     static ObjectMapper mapper = JsonObjectMapper.create();
