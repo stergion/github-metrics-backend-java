@@ -25,6 +25,14 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
     @Inject
     MongoIssueCommentSearchStrategy searchStrategy;
 
+    public MongoIssueCommentRepositoryAdapter(MongoIssueCommentRepository repository,
+                                              IssueCommentMapper mapper,
+                                              MongoIssueCommentSearchStrategy searchStrategy) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.searchStrategy = searchStrategy;
+    }
+
 
     @Override
     public Uni<IssueComment> persist(IssueComment commit) {

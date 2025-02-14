@@ -1,10 +1,10 @@
 package com.stergion.githubbackend.infrastructure.persistence;
 
-import com.stergion.githubbackend.infrastructure.persistence.utils.Database;
-import com.stergion.githubbackend.infrastructure.persistence.utils.DatabaseType;
 import com.stergion.githubbackend.domain.contirbutions.repositories.*;
 import com.stergion.githubbackend.domain.repositories.RepositoryRepository;
 import com.stergion.githubbackend.domain.users.UserRepository;
+import com.stergion.githubbackend.infrastructure.persistence.utils.Database;
+import com.stergion.githubbackend.infrastructure.persistence.utils.DatabaseType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;

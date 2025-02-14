@@ -10,11 +10,14 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 public class MongoRepositoryRepositoryAdapter implements RepositoryRepository {
-    @Inject
-    MongoRepositoryRepository repository;
+    private final MongoRepositoryRepository repository;
+    private final RepositoryMapper mapper;
 
-    @Inject
-    RepositoryMapper mapper;
+    public MongoRepositoryRepositoryAdapter(MongoRepositoryRepository repository,
+                                            RepositoryMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     public void persist(Repository repository) {

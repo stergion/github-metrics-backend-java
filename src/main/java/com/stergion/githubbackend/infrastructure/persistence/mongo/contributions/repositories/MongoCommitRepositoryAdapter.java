@@ -10,20 +10,21 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoCommitSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public class MongoCommitRepositoryAdapter implements CommitRepository {
-    @Inject
-    MongoCommitRepository repository;
+    private final MongoCommitRepository repository;
+    private final CommitMapper mapper;
+    private final MongoCommitSearchStrategy searchStrategy;
 
-    @Inject
-    CommitMapper mapper;
-
-    @Inject
-    MongoCommitSearchStrategy searchStrategy;
+    public MongoCommitRepositoryAdapter(MongoCommitRepository repository, CommitMapper mapper,
+                                        MongoCommitSearchStrategy searchStrategy) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.searchStrategy = searchStrategy;
+    }
 
 
     @Override

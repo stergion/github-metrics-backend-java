@@ -10,20 +10,22 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoPullRequestSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public class MongoPullRequestRepositoryAdapter implements PullRequestRepository {
-    @Inject
-    MongoPullRequestRepository repository;
+    private final MongoPullRequestRepository repository;
+    private final PullRequestMapper mapper;
+    private final MongoPullRequestSearchStrategy searchStrategy;
 
-    @Inject
-    PullRequestMapper mapper;
-
-    @Inject
-    MongoPullRequestSearchStrategy searchStrategy;
+    public MongoPullRequestRepositoryAdapter(MongoPullRequestRepository repository,
+                                             PullRequestMapper mapper,
+                                             MongoPullRequestSearchStrategy searchStrategy) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.searchStrategy = searchStrategy;
+    }
 
 
     @Override

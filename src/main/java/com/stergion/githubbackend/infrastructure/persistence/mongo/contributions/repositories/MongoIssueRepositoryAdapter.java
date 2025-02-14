@@ -10,20 +10,21 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoIssueSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
 public class MongoIssueRepositoryAdapter implements IssueRepository {
-    @Inject
-    MongoIssueRepository repository;
+    private final MongoIssueRepository repository;
+    private final IssueMapper mapper;
+    private final MongoIssueSearchStrategy searchStrategy;
 
-    @Inject
-    IssueMapper mapper;
-
-    @Inject
-    MongoIssueSearchStrategy searchStrategy;
+    public MongoIssueRepositoryAdapter(MongoIssueRepository repository, IssueMapper mapper,
+                                       MongoIssueSearchStrategy searchStrategy) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.searchStrategy = searchStrategy;
+    }
 
 
     @Override

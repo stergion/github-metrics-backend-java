@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class MongoUserRepositoryAdapter implements UserRepository {
-    @Inject
-    MongoUserRepository repository;
+    private final MongoUserRepository repository;
 
-    @Inject
-    UserMapper mapper;
+    private final UserMapper mapper;
+
+    public MongoUserRepositoryAdapter(MongoUserRepository userRepository, UserMapper userMapper) {
+        this.repository = userRepository;
+        this.mapper = userMapper;
+    }
 
     @Override
     public void persist(User user) {
