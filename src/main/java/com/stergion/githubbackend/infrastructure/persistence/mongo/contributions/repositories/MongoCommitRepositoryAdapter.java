@@ -34,11 +34,13 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
     }
 
     @Override
-    public Uni<Void> persist(List<Commit> contributions) {
+    public Uni<List<Commit>> persist(List<Commit> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
-        return repository.persist(entities);
+        return repository.persist(entities)
+                         .chain(ignored -> Uni.createFrom().item(entities))
+                         .map(list -> list.stream().map(mapper::toDomain).toList());
     }
 
     @Override

@@ -3,13 +3,11 @@ package com.stergion.githubbackend.domain.users;
 import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.MongoUserRepositoryAdapter;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.bson.types.ObjectId;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +19,7 @@ public class UserService {
     UserClient client;
 
     @Inject
-    MongoUserRepositoryAdapter repository;
+    UserRepository repository;
 
     @Inject
     RepositoryService repositoryService;
@@ -35,20 +33,18 @@ public class UserService {
     }
 
     private User createUser(User user) {
-        repository.persist(user);
-        return user;
+        return repository.persist(user);
     }
 
     private User updateUser(User user) {
-        repository.update(user);
-        return user;
+        return repository.update(user);
     }
 
     public User fetchAndCreateUser(String login) {
         if (check(login)) {
             throw new UserAlreadyExistsException(login);
         }
-//      Create User only if not found
+        // Create User only if not found
         User user = fetchUser(login);
 
         return createUser(user);
@@ -109,9 +105,7 @@ public class UserService {
         user.repositories().clear();
         user.repositories().addAll(uniqueIds);
 
-        repository.update(user);
-
-        return user;
+        return repository.update(user);
     }
 
     public List<Repository> getUserRepositories(String login) {

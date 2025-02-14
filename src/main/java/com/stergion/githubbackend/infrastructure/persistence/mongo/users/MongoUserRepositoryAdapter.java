@@ -2,11 +2,8 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.users.UserRepository;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MongoUserRepositoryAdapter implements UserRepository {
     private final MongoUserRepository repository;
@@ -19,27 +16,35 @@ public class MongoUserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public void persist(User user) {
+    public User persist(User user) {
         UserEntity userEntity = mapper.toEntity(user);
         repository.persist(userEntity);
+        return mapper.toDomain(userEntity);
     }
 
     @Override
-    public void persist(List<User> users) {
-        Stream<UserEntity> userEntitiesStream = users.stream().map(mapper::toEntity);
-        repository.persist(userEntitiesStream);
+    public List<User> persist(List<User> users) {
+        List<UserEntity> userEntities = users.stream().map(mapper::toEntity).toList();
+        repository.persist(userEntities);
+        return userEntities.stream()
+                           .map(mapper::toDomain)
+                           .toList();
     }
 
     @Override
-    public  void update(User user) {
+    public User update(User user) {
         UserEntity userEntity = mapper.toEntity(user);
         repository.update(userEntity);
+        return mapper.toDomain(userEntity);
     }
 
     @Override
-    public void update(List<User> users) {
-        Stream<UserEntity> userEntitiesStream = users.stream().map(mapper::toEntity);
-        repository.update(userEntitiesStream);
+    public List<User> update(List<User> users) {
+        List<UserEntity> userEntities = users.stream().map(mapper::toEntity).toList();
+        repository.update(userEntities);
+        return userEntities.stream()
+                           .map(mapper::toDomain)
+                           .toList();
     }
 
     @Override

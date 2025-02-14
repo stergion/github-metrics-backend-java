@@ -3,8 +3,6 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.repositories
 import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryRepository;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -20,29 +18,39 @@ public class MongoRepositoryRepositoryAdapter implements RepositoryRepository {
     }
 
     @Override
-    public void persist(Repository repository) {
+    public Repository persist(Repository repository) {
         RepositoryEntity entity = mapper.toEntity(repository);
         this.repository.save(entity);
+        return mapper.toDomain(entity);
     }
 
     @Override
-    public void persist(List<Repository> repository) {
+    public List<Repository> persist(List<Repository> repository) {
         var repositories = repository.stream()
                                      .map(mapper::toEntity)
                                      .toList();
         this.repository.save(repositories);
+        return repositories.stream()
+                           .map(mapper::toDomain)
+                           .toList();
     }
 
     @Override
-    public void update(Repository repository) {
-        this.repository.update(mapper.toEntity(repository));
+    public Repository update(Repository repository) {
+        var entity = mapper.toEntity(repository);
+        this.repository.update(entity);
+        return mapper.toDomain(entity);
     }
 
     @Override
-    public void update(List<Repository> repositories) {
-        this.repository.update(repositories.stream()
-                                           .map(mapper::toEntity)
-                                           .toList());
+    public List<Repository> update(List<Repository> repositories) {
+        var entities = repositories.stream()
+                                   .map(mapper::toEntity)
+                                   .toList();
+        this.repository.update(entities);
+        return entities.stream()
+                       .map(mapper::toDomain)
+                       .toList();
     }
 
     @Override

@@ -3,13 +3,13 @@ package com.stergion.githubbackend.domain.users;
 import java.util.List;
 
 public interface UserRepository {
-    void persist(User user);
+    User persist(User user);
 
-    void persist(List<User> users);
+    List<User> persist(List<User> users);
 
-    void update(User user);
+    User update(User user);
 
-    void update(List<User> users);
+    List<User> update(List<User> users);
 
     void delete(User user);
 

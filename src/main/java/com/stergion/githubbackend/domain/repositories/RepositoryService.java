@@ -4,7 +4,6 @@ import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.utils.RepositoryIdCache;
 import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.RepositoryClient;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.MongoRepositoryRepositoryAdapter;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryMapper;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,8 +16,9 @@ import java.util.List;
 public class RepositoryService {
     @Inject
     RepositoryClient repoClient;
+
     @Inject
-    MongoRepositoryRepositoryAdapter repoRepository;
+    RepositoryRepository repoRepository;
 
     @Inject
     RepositoryMapper repoMapper;
@@ -57,15 +57,12 @@ public class RepositoryService {
         return repo;
     }
 
-    private Repository createRepository(Repository repo) {
-        repoRepository.persist(repo);
-        return repo;
+    private Repository createRepository(Repository repository) {
+        return repoRepository.persist(repository);
     }
 
-    private List<Repository> createRepositories(List<Repository> repo) {
-        repoRepository.persist(repo);
-
-        return repo;
+    private List<Repository> createRepositories(List<Repository> repositories) {
+        return repoRepository.persist(repositories);
     }
 
     public Repository fetchAndCreateRepository(NameWithOwner nameWithOwner) {

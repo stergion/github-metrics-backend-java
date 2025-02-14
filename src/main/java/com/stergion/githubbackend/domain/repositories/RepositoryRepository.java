@@ -6,17 +6,17 @@ import com.stergion.githubbackend.domain.utils.types.NameWithOwner;
 import java.util.List;
 
 public interface RepositoryRepository {
-    void persist(Repository repository);
+    Repository persist(Repository repository);
 
-    void persist(List<Repository> repository);
+    List<Repository> persist(List<Repository> repository);
 
     void delete(Repository repository);
 
     void deleteByOwner(String owner);
 
-    void update(Repository repository);
+    Repository update(Repository repository);
 
-    void update(List<Repository> repositories);
+    List<Repository> update(List<Repository> repositories);
 
     List<Repository> findById(List<String> ids);
 

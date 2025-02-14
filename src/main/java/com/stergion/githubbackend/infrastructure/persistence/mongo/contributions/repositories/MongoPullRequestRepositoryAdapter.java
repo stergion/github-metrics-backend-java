@@ -35,11 +35,13 @@ public class MongoPullRequestRepositoryAdapter implements PullRequestRepository 
     }
 
     @Override
-    public Uni<Void> persist(List<PullRequest> contributions) {
+    public Uni<List<PullRequest>> persist(List<PullRequest> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
-        return repository.persist(entities);
+        return repository.persist(entities)
+                         .chain(ignored -> Uni.createFrom().item(entities))
+                         .map(list -> list.stream().map(mapper::toDomain).toList());
     }
 
     @Override

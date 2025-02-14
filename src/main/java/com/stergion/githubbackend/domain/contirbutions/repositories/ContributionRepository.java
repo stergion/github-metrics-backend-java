@@ -11,7 +11,7 @@ import java.util.List;
 public interface ContributionRepository<T extends Contribution, C extends BaseSearchCriteria<?, ?>> {
     Uni<T> persist(T contribution);
 
-    Uni<Void> persist(List<T> contributions);
+    Uni<List<T>> persist(List<T> contributions);
 
     Uni<Void> delete(T contribution);
 

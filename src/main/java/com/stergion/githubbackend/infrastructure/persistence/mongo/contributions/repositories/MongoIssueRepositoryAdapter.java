@@ -34,11 +34,13 @@ public class MongoIssueRepositoryAdapter implements IssueRepository {
     }
 
     @Override
-    public Uni<Void> persist(List<Issue> contributions) {
+    public Uni<List<Issue>> persist(List<Issue> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
-        return repository.persist(entities);
+        return repository.persist(entities)
+                         .chain(ignored -> Uni.createFrom().item(entities))
+                         .map(list -> list.stream().map(mapper::toDomain).toList());
     }
 
     @Override

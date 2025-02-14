@@ -41,11 +41,13 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
     }
 
     @Override
-    public Uni<Void> persist(List<IssueComment> contributions) {
+    public Uni<List<IssueComment>> persist(List<IssueComment> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
-        return repository.persist(entities);
+        return repository.persist(entities)
+                         .chain(ignored -> Uni.createFrom().item(entities))
+                         .map(list -> list.stream().map(mapper::toDomain).toList());
     }
 
     @Override
