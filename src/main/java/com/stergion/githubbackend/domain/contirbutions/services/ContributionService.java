@@ -23,12 +23,14 @@ import java.util.List;
  * only what they need to.
  *
  * @param <D> The domain model type (e.g., Issue, Commit)
- * @param <E> The Entity type (e.g., IssueEntity, CommitEntity)
+ * @param <C> The search criteria type (e.g., CommitSearchCriteria, IssueSearchCriteria)
  */
-public abstract class ContributionService<D extends Contribution, C extends BaseSearchCriteria<?,
-        ?>> {
+public abstract class ContributionService<D extends Contribution,
+        C extends BaseSearchCriteria<?, ?>> {
+
     protected ContributionRepository<D, C> repository;
     protected FetchStrategy<D> fetchStrategy;
+    
     @Inject
     UserService userService;
     @Inject
