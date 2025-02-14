@@ -10,13 +10,11 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoPullRequestSearchStrategy;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-@ApplicationScoped
 public class MongoPullRequestRepositoryAdapter implements PullRequestRepository {
     @Inject
     MongoPullRequestRepository repository;

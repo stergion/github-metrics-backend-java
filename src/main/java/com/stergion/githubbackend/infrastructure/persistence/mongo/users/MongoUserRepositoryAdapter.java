@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 
-@ApplicationScoped
 public class MongoUserRepositoryAdapter implements UserRepository {
     @Inject
     MongoUserRepository repository;

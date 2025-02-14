@@ -9,7 +9,6 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
-@ApplicationScoped
 public class MongoRepositoryRepositoryAdapter implements RepositoryRepository {
     @Inject
     MongoRepositoryRepository repository;
