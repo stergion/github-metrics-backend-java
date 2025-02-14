@@ -1,4 +1,4 @@
-package com.stergion.githubbackend.common;
+package com.stergion.githubbackend.infrastructure.persistence.utils;
 
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Qualifier;
