@@ -4,6 +4,8 @@ import com.stergion.githubbackend.common.batch.BatchProcessorConfig;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchParams;
 import com.stergion.githubbackend.domain.contirbutions.fetch.FetchStrategy;
 import com.stergion.githubbackend.domain.contirbutions.models.Contribution;
+import com.stergion.githubbackend.domain.contirbutions.models.RepositoryProjection;
+import com.stergion.githubbackend.domain.contirbutions.models.UserProjection;
 import com.stergion.githubbackend.domain.contirbutions.repositories.ContributionRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.BaseSearchCriteria;
@@ -30,7 +32,7 @@ public abstract class ContributionService<D extends Contribution,
 
     protected ContributionRepository<D, C> repository;
     protected FetchStrategy<D> fetchStrategy;
-    
+
     @Inject
     UserService userService;
     @Inject
@@ -76,7 +78,32 @@ public abstract class ContributionService<D extends Contribution,
                     .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
                     .toUni()
                     .chain(ignored -> Uni.createFrom().item(contributions))
-                    .call(item -> repository.persist(item));
+                    .map(this::injectUserRef)
+                    .map(this::injectRepositoryRef)
+                    .flatMap(item -> repository.persist(item));
+    }
+
+    private List<D> injectRepositoryRef(List<D> batch) {
+        return batch.stream()
+                    .peek(contribution -> {
+                        var repo = repositoryService.getRepository(
+                                contribution.getRepository().owner(),
+                                contribution.getRepository().name()
+                                                                  );
+                        contribution.setRepository(
+                                new RepositoryProjection(repo.id(), repo.owner(), repo.name()));
+                    })
+                    .toList();
+    }
+
+    private List<D> injectUserRef(List<D> batch) {
+        return batch.stream()
+                    .peek(contribution -> {
+                        var user = userService.getUser(contribution.getUser().login());
+                        contribution.setUser(
+                                new UserProjection(user.id(), user.login(), user.name()));
+                    })
+                    .toList();
     }
 
     /**
