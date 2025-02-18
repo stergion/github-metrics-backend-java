@@ -1,12 +1,8 @@
 package com.stergion.githubbackend.infrastructure.persistence;
 
-import com.stergion.githubbackend.domain.contirbutions.repositories.CommitRepository;
-import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
-import com.stergion.githubbackend.domain.contirbutions.repositories.IssueRepository;
-import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestRepository;
+import com.stergion.githubbackend.domain.contirbutions.repositories.*;
 import com.stergion.githubbackend.domain.repositories.RepositoryRepository;
 import com.stergion.githubbackend.domain.users.UserRepository;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestReviewRepositoryAdapter;
 
 public interface RepositoryFactory {
 
@@ -22,5 +18,5 @@ public interface RepositoryFactory {
 
     PullRequestRepository createPullRequestRepository();
 
-    MongoPullRequestReviewRepositoryAdapter createPullRequestReviewRepository();
+    PullRequestReviewRepository createPullRequestReviewRepository();
 }
