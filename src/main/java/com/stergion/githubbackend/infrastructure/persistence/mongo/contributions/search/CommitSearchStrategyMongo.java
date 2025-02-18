@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.CommitSearchStrate
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoCommitRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.CommitRepositoryMongo;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.conversions.Bson;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class MongoCommitSearchStrategy
-        extends MongoContributionSearchStrategy<CommitEntity, CommitSearchCriteria>
+public class CommitSearchStrategyMongo
+        extends ContributionSearchStrategyMongo<CommitEntity, CommitSearchCriteria>
         implements CommitSearchStrategy {
 
-    public MongoCommitSearchStrategy(MongoCommitRepository repository) {
+    public CommitSearchStrategyMongo(CommitRepositoryMongo repository) {
         super(repository);
     }
 

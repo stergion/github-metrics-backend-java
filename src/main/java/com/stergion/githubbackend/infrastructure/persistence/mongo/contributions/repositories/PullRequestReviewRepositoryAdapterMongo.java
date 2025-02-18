@@ -1,26 +1,27 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.models.Issue;
-import com.stergion.githubbackend.domain.contirbutions.repositories.IssueRepository;
+import com.stergion.githubbackend.domain.contirbutions.models.PullRequestReview;
+import com.stergion.githubbackend.domain.contirbutions.repositories.PullRequestReviewRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
-import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.IssueMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoIssueSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestReviewSearchCriteria;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.PullRequestReviewMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.PullRequestReviewSearchStrategyMongo;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public class MongoIssueRepositoryAdapter implements IssueRepository {
-    private final MongoIssueRepository repository;
-    private final IssueMapper mapper;
-    private final MongoIssueSearchStrategy searchStrategy;
+public class PullRequestReviewRepositoryAdapterMongo implements PullRequestReviewRepository {
+    private final PullRequestReviewRepositoryMongo repository;
+    private final PullRequestReviewMapper mapper;
+    private final PullRequestReviewSearchStrategyMongo searchStrategy;
 
-    public MongoIssueRepositoryAdapter(MongoIssueRepository repository, IssueMapper mapper,
-                                       MongoIssueSearchStrategy searchStrategy) {
+    public PullRequestReviewRepositoryAdapterMongo(PullRequestReviewRepositoryMongo repository,
+                                                   PullRequestReviewMapper mapper,
+                                                   PullRequestReviewSearchStrategyMongo searchStrategy) {
         this.repository = repository;
         this.mapper = mapper;
         this.searchStrategy = searchStrategy;
@@ -28,13 +29,13 @@ public class MongoIssueRepositoryAdapter implements IssueRepository {
 
 
     @Override
-    public Uni<Issue> persist(Issue commit) {
-        IssueEntity entity = mapper.toEntity(commit);
+    public Uni<PullRequestReview> persist(PullRequestReview commit) {
+        PullRequestReviewEntity entity = mapper.toEntity(commit);
         return repository.persist(entity).map(mapper::toDomain);
     }
 
     @Override
-    public Uni<List<Issue>> persist(List<Issue> contributions) {
+    public Uni<List<PullRequestReview>> persist(List<PullRequestReview> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
@@ -44,53 +45,53 @@ public class MongoIssueRepositoryAdapter implements IssueRepository {
     }
 
     @Override
-    public Uni<Void> delete(Issue contribution) {
+    public Uni<Void> delete(PullRequestReview contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.delete(entity);
     }
 
     @Override
-    public Uni<Long> delete(List<Issue> contributions) {
+    public Uni<Long> delete(List<PullRequestReview> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
-                               .map(IssueEntity::id)
+                               .map(PullRequestReviewEntity::id)
                                .toList();
         return repository.deleteById(ids);
     }
 
     @Override
-    public Uni<Issue> update(Issue contribution) {
+    public Uni<PullRequestReview> update(PullRequestReview contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.update(entity)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<Issue> findById(String id) {
+    public Uni<PullRequestReview> findById(String id) {
         return repository.findById(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<Issue> findByGitHubId(String id) {
+    public Uni<PullRequestReview> findByGitHubId(String id) {
         return repository.findByGitHubId(id)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Issue> findByUserId(String id) {
+    public Multi<PullRequestReview> findByUserId(String id) {
         return repository.findByUserId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Issue> findByRepoId(String id) {
+    public Multi<PullRequestReview> findByRepoId(String id) {
         return repository.findByRepoId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Issue> findByUserAndRepoId(String userId, String repoId) {
+    public Multi<PullRequestReview> findByUserAndRepoId(String userId, String repoId) {
         return repository.findByUserAndRepoId(new ObjectId(userId), new ObjectId(repoId))
                          .map(mapper::toDomain);
     }
@@ -109,7 +110,7 @@ public class MongoIssueRepositoryAdapter implements IssueRepository {
     }
 
     @Override
-    public Uni<PagedResponse<Issue>> search(IssueSearchCriteria criteria) {
+    public Uni<PagedResponse<PullRequestReview>> search(PullRequestReviewSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
                                      mapper::toDomain));

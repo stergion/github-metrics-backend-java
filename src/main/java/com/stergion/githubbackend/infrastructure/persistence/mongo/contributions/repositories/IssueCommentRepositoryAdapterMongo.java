@@ -1,26 +1,33 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.models.Commit;
-import com.stergion.githubbackend.domain.contirbutions.repositories.CommitRepository;
+import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
+import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
-import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.CommitMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoCommitSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.IssueCommentMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.IssueCommentSearchStrategyMongo;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public class MongoCommitRepositoryAdapter implements CommitRepository {
-    private final MongoCommitRepository repository;
-    private final CommitMapper mapper;
-    private final MongoCommitSearchStrategy searchStrategy;
+public class IssueCommentRepositoryAdapterMongo implements IssueCommentRepository {
+    @Inject
+    IssueCommentRepositoryMongo repository;
 
-    public MongoCommitRepositoryAdapter(MongoCommitRepository repository, CommitMapper mapper,
-                                        MongoCommitSearchStrategy searchStrategy) {
+    @Inject
+    IssueCommentMapper mapper;
+
+    @Inject
+    IssueCommentSearchStrategyMongo searchStrategy;
+
+    public IssueCommentRepositoryAdapterMongo(IssueCommentRepositoryMongo repository,
+                                              IssueCommentMapper mapper,
+                                              IssueCommentSearchStrategyMongo searchStrategy) {
         this.repository = repository;
         this.mapper = mapper;
         this.searchStrategy = searchStrategy;
@@ -28,13 +35,13 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
 
 
     @Override
-    public Uni<Commit> persist(Commit commit) {
-        CommitEntity entity = mapper.toEntity(commit);
+    public Uni<IssueComment> persist(IssueComment commit) {
+        IssueCommentEntity entity = mapper.toEntity(commit);
         return repository.persist(entity).map(mapper::toDomain);
     }
 
     @Override
-    public Uni<List<Commit>> persist(List<Commit> contributions) {
+    public Uni<List<IssueComment>> persist(List<IssueComment> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
@@ -44,53 +51,53 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
     }
 
     @Override
-    public Uni<Void> delete(Commit contribution) {
+    public Uni<Void> delete(IssueComment contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.delete(entity);
     }
 
     @Override
-    public Uni<Long> delete(List<Commit> contributions) {
+    public Uni<Long> delete(List<IssueComment> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
-                               .map(CommitEntity::id)
+                               .map(IssueCommentEntity::id)
                                .toList();
         return repository.deleteById(ids);
     }
 
     @Override
-    public Uni<Commit> update(Commit contribution) {
+    public Uni<IssueComment> update(IssueComment contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.update(entity)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<Commit> findById(String id) {
+    public Uni<IssueComment> findById(String id) {
         return repository.findById(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<Commit> findByGitHubId(String id) {
+    public Uni<IssueComment> findByGitHubId(String id) {
         return repository.findByGitHubId(id)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Commit> findByUserId(String id) {
+    public Multi<IssueComment> findByUserId(String id) {
         return repository.findByUserId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Commit> findByRepoId(String id) {
+    public Multi<IssueComment> findByRepoId(String id) {
         return repository.findByRepoId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<Commit> findByUserAndRepoId(String userId, String repoId) {
+    public Multi<IssueComment> findByUserAndRepoId(String userId, String repoId) {
         return repository.findByUserAndRepoId(new ObjectId(userId), new ObjectId(repoId))
                          .map(mapper::toDomain);
     }
@@ -109,10 +116,9 @@ public class MongoCommitRepositoryAdapter implements CommitRepository {
     }
 
     @Override
-    public Uni<PagedResponse<Commit>> search(CommitSearchCriteria criteria) {
+    public Uni<PagedResponse<IssueComment>> search(IssueCommentSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
                                      mapper::toDomain));
     }
-
 }

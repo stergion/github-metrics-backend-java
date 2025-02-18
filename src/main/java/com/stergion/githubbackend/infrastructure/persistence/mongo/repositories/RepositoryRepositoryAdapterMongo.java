@@ -7,11 +7,11 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public class MongoRepositoryRepositoryAdapter implements RepositoryRepository {
-    private final MongoRepositoryRepository repository;
+public class RepositoryRepositoryAdapterMongo implements RepositoryRepository {
+    private final RepositoryRepositoryMongo repository;
     private final RepositoryMapper mapper;
 
-    public MongoRepositoryRepositoryAdapter(MongoRepositoryRepository repository,
+    public RepositoryRepositoryAdapterMongo(RepositoryRepositoryMongo repository,
                                             RepositoryMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;

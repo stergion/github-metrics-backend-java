@@ -7,7 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.types.ObjectId;
 
 @ApplicationScoped
-public final class MongoIssueRepository implements MongoContributionRepository<IssueEntity> {
+public final class IssueRepositoryMongo implements ContributionRepositoryMongo<IssueEntity> {
     public Multi<IssueEntity> findByUserIdAndState(ObjectId testUserId, IssueState issueState) {
         return find("userId =?1 and state =?2", testUserId, issueState).stream();
     }

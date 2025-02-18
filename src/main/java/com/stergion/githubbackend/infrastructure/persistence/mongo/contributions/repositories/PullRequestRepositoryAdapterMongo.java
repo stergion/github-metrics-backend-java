@@ -7,21 +7,21 @@ import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullRequestSearchCriteria;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestEntity;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.PullRequestMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoPullRequestSearchStrategy;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.PullRequestSearchStrategyMongo;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public class MongoPullRequestRepositoryAdapter implements PullRequestRepository {
-    private final MongoPullRequestRepository repository;
+public class PullRequestRepositoryAdapterMongo implements PullRequestRepository {
+    private final PullRequestRepositoryMongo repository;
     private final PullRequestMapper mapper;
-    private final MongoPullRequestSearchStrategy searchStrategy;
+    private final PullRequestSearchStrategyMongo searchStrategy;
 
-    public MongoPullRequestRepositoryAdapter(MongoPullRequestRepository repository,
+    public PullRequestRepositoryAdapterMongo(PullRequestRepositoryMongo repository,
                                              PullRequestMapper mapper,
-                                             MongoPullRequestSearchStrategy searchStrategy) {
+                                             PullRequestSearchStrategyMongo searchStrategy) {
         this.repository = repository;
         this.mapper = mapper;
         this.searchStrategy = searchStrategy;

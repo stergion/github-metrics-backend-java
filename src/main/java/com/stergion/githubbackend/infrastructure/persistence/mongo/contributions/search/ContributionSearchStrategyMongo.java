@@ -14,7 +14,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.fields.RangeableFi
 import com.stergion.githubbackend.domain.contirbutions.search.fields.TimeField;
 import com.stergion.githubbackend.domain.utils.JsonObjectMapper;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.ContributionEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoContributionRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.ContributionRepositoryMongo;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Uni;
 import org.bson.Document;
@@ -28,18 +28,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public abstract class MongoContributionSearchStrategy<T extends ContributionEntity,
+public abstract class ContributionSearchStrategyMongo<T extends ContributionEntity,
         U extends BaseSearchCriteria<? extends RangeField, ? extends TimeField>>
         implements ContributionSearchStrategy<T, U> {
 
-    protected MongoContributionRepository<T> repository;
+    protected ContributionRepositoryMongo<T> repository;
     protected CodecRegistry codecRegistry;
 
-    protected MongoContributionSearchStrategy() {
+    protected ContributionSearchStrategyMongo() {
         // no-args constructor for CDI
     }
 
-    protected MongoContributionSearchStrategy(MongoContributionRepository<T> repository) {
+    protected ContributionSearchStrategyMongo(ContributionRepositoryMongo<T> repository) {
         this.repository = repository;
         this.codecRegistry = repository != null ? repository.mongoCollection()
                                                             .getCodecRegistry() : null;

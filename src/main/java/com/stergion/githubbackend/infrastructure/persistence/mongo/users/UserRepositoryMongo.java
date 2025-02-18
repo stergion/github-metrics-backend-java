@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class MongoUserRepository implements PanacheMongoRepository<UserEntity> {
+public class UserRepositoryMongo implements PanacheMongoRepository<UserEntity> {
 
     private void setTimestamps(UserEntity user) {
         if (user.id == null) {  // New user

@@ -5,7 +5,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.IssueCommentSearch
 import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoIssueCommentRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.IssueCommentRepositoryMongo;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.conversions.Bson;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class MongoIssueCommentSearchStrategy
-        extends MongoContributionSearchStrategy<IssueCommentEntity, IssueCommentSearchCriteria>
+public class IssueCommentSearchStrategyMongo
+        extends ContributionSearchStrategyMongo<IssueCommentEntity, IssueCommentSearchCriteria>
         implements IssueCommentSearchStrategy {
 
-    public MongoIssueCommentSearchStrategy(MongoIssueCommentRepository repository) {
+    public IssueCommentSearchStrategyMongo(IssueCommentRepositoryMongo repository) {
         super(repository);
     }
 

@@ -20,11 +20,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@DisplayName("MongoUserRepository Tests")
-class MongoUserRepositoryTest {
+@DisplayName("UserRepositoryMongo Tests")
+class UserRepositoryMongoTest {
 
     @Inject
-    MongoUserRepository userRepository;
+    UserRepositoryMongo userRepository;
 
     private UserEntity testUser;
 

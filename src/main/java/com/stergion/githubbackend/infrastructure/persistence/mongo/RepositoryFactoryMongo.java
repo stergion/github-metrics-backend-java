@@ -10,11 +10,11 @@ import com.stergion.githubbackend.infrastructure.persistence.RepositoryFactory;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.*;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.*;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.*;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.MongoRepositoryRepository;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.MongoRepositoryRepositoryAdapter;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryRepositoryMongo;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryRepositoryAdapterMongo;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.repositories.RepositoryMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.MongoUserRepository;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.users.MongoUserRepositoryAdapter;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserRepositoryMongo;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserRepositoryAdapterMongo;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.users.UserMapper;
 import com.stergion.githubbackend.infrastructure.persistence.utils.Database;
 import com.stergion.githubbackend.infrastructure.persistence.utils.DatabaseType;
@@ -23,69 +23,69 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 @Database(DatabaseType.MONGO)
-public class MongoRepositoryFactory implements RepositoryFactory {
+public class RepositoryFactoryMongo implements RepositoryFactory {
 
     @Inject
-    MongoUserRepository userRepository;
+    UserRepositoryMongo userRepository;
     @Inject
     UserMapper userMapper;
 
     @Inject
-    MongoRepositoryRepository repositoryRepository;
+    RepositoryRepositoryMongo repositoryRepository;
     @Inject
     RepositoryMapper repositoryMapper;
 
     @Inject
-    MongoCommitRepository commitRepository;
+    CommitRepositoryMongo commitRepository;
     @Inject
     CommitMapper commitMapper;
     @Inject
-    MongoCommitSearchStrategy commitSearchStrategy;
+    CommitSearchStrategyMongo commitSearchStrategy;
 
     @Inject
-    MongoIssueCommentRepository issueCommentRepository;
+    IssueCommentRepositoryMongo issueCommentRepository;
     @Inject
     IssueCommentMapper issueCommentMapper;
     @Inject
-    MongoIssueCommentSearchStrategy issueCommentSearchStrategy;
+    IssueCommentSearchStrategyMongo issueCommentSearchStrategy;
 
     @Inject
-    MongoIssueRepository issueRepository;
+    IssueRepositoryMongo issueRepository;
     @Inject
     IssueMapper issueMapper;
     @Inject
-    MongoIssueSearchStrategy issueSearchStrategy;
+    IssueSearchStrategyMongo issueSearchStrategy;
 
     @Inject
-    MongoPullRequestRepository pullRequestRepository;
+    PullRequestRepositoryMongo pullRequestRepository;
     @Inject
     PullRequestMapper pullRequestMapper;
     @Inject
-    MongoPullRequestSearchStrategy pullRequestSearchStrategy;
+    PullRequestSearchStrategyMongo pullRequestSearchStrategy;
 
     @Inject
-    MongoPullRequestReviewRepository reviewRepository;
+    PullRequestReviewRepositoryMongo reviewRepository;
     @Inject
     PullRequestReviewMapper reviewMapper;
     @Inject
-    MongoPullRequestReviewSearchStrategy reviewSearchStrategy;
+    PullRequestReviewSearchStrategyMongo reviewSearchStrategy;
 
 
     @Override
     public UserRepository createUserRepository() {
-        return new MongoUserRepositoryAdapter(userRepository, userMapper);
+        return new UserRepositoryAdapterMongo(userRepository, userMapper);
 
     }
 
 
     @Override
     public RepositoryRepository createRepositoryRepository() {
-        return new MongoRepositoryRepositoryAdapter(repositoryRepository, repositoryMapper);
+        return new RepositoryRepositoryAdapterMongo(repositoryRepository, repositoryMapper);
     }
 
     @Override
     public CommitRepository createCommitRepository() {
-        return new MongoCommitRepositoryAdapter(
+        return new CommitRepositoryAdapterMongo(
                 commitRepository,
                 commitMapper,
                 commitSearchStrategy
@@ -94,7 +94,7 @@ public class MongoRepositoryFactory implements RepositoryFactory {
 
     @Override
     public IssueCommentRepository createIssueCommentRepository() {
-        return new MongoIssueCommentRepositoryAdapter(
+        return new IssueCommentRepositoryAdapterMongo(
                 issueCommentRepository,
                 issueCommentMapper,
                 issueCommentSearchStrategy
@@ -103,12 +103,12 @@ public class MongoRepositoryFactory implements RepositoryFactory {
 
     @Override
     public IssueRepository createIssueRepository() {
-        return new MongoIssueRepositoryAdapter(issueRepository, issueMapper, issueSearchStrategy);
+        return new IssueRepositoryAdapterMongo(issueRepository, issueMapper, issueSearchStrategy);
     }
 
     @Override
     public PullRequestRepository createPullRequestRepository() {
-        return new MongoPullRequestRepositoryAdapter(
+        return new PullRequestRepositoryAdapterMongo(
                 pullRequestRepository,
                 pullRequestMapper,
                 pullRequestSearchStrategy
@@ -116,8 +116,8 @@ public class MongoRepositoryFactory implements RepositoryFactory {
     }
 
     @Override
-    public MongoPullRequestReviewRepositoryAdapter createPullRequestReviewRepository() {
-        return new MongoPullRequestReviewRepositoryAdapter(
+    public PullRequestReviewRepositoryAdapterMongo createPullRequestReviewRepository() {
+        return new PullRequestReviewRepositoryAdapterMongo(
                 reviewRepository,
                 reviewMapper,
                 reviewSearchStrategy

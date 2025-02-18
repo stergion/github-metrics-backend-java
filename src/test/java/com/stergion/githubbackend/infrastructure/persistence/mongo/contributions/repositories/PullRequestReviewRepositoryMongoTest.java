@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @DisplayName("PullRequestReview Repository Tests")
-class MongoPullRequestReviewRepositoryTest {
+class PullRequestReviewRepositoryMongoTest {
 
     @Inject
-    MongoPullRequestReviewRepository pullRequestReviewRepository;
+    PullRequestReviewRepositoryMongo pullRequestReviewRepository;
 
     private static final ObjectId TEST_USER_ID = new ObjectId();
     private static final ObjectId TEST_REPO_ID = new ObjectId();

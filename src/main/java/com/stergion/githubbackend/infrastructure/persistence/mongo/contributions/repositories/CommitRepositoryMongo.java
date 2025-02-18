@@ -4,5 +4,5 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public final class MongoCommitRepository implements MongoContributionRepository<CommitEntity> {
+public final class CommitRepositoryMongo implements ContributionRepositoryMongo<CommitEntity> {
 }

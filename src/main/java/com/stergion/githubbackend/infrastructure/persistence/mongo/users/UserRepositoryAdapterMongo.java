@@ -5,12 +5,12 @@ import com.stergion.githubbackend.domain.users.UserRepository;
 
 import java.util.List;
 
-public class MongoUserRepositoryAdapter implements UserRepository {
-    private final MongoUserRepository repository;
+public class UserRepositoryAdapterMongo implements UserRepository {
+    private final UserRepositoryMongo repository;
 
     private final UserMapper mapper;
 
-    public MongoUserRepositoryAdapter(MongoUserRepository userRepository, UserMapper userMapper) {
+    public UserRepositoryAdapterMongo(UserRepositoryMongo userRepository, UserMapper userMapper) {
         this.repository = userRepository;
         this.mapper = userMapper;
     }

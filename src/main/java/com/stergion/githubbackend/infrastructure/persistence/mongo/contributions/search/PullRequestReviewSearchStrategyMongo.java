@@ -6,7 +6,7 @@ import com.stergion.githubbackend.domain.contirbutions.search.criteria.PullReque
 import com.stergion.githubbackend.domain.contirbutions.search.fields.CommonField;
 import com.stergion.githubbackend.domain.contirbutions.search.fields.PullRequestReviewField;
 import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.PullRequestReviewEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.MongoPullRequestReviewRepository;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories.PullRequestReviewRepositoryMongo;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.conversions.Bson;
@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class MongoPullRequestReviewSearchStrategy
-        extends MongoContributionSearchStrategy<PullRequestReviewEntity,
-        PullRequestReviewSearchCriteria>
+public class PullRequestReviewSearchStrategyMongo
+        extends ContributionSearchStrategyMongo<PullRequestReviewEntity,
+                PullRequestReviewSearchCriteria>
         implements PullRequestReviewSearchStrategy {
 
-    public MongoPullRequestReviewSearchStrategy(MongoPullRequestReviewRepository repository) {
+    public PullRequestReviewSearchStrategyMongo(PullRequestReviewRepositoryMongo repository) {
         super(repository);
     }
 

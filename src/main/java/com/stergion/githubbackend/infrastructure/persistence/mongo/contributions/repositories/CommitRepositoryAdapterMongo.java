@@ -1,33 +1,26 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.repositories;
 
 
-import com.stergion.githubbackend.domain.contirbutions.models.IssueComment;
-import com.stergion.githubbackend.domain.contirbutions.repositories.IssueCommentRepository;
+import com.stergion.githubbackend.domain.contirbutions.models.Commit;
+import com.stergion.githubbackend.domain.contirbutions.repositories.CommitRepository;
 import com.stergion.githubbackend.domain.contirbutions.search.PagedResponse;
-import com.stergion.githubbackend.domain.contirbutions.search.criteria.IssueCommentSearchCriteria;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.IssueCommentEntity;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.IssueCommentMapper;
-import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.MongoIssueCommentSearchStrategy;
+import com.stergion.githubbackend.domain.contirbutions.search.criteria.CommitSearchCriteria;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.entities.CommitEntity;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.mappers.CommitMapper;
+import com.stergion.githubbackend.infrastructure.persistence.mongo.contributions.search.CommitSearchStrategyMongo;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
-public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepository {
-    @Inject
-    MongoIssueCommentRepository repository;
+public class CommitRepositoryAdapterMongo implements CommitRepository {
+    private final CommitRepositoryMongo repository;
+    private final CommitMapper mapper;
+    private final CommitSearchStrategyMongo searchStrategy;
 
-    @Inject
-    IssueCommentMapper mapper;
-
-    @Inject
-    MongoIssueCommentSearchStrategy searchStrategy;
-
-    public MongoIssueCommentRepositoryAdapter(MongoIssueCommentRepository repository,
-                                              IssueCommentMapper mapper,
-                                              MongoIssueCommentSearchStrategy searchStrategy) {
+    public CommitRepositoryAdapterMongo(CommitRepositoryMongo repository, CommitMapper mapper,
+                                        CommitSearchStrategyMongo searchStrategy) {
         this.repository = repository;
         this.mapper = mapper;
         this.searchStrategy = searchStrategy;
@@ -35,13 +28,13 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
 
 
     @Override
-    public Uni<IssueComment> persist(IssueComment commit) {
-        IssueCommentEntity entity = mapper.toEntity(commit);
+    public Uni<Commit> persist(Commit commit) {
+        CommitEntity entity = mapper.toEntity(commit);
         return repository.persist(entity).map(mapper::toDomain);
     }
 
     @Override
-    public Uni<List<IssueComment>> persist(List<IssueComment> contributions) {
+    public Uni<List<Commit>> persist(List<Commit> contributions) {
         var entities = contributions.stream()
                                     .map(mapper::toEntity)
                                     .toList();
@@ -51,53 +44,53 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
     }
 
     @Override
-    public Uni<Void> delete(IssueComment contribution) {
+    public Uni<Void> delete(Commit contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.delete(entity);
     }
 
     @Override
-    public Uni<Long> delete(List<IssueComment> contributions) {
+    public Uni<Long> delete(List<Commit> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
-                               .map(IssueCommentEntity::id)
+                               .map(CommitEntity::id)
                                .toList();
         return repository.deleteById(ids);
     }
 
     @Override
-    public Uni<IssueComment> update(IssueComment contribution) {
+    public Uni<Commit> update(Commit contribution) {
         var entity = mapper.toEntity(contribution);
         return repository.update(entity)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<IssueComment> findById(String id) {
+    public Uni<Commit> findById(String id) {
         return repository.findById(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Uni<IssueComment> findByGitHubId(String id) {
+    public Uni<Commit> findByGitHubId(String id) {
         return repository.findByGitHubId(id)
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<IssueComment> findByUserId(String id) {
+    public Multi<Commit> findByUserId(String id) {
         return repository.findByUserId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<IssueComment> findByRepoId(String id) {
+    public Multi<Commit> findByRepoId(String id) {
         return repository.findByRepoId(new ObjectId(id))
                          .map(mapper::toDomain);
     }
 
     @Override
-    public Multi<IssueComment> findByUserAndRepoId(String userId, String repoId) {
+    public Multi<Commit> findByUserAndRepoId(String userId, String repoId) {
         return repository.findByUserAndRepoId(new ObjectId(userId), new ObjectId(repoId))
                          .map(mapper::toDomain);
     }
@@ -116,9 +109,10 @@ public class MongoIssueCommentRepositoryAdapter implements IssueCommentRepositor
     }
 
     @Override
-    public Uni<PagedResponse<IssueComment>> search(IssueCommentSearchCriteria criteria) {
+    public Uni<PagedResponse<Commit>> search(CommitSearchCriteria criteria) {
         return searchStrategy.search(criteria)
                              .map(response -> PagedResponse.map(response,
                                      mapper::toDomain));
     }
+
 }
