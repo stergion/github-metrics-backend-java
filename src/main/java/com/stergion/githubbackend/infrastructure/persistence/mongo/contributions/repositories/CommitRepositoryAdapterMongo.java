@@ -50,12 +50,12 @@ public class CommitRepositoryAdapterMongo implements CommitRepository {
     }
 
     @Override
-    public Uni<Long> delete(List<Commit> contributions) {
+    public Uni<Void> delete(List<Commit> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
                                .map(CommitEntity::id)
                                .toList();
-        return repository.deleteById(ids);
+        return repository.deleteById(ids).replaceWithVoid();
     }
 
     @Override

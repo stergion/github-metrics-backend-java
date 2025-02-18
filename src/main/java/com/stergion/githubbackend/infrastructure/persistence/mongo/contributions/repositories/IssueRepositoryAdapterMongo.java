@@ -50,12 +50,12 @@ public class IssueRepositoryAdapterMongo implements IssueRepository {
     }
 
     @Override
-    public Uni<Long> delete(List<Issue> contributions) {
+    public Uni<Void> delete(List<Issue> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
                                .map(IssueEntity::id)
                                .toList();
-        return repository.deleteById(ids);
+        return repository.deleteById(ids).replaceWithVoid();
     }
 
     @Override

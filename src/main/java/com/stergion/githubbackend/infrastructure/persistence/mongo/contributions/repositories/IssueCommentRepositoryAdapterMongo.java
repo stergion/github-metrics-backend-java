@@ -57,12 +57,12 @@ public class IssueCommentRepositoryAdapterMongo implements IssueCommentRepositor
     }
 
     @Override
-    public Uni<Long> delete(List<IssueComment> contributions) {
+    public Uni<Void> delete(List<IssueComment> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
                                .map(IssueCommentEntity::id)
                                .toList();
-        return repository.deleteById(ids);
+        return repository.deleteById(ids).replaceWithVoid();
     }
 
     @Override

@@ -51,12 +51,12 @@ public class PullRequestRepositoryAdapterMongo implements PullRequestRepository 
     }
 
     @Override
-    public Uni<Long> delete(List<PullRequest> contributions) {
+    public Uni<Void> delete(List<PullRequest> contributions) {
         var ids = contributions.stream()
                                .map(mapper::toEntity)
                                .map(PullRequestEntity::id)
                                .toList();
-        return repository.deleteById(ids);
+        return repository.deleteById(ids).replaceWithVoid();
     }
 
     @Override

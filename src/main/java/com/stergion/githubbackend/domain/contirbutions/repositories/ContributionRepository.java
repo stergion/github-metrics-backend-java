@@ -15,7 +15,7 @@ public interface ContributionRepository<T extends Contribution, C extends BaseSe
 
     Uni<Void> delete(T contribution);
 
-    Uni<Long> delete(List<T> contributions);
+    Uni<Void> delete(List<T> contributions);
 
     Uni<T> update(T contribution);
 
