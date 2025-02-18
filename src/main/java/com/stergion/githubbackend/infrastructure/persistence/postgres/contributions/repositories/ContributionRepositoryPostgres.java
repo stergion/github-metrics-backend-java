@@ -7,10 +7,10 @@ import io.smallrye.mutiny.Uni;
 import java.util.List;
 import java.util.UUID;
 
-public sealed interface ContributionRepository<T extends ContributionEntity>
+public sealed interface ContributionRepositoryPostgres<T extends ContributionEntity>
         extends PanacheRepositoryBase<T, UUID>
-        permits CommitRepository, IssueRepository, IssueCommentRepository, PullRequestRepository,
-        PullRequestReviewRepository {
+        permits CommitRepositoryPostgres, IssueRepositoryPostgres, IssueCommentRepositoryPostgres, PullRequestRepositoryPostgres,
+        PullRequestReviewRepositoryPostgres {
 
     default Uni<T> findById(UUID id) {
         return find("id", id).firstResult();

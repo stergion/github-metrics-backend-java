@@ -1,33 +1,35 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueEntity;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestReviewEntity;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
-public final class IssueRepository implements ContributionRepository<IssueEntity> {
+public final class PullRequestReviewRepositoryPostgres
+        implements ContributionRepositoryPostgres<PullRequestReviewEntity> {
+
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
     @Override
     public Uni<Long> deleteAll() {
         // Delete associations
-        String deleteIssuesLabelsQuery = "DELETE FROM Issues_Labels ";
+        String deleteReviewsReviewCommentsQuery = "DELETE FROM PullRequestReviews_PullRequestReviewComments ";
 
         // Delete associated entities
-        String deleteLabelsQuery = "DELETE FROM Labels";
+        String deleteReviewCommentsQuery = "DELETE FROM PullRequestReviewComments";
 
-        // Delete Issues
-        String deleteIssues =  """
+        // Delete Reviews
+        String deleteReviews = """
                 WITH ids AS MATERIALIZED (
                     SELECT i.id
-                    FROM Issues i
+                    FROM PullRequestReviews i
                     JOIN Contributions c ON i.id = c.id
                 ),
-                delete_issues AS (
-                    DELETE FROM Issues
+                delete_reviews AS (
+                    DELETE FROM PullRequestReviews
                     WHERE id IN (SELECT id FROM ids)
                 ),
                 delete_contributions AS (
@@ -39,19 +41,18 @@ public final class IssueRepository implements ContributionRepository<IssueEntity
                 """;
 
         return sessionFactory.withTransaction((session, tx) ->
-                        session.createNativeQuery(deleteIssuesLabelsQuery)
+                        session.createNativeQuery(deleteReviewsReviewCommentsQuery)
                                .executeUpdate()
                                .flatMap(result ->
-                                               session.createNativeQuery(deleteLabelsQuery)
+                                               session.createNativeQuery(deleteReviewCommentsQuery)
                                                       .executeUpdate()
                                        )
                                .flatMap(result ->
-                                               session.createNativeQuery(deleteIssues)
+                                               session.createNativeQuery(deleteReviews)
                                                       .executeUpdate()
                                        )
                                .map(Long::valueOf)
                                              );
 
     }
-
 }

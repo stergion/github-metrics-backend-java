@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class UserRepository implements PanacheRepositoryBase<UserEntity, UUID> {
+public class UserRepositoryPostgres implements PanacheRepositoryBase<UserEntity, UUID> {
 
     public Uni<UserEntity> findByLogin(String login) {
         return find("login", login).firstResult();

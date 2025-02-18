@@ -1,35 +1,33 @@
 package com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.repositories;
 
-import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestReviewEntity;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueEntity;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
-public final class PullRequestReviewRepository
-        implements ContributionRepository<PullRequestReviewEntity> {
-
+public final class IssueRepositoryPostgres implements ContributionRepositoryPostgres<IssueEntity> {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
     @Override
     public Uni<Long> deleteAll() {
         // Delete associations
-        String deleteReviewsReviewCommentsQuery = "DELETE FROM PullRequestReviews_PullRequestReviewComments ";
+        String deleteIssuesLabelsQuery = "DELETE FROM Issues_Labels ";
 
         // Delete associated entities
-        String deleteReviewCommentsQuery = "DELETE FROM PullRequestReviewComments";
+        String deleteLabelsQuery = "DELETE FROM Labels";
 
-        // Delete Reviews
-        String deleteReviews = """
+        // Delete Issues
+        String deleteIssues =  """
                 WITH ids AS MATERIALIZED (
                     SELECT i.id
-                    FROM PullRequestReviews i
+                    FROM Issues i
                     JOIN Contributions c ON i.id = c.id
                 ),
-                delete_reviews AS (
-                    DELETE FROM PullRequestReviews
+                delete_issues AS (
+                    DELETE FROM Issues
                     WHERE id IN (SELECT id FROM ids)
                 ),
                 delete_contributions AS (
@@ -41,18 +39,19 @@ public final class PullRequestReviewRepository
                 """;
 
         return sessionFactory.withTransaction((session, tx) ->
-                        session.createNativeQuery(deleteReviewsReviewCommentsQuery)
+                        session.createNativeQuery(deleteIssuesLabelsQuery)
                                .executeUpdate()
                                .flatMap(result ->
-                                               session.createNativeQuery(deleteReviewCommentsQuery)
+                                               session.createNativeQuery(deleteLabelsQuery)
                                                       .executeUpdate()
                                        )
                                .flatMap(result ->
-                                               session.createNativeQuery(deleteReviews)
+                                               session.createNativeQuery(deleteIssues)
                                                       .executeUpdate()
                                        )
                                .map(Long::valueOf)
                                              );
 
     }
+
 }

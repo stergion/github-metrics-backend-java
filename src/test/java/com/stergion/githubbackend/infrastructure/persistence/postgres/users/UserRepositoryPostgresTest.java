@@ -2,7 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.users;
 
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepositoryPostgres;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.vertx.RunOnVertxContext;
@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @DisplayName("User Repository Tests")
-class UserRepositoryTest {
+class UserRepositoryPostgresTest {
 
     @Inject
-    UserRepository userRepository;
+    UserRepositoryPostgres userRepository;
 
 
     @Inject
-    RepositoryRepository repositoryRepository;
+    RepositoryRepositoryPostgres repositoryRepository;
 
     @AfterEach
     @RunOnVertxContext

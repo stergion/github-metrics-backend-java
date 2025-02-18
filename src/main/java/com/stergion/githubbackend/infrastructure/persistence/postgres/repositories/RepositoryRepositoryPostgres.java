@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class RepositoryRepository implements PanacheRepositoryBase<RepositoryEntity, UUID> {
+public class RepositoryRepositoryPostgres implements PanacheRepositoryBase<RepositoryEntity, UUID> {
     @Inject
     EntityManagerFactory em;
     @Inject

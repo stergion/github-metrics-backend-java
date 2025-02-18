@@ -3,9 +3,9 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.IssueCommentEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepositoryPostgres;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepositoryPostgres;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.vertx.RunOnVertxContext;
@@ -21,16 +21,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @DisplayName("Issue Comment Repository Tests")
-class IssueCommentRepositoryTest {
+class IssueCommentRepositoryPostgresTest {
 
     @Inject
-    IssueCommentRepository issueCommentRepository;
+    IssueCommentRepositoryPostgres issueCommentRepository;
 
     @Inject
-    UserRepository userRepository;
+    UserRepositoryPostgres userRepository;
 
     @Inject
-    RepositoryRepository repositoryRepository;
+    RepositoryRepositoryPostgres repositoryRepository;
 
     @Inject
     Mutiny.SessionFactory sessionFactory;

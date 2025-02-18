@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @DisplayName("Repository Repository Tests")
-class RepositoryRepositoryTest {
+class RepositoryRepositoryPostgresTest {
 
     @Inject
-    RepositoryRepository repositoryRepository;
+    RepositoryRepositoryPostgres repositoryRepository;
 
     @Inject
     Mutiny.SessionFactory sessionFactory;

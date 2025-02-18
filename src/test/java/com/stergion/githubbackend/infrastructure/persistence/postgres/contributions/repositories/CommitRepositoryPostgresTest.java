@@ -3,9 +3,9 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 import com.stergion.githubbackend.infrastructure.persistence.postgres.TestEntityCreators;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.CommitEntity;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryEntity;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.repositories.RepositoryRepositoryPostgres;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserEntity;
-import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepository;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.users.UserRepositoryPostgres;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.AssociatedPullRequest;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.CommitComment;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.File;
@@ -23,16 +23,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @DisplayName("Commit Repository Tests")
-class CommitRepositoryTest {
+class CommitRepositoryPostgresTest {
 
     @Inject
-    CommitRepository commitRepository;
+    CommitRepositoryPostgres commitRepository;
 
     @Inject
-    UserRepository userRepository;
+    UserRepositoryPostgres userRepository;
 
     @Inject
-    RepositoryRepository repositoryRepository;
+    RepositoryRepositoryPostgres repositoryRepository;
 
     @Inject
     Mutiny.SessionFactory sessionFactory;

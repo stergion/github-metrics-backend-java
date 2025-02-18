@@ -7,7 +7,8 @@ import jakarta.inject.Inject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 @ApplicationScoped
-public final class PullRequestRepository implements ContributionRepository<PullRequestEntity> {
+public final class PullRequestRepositoryPostgres
+        implements ContributionRepositoryPostgres<PullRequestEntity> {
     @Inject
     Mutiny.SessionFactory sessionFactory;
 
