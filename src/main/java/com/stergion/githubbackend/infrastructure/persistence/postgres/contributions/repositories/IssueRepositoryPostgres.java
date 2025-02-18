@@ -84,7 +84,7 @@ public final class IssueRepositoryPostgres implements ContributionRepositoryPost
         String deleteLabelsQuery = "DELETE FROM Labels";
 
         // Delete Issues
-        String deleteIssues =  """
+        String deleteIssues = """
                 WITH ids AS MATERIALIZED (
                     SELECT i.id
                     FROM Issues i

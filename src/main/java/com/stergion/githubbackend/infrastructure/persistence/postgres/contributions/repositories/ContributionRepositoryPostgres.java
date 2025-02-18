@@ -33,6 +33,7 @@ public sealed interface ContributionRepositoryPostgres<T extends ContributionEnt
         return find("user.id = ?1 " + "and repository.id = ?2",
                 userId, repositoryId).list();
     }
+
     default Uni<List<UUID>> getRepositoryIds(UUID userId) {
         return list(
                 "SELECT DISTINCT repository.id from Contributions WHERE user.id = ?1",

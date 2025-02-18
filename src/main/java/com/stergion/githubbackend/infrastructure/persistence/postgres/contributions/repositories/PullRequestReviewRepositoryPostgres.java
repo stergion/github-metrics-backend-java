@@ -80,7 +80,8 @@ public final class PullRequestReviewRepositoryPostgres
     @Override
     public Uni<Long> deleteAll() {
         // Delete associations
-        String deleteReviewsReviewCommentsQuery = "DELETE FROM PullRequestReviews_PullRequestReviewComments ";
+        String deleteReviewsReviewCommentsQuery = "DELETE FROM " +
+                                                  "PullRequestReviews_PullRequestReviewComments ";
 
         // Delete associated entities
         String deleteReviewCommentsQuery = "DELETE FROM PullRequestReviewComments";

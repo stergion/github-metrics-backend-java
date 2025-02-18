@@ -108,11 +108,13 @@ public final class PullRequestRepositoryPostgres
                         session.createNativeQuery(deletePullRequestsLabelsQuery)
                                .setParameter(1, userId)
                                .executeUpdate()
-                               .flatMap(result -> session.createNativeQuery(deletePullRequestsPullRequestCommitsQuery)
+                               .flatMap(result -> session.createNativeQuery(
+                                                                 deletePullRequestsPullRequestCommitsQuery)
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
-                               .flatMap(result -> session.createNativeQuery(deletePullRequestsClosingIssuesReferencesQuery)
+                               .flatMap(result -> session.createNativeQuery(
+                                                                 deletePullRequestsClosingIssuesReferencesQuery)
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
@@ -124,7 +126,8 @@ public final class PullRequestRepositoryPostgres
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
-                               .flatMap(result -> session.createNativeQuery(deleteClosingIssuesReferencesQuery)
+                               .flatMap(result -> session.createNativeQuery(
+                                                                 deleteClosingIssuesReferencesQuery)
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
@@ -140,8 +143,10 @@ public final class PullRequestRepositoryPostgres
     public Uni<Long> deleteAll() {
         // Delete associations
         String deletePullRequestsLabelsQuery = "DELETE FROM PullRequests_Labels";
-        String deletePullRequestsPullRequestCommitsQuery = "DELETE FROM PullRequests_PullRequestCommits";
-        String deletePullRequestsClosingIssuesReferencesQuery = "DELETE FROM PullRequests_ClosingIssuesReferences";
+        String deletePullRequestsPullRequestCommitsQuery = "DELETE FROM " +
+                                                           "PullRequests_PullRequestCommits";
+        String deletePullRequestsClosingIssuesReferencesQuery = "DELETE FROM " +
+                                                                "PullRequests_ClosingIssuesReferences";
 
         // Delete associated entities
         String deleteLabelsQuery = "DELETE FROM Labels";
@@ -176,7 +181,8 @@ public final class PullRequestRepositoryPostgres
                                                       .executeUpdate()
                                        )
                                .flatMap(result ->
-                                               session.createNativeQuery(deletePullRequestsClosingIssuesReferencesQuery)
+                                               session.createNativeQuery(
+                                                              deletePullRequestsClosingIssuesReferencesQuery)
                                                       .executeUpdate()
                                        )
                                .flatMap(result ->

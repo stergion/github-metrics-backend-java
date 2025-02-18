@@ -107,16 +107,18 @@ public final class CommitRepositoryPostgres
                         session.createNativeQuery(deleteCommitsAssociatedPullRequestsQuery)
                                .setParameter(1, userId)
                                .executeUpdate()
-                               .flatMap(result -> session.createNativeQuery(deleteCommitsCommitCommentsQuery)
-                                                         .setParameter(1, userId)
-                                                         .executeUpdate()
+                               .flatMap(
+                                       result -> session.createNativeQuery(deleteCommitsCommitCommentsQuery)
+                                                        .setParameter(1, userId)
+                                                        .executeUpdate()
                                        )
                                .flatMap(result -> session.createNativeQuery(deleteCommitsFilesQuery)
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
                                // Now delete the mapped entities
-                               .flatMap(result -> session.createNativeQuery(deleteAssociatedPullRequestsQuery)
+                               .flatMap(result -> session.createNativeQuery(
+                                                                 deleteAssociatedPullRequestsQuery)
                                                          .setParameter(1, userId)
                                                          .executeUpdate()
                                        )
