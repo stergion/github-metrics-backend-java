@@ -9,7 +9,8 @@ import java.util.UUID;
 
 public sealed interface ContributionRepositoryPostgres<T extends ContributionEntity>
         extends PanacheRepositoryBase<T, UUID>
-        permits CommitRepositoryPostgres, IssueRepositoryPostgres, IssueCommentRepositoryPostgres, PullRequestRepositoryPostgres,
+        permits CommitRepositoryPostgres, IssueRepositoryPostgres, IssueCommentRepositoryPostgres
+        , PullRequestRepositoryPostgres,
         PullRequestReviewRepositoryPostgres {
 
     default Uni<T> findById(UUID id) {
@@ -43,9 +44,7 @@ public sealed interface ContributionRepositoryPostgres<T extends ContributionEnt
     }
 
     // Specialized deletion methods
-    default Uni<Long> delete(UUID userId) {
-        return delete("user.id", userId);
-    }
+    Uni<Long> deleteByUserId(UUID userId);
 
     @Override
     Uni<Long> deleteAll();
