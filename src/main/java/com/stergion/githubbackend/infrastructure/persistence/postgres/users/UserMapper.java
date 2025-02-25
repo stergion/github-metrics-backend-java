@@ -31,4 +31,18 @@ public interface UserMapper {
     UserEntity toEntity(User user);
 
     List<UserEntity> toEntity(List<User> user);
+
+    default List<String> mapRepositories(Set<RepositoryEntity> repositories) {
+        return repositories.stream().map(e -> e.getId().toString()).toList();
+    }
+
+    default Set<RepositoryEntity> mapRepositories(List<String> repositories) {
+        return repositories.stream()
+                           .map(id -> {
+                               var repo = new RepositoryEntity();
+                               repo.setId(UUID.fromString(id));
+                               return repo;
+                           }).collect(Collectors.toSet());
+    }
+
 }
