@@ -9,6 +9,7 @@ import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.UserService;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -35,15 +36,16 @@ public class UserResource {
     UserDataManagementService userDataManagementService;
 
     @GET
-    public RestResponse<UserResponse> getUser(String login) {
+    public Uni<RestResponse<UserResponse>> getUser(String login) {
         Log.info("Fetching user: " + login);
 
-        var usr = userService.getUser(login);
+        return userService.getUser(login)
+                          .chain(usr -> Uni.createFrom()
+                                           .item(repositoryService.getRepositories(
+                                                   usr.repositories()))
+                                           .map(repos -> userMapper.toResponse(usr, repos)))
+                          .map(RestResponse::ok);
 
-        List<Repository> repos = repositoryService.getRepositories(usr.repositories());
-        UserResponse userResponse = userMapper.toResponse(usr, repos);
-
-        return RestResponse.ok(userResponse);
     }
 
     @POST
@@ -80,20 +82,19 @@ public class UserResource {
 
     @GET
     @Path("/repositories")
-    public RestResponse<List<?>> getUserRepositories(String login,
-                                                     @RestQuery @DefaultValue("basic") String detail) {
+    public Uni<RestResponse<List<?>>> getUserRepositories(String login,
+            @RestQuery @DefaultValue("basic") String detail) {
         Log.info("Getting repositories of user: " + login);
 
         var detailLevel = DetailLevel.fromString(detail);
-        List<Repository> repos = userService.getUserRepositories(login);
 
-        Function<Repository, ?> mapper = switch(detailLevel) {
+        Function<Repository, ?> mapper = switch (detailLevel) {
             case FULL -> repositoryMapper::toRepositoryResponse;
             case BASIC -> repositoryMapper::toNameWithOwnerResponse;
         };
 
-        return RestResponse.ok(repos.stream()
-                                    .map(mapper)
-                                    .toList());
+        return userService.getUserRepositories(login)
+                          .map(repos -> repos.stream().map(mapper).toList())
+                          .map(RestResponse::ok);
     }
 }

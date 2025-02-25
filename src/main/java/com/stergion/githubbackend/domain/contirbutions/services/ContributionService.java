@@ -43,7 +43,7 @@ public abstract class ContributionService<D extends Contribution,
     }
 
     protected ContributionService(ContributionRepository<D, C> repository,
-                                  FetchStrategy<D> fetchStrategy) {
+            FetchStrategy<D> fetchStrategy) {
         this.repository = repository;
         this.fetchStrategy = fetchStrategy;
     }
@@ -60,8 +60,8 @@ public abstract class ContributionService<D extends Contribution,
                         repo -> Uni.createFrom().item(repo)
                                    .emitOn(Infrastructure.getDefaultWorkerPool())
                                    .map(r -> repositoryService.fetchAndCreateRepository(r.owner(),
-                                           r.name()))
-                                                    )
+                                                                                        r.name()))
+                )
                     .collect().asList()
                     .replaceWithVoid();
     }
@@ -78,32 +78,46 @@ public abstract class ContributionService<D extends Contribution,
                     .onItem().transformToUniAndConcatenate(this::ensureRepositoriesExist)
                     .toUni()
                     .chain(ignored -> Uni.createFrom().item(contributions))
-                    .map(this::injectUserRef)
-                    .map(this::injectRepositoryRef)
+                    .chain(this::injectUserRef)
+                    .chain(this::injectRepositoryRef)
                     .flatMap(item -> repository.persist(item));
     }
 
-    private List<D> injectRepositoryRef(List<D> batch) {
-        return batch.stream()
-                    .peek(contribution -> {
-                        var repo = repositoryService.getRepository(
-                                contribution.getRepository().owner(),
-                                contribution.getRepository().name()
-                                                                  );
-                        contribution.setRepository(
-                                new RepositoryProjection(repo.id(), repo.owner(), repo.name()));
-                    })
-                    .toList();
+    private Uni<List<D>> injectRepositoryRef(List<D> batch) {
+        if (batch.isEmpty()) {
+            return Uni.createFrom().item(batch);
+        }
+
+        return Multi.createFrom().iterable(batch)
+                    .onItem().transform(contribution -> {
+                    var repo = repositoryService.getRepository(
+                            contribution.getRepository().owner(),
+                            contribution.getRepository().name()
+                    );
+                    contribution.setRepository(
+                            new RepositoryProjection(repo.id(), repo.owner(), repo.name()));
+                    return contribution;
+                })
+                    .collect().asList();
     }
 
-    private List<D> injectUserRef(List<D> batch) {
-        return batch.stream()
-                    .peek(contribution -> {
-                        var user = userService.getUser(contribution.getUser().login());
-                        contribution.setUser(
-                                new UserProjection(user.id(), user.login(), user.name()));
-                    })
-                    .toList();
+    private Uni<List<D>> injectUserRef(List<D> batch) {
+        if (batch.isEmpty()) {
+            return Uni.createFrom().item(batch);
+        }
+
+        return Multi.createFrom().iterable(batch)
+                    .onItem()
+                    .transformToUniAndMerge(
+                            contr -> userService.getUser(contr.getUser().login())
+                                                .map(user -> {
+                                                    contr.setUser(new UserProjection(user.id(),
+                                                                                     user.login(),
+                                                                                     user.name()));
+                                                    return contr;
+                                                })
+                    )
+                    .collect().asList();
     }
 
     /**
@@ -118,15 +132,26 @@ public abstract class ContributionService<D extends Contribution,
      * Get all contributions for a user
      */
     public Multi<D> getUserContributions(String login) {
-        String userId = userService.getUserId(login);
-        return repository.findByUserId(userId);
+//        String userId = userService.getUserId(login);
+//        return repository.findByUserId(userId);
+        return userService.getUserId(login)
+                          .onItem().transformToMulti(repository::findByUserId);
     }
 
     public Multi<D> getUserContributions(String login, String owner, String name) {
-        String userId = userService.getUserId(login);
-        String repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
-
-        return repository.findByUserAndRepoId(userId, repoId);
+//        String userId = userService.getUserId(login);
+//        String repoId = repositoryService.getRepositoryId(new NameWithOwner(owner, name));
+//
+//        return repository.findByUserAndRepoId(userId, repoId);
+        return Uni.combine().all().unis(
+                userService.getUserId(login),
+                Uni.createFrom().item(repositoryService.getRepositoryId(new NameWithOwner(owner, name)))
+                ).asTuple()
+                .onItem().transformToMulti(tuple -> {
+                    String userId = tuple.getItem1();
+                    String repoId = tuple.getItem2();
+                    return repository.findByUserAndRepoId(userId, repoId);
+                });
     }
 
     /**

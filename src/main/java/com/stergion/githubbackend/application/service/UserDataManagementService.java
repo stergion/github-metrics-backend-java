@@ -5,7 +5,9 @@ import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.users.UserAlreadyExistsException;
+import com.stergion.githubbackend.domain.users.UserNotFoundException;
 import com.stergion.githubbackend.domain.users.UserService;
+import com.stergion.githubbackend.domain.utils.types.Github;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -13,6 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.resteasy.reactive.common.NotImplementedYet;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -53,28 +56,29 @@ public class UserDataManagementService {
         LocalDateTime from = LocalDateTime.now().minusMonths(3);
         LocalDateTime to = LocalDateTime.now();
 
-        // Check if user already exists
-        Log.debug("Checking if user '" + login + "' exists");
-        if (userService.check(login)) {
-            throw new UserAlreadyExistsException(login);
-        }
 
         // Create new user
         Log.debug("Fetching and saving user info of '" + login + "'");
-        User user = userService.fetchAndCreateUser(login);
+        User user = userService.getUser(login)
+                               .onItem().ifNotNull().failWith(new UserAlreadyExistsException(login))
+                               .onFailure(e -> e instanceof UserNotFoundException)
+                               .recoverWithUni(userService.fetchAndCreateUser(login))
+                               .await().indefinitely();
+
 
         // Update user Repositories and Contributions
+
         doUpdate(user, from, to);
     }
 
     public void updateUser(String login) {
-        User user = userService.getUser(login);
+        User user = userService.getUser(login).await().indefinitely();
 
         // Update user Repositories and Contributions
         doUpdate(user, user.updatedAt(), LocalDateTime.now());
 
         // Update user info
-        userService.fetchAndUpdateUser(user.login());
+        userService.fetchAndUpdateUser(user.login()).await().indefinitely();
     }
 
     public void reactivateUser() {
@@ -100,21 +104,28 @@ public class UserDataManagementService {
     }
 
     public void deleteUser(String login) {
-        User user = userService.getUser(login);
+        userService.getUser(login)
+                   .invoke(user -> Log.debugf("Deleting user '%s'(id: %s) Commit contributions",
+                                              user.login(), user.id()))
+                   .call(user -> commitService.deleteUserContributions(user.id()))
+                   .invoke(user -> Log.debugf("Deleting user '%s' Issue contributions",
+                                              user.login())
+                   )
+                   .call(user -> issueService.deleteUserContributions(user.id()))
+                   .invoke(user -> Log.debugf("Deleting user '%s' Pull Request contributions",
+                                              user.login()))
+                   .call(user -> pullRequestService.deleteUserContributions(user.id()))
+                   .invoke(user -> Log.debugf(
+                           "Deleting user '%s' Pull Request Review contributions", user.login()))
+                   .call(user -> pullRequestReviewService.deleteUserContributions(user.id()))
+                   .invoke(user -> Log.debugf("Deleting user '%s' Issue Comment contributions",
+                                              user.login()))
+                   .call(user -> issueCommentService.deleteUserContributions(user.id()))
+                   .invoke(user -> Log.debugf("Deleting user '%s' info", user.login()))
+                   .call(user -> userService.deleteUser(user.login()))
+                   .await().indefinitely();
 
-        Log.debugf("Deleting user '%s' Commit contributions", user.login());
-        commitService.deleteUserContributions(user.id());
-        Log.debugf("Deleting user '%s' Issue contributions", user.login());
-        issueService.deleteUserContributions(user.id());
-        Log.debugf("Deleting user '%s' Pull Request contributions", user.login());
-        pullRequestService.deleteUserContributions(user.id());
-        Log.debugf("Deleting user '%s' Pull Request Review contributions", user.login());
-        pullRequestReviewService.deleteUserContributions(user.id());
-        Log.debugf("Deleting user '%s' Issue Comment contributions", user.login());
-        issueCommentService.deleteUserContributions(user.id());
 
-        Log.debugf("Deleting user '%s' info", user.login());
-        userService.deleteUser(login);
     }
 
     private void doUpdate(User user, LocalDateTime from, LocalDateTime to) {
@@ -122,19 +133,19 @@ public class UserDataManagementService {
         // Get user repositories
         Log.debug("Fetching and saving repository info of '" + user.login() + "'");
         List<Repository> repos = repositoryService.fetchAndCreateUserRepositories(login,
-                                                             from, to)
+                                                                                  from, to)
                                                   .collect()
                                                   .asList()
                                                   .map(lists -> lists.stream()
-                                                                        .flatMap(List::stream)
-                                                                        .toList())
+                                                                     .flatMap(List::stream)
+                                                                     .toList())
                                                   .await()
                                                   .indefinitely();
         Log.debugf("Number of repositories created: %d", repos.size());
 
         Log.debug("Updating repository references of '" + login + "'");
 
-        user = userService.updateRepositories(user, repos);
+        user = userService.updateRepositories(user, repos).await().indefinitely();
 
         Log.debugf("User '%s' updated:\n%s", user.login(), user);
 
@@ -155,44 +166,49 @@ public class UserDataManagementService {
         Log.debugf("Number of committed repositories created: %d", repos.size());
 
         Log.debug("Updating repository references of '" + login + "'");
-        user = userService.updateRepositories(user, reposCommited);
+        user = userService.updateRepositories(user, reposCommited).await().indefinitely();
 
         Log.debugf("User '%s' updated:\n%s", user.login(), user);
-
+        var EmptyRepo = new Repository(null,
+                                       "all", "repositories",
+                                       new Github("", URI.create("www.example.com")), List.of(), 0,
+                                       "",
+                                       List.of(), 0, 0, List.of(), 0, 0, 0, 0);
         // Update Contributions
         Multi<OperationResult<Repository>> commitResult = performOperation(
                 OperationType.COMMIT,
                 repos,
                 repo -> commitService.fetchAndCreateCommits(login,
-                        repo.owner(),
-                        repo.name(),
-                        from, to));
+                                                            repo.owner(),
+                                                            repo.name(),
+                                                            from, to));
         Multi<OperationResult<Repository>> issueResult = performOperation(
                 OperationType.ISSUE,
-                repos,
+                List.of(EmptyRepo),
                 repo -> issueService.fetchAndCreateIssues(login, from, to));
 
         Multi<OperationResult<Repository>> prResult = performOperation(
                 OperationType.PULL_REQUEST,
-                repos,
+                List.of(EmptyRepo),
                 repo -> pullRequestService.fetchAndCreatePullRequests(login, from, to));
 
         Multi<OperationResult<Repository>> prrResult = performOperation(
                 OperationType.PULL_REQUEST_REVIEW,
-                repos,
+                List.of(EmptyRepo),
                 repo -> pullRequestReviewService.fetchAndCreatePullRequestReviews(login, from, to));
 
         Multi<OperationResult<Repository>> issueCommentResult = performOperation(
                 OperationType.ISSUE_COMMENT,
-                repos,
+                List.of(EmptyRepo),
                 repo -> issueCommentService.fetchAndCreateIssueComments(login, from, to));
 
         Uni<Void> completion = Multi.createBy().merging().streams(commitResult, issueResult,
-                                            prResult, prrResult, issueCommentResult)
+                                                                  prResult, prrResult,
+                                                                  issueCommentResult)
                                     .invoke(op -> {
                                         Log.debugf(
                                                 "Creating contributions of type %s from " +
-                                                        "repository '%s/%s':\t%s",
+                                                "repository '%s/%s':\t%s",
                                                 op.type,
                                                 op.item.owner(),
                                                 op.item.name(),
@@ -222,7 +238,9 @@ public class UserDataManagementService {
                 pullRequestReviewService.getRepositoryIds(user.id()).await().indefinitely());
         reposUpd.addAll(issueCommentService.getRepositoryIds(user.id()).await().indefinitely());
 
-        userService.updateRepositoriesFromIds(user, reposUpd.stream().toList());
+        userService.updateRepositoriesFromIds(user, reposUpd.stream().toList())
+                   .await()
+                   .indefinitely();
     }
 
 
@@ -234,17 +252,19 @@ public class UserDataManagementService {
                     .iterable(items)
                     .onItem()
                     .transformToUniAndMerge(item ->
-                                    operation.apply(item)
-                                             .onFailure().retry().atMost(3)
-                                             .collect().asList()
-                                             .map(result -> new OperationResult<>(type, item,
-                                                     true, null))
-                                             .onFailure()
-                                             .recoverWithItem(
-                                                     error -> new OperationResult<>(type, item,
-                                                             false,
-                                                             error))
-                                           );
+                                                    operation.apply(item)
+                                                             .onFailure().retry().atMost(3)
+                                                             .collect().asList()
+                                                             .map(result -> new OperationResult<>(
+                                                                     type, item,
+                                                                     true, null))
+                                                             .onFailure()
+                                                             .recoverWithItem(
+                                                                     error -> new OperationResult<>(
+                                                                             type, item,
+                                                                             false,
+                                                                             error))
+                    );
     }
 
 }

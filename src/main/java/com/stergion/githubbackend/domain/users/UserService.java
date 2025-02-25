@@ -4,6 +4,8 @@ import com.stergion.githubbackend.domain.repositories.Repository;
 import com.stergion.githubbackend.domain.repositories.RepositoryService;
 import com.stergion.githubbackend.infrastructure.external.githubservice.service.UserClient;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.infrastructure.Infrastructure;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
@@ -24,64 +26,59 @@ public class UserService {
     @Inject
     RepositoryService repositoryService;
 
-    private User fetchUser(String login) {
-        User user = client.getUserInfo(login);
-        if (user == null) {
-            throw new UserNotFoundException(login);
-        }
-        return user;
+    private Uni<User> fetchUser(String login) {
+        return Uni.createFrom().item(() -> client.getUserInfo(login))
+                  .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+                  .onItem().ifNull().failWith(new UserNotFoundException(login))
+                  .onFailure().retry().atMost(3);
     }
 
-    private User createUser(User user) {
+    private Uni<User> createUser(User user) {
         return repository.persist(user);
     }
 
-    private User updateUser(User user) {
+    private Uni<User> updateUser(User user) {
         return repository.update(user);
     }
 
-    public User fetchAndCreateUser(String login) {
-        if (check(login)) {
-            throw new UserAlreadyExistsException(login);
-        }
-        // Create User only if not found
-        User user = fetchUser(login);
+    public Uni<User> fetchAndCreateUser(String login) {
+        return repository.findByLogin(login)
+                         .onItem().ifNotNull()
+                         .failWith(new UserAlreadyExistsException(login))
+                         .onItem().ifNull()
+                         .switchTo(() -> fetchUser(login))
+                         .chain(repository::persist);
 
-        return createUser(user);
+
     }
 
-    public User fetchAndUpdateUser(@NotBlank String login) {
-        if (!check(login)) {
-            throw new UserNotFoundException(login);
-        }
-        User user = fetchUser(login);
-        return updateUser(user);
+    public Uni<User> fetchAndUpdateUser(@NotBlank String login) {
+        return repository.findByLogin(login)
+                         .onItem().ifNull()
+                         .failWith(new UserNotFoundException(login))
+                         .onItem().ifNotNull()
+                         .transformToUni(user -> fetchUser(user.login()))
+                         .chain(repository::update);
+
     }
 
-    public User getUser(String login) {
-        User user = repository.findByLogin(login);
-        if (user == null) {
-            throw new UserNotFoundException(login);
-        }
-        return user;
+    public Uni<User> getUser(String login) {
+        return repository.findByLogin(login)
+                         .onItem().ifNull()
+                         .failWith(new UserNotFoundException(login));
     }
 
-    public String getUserId(@NotNull String login) {
-        User user = repository.findByLogin(login);
-        if (user == null) {
-            throw new UserNotFoundException(login);
-        }
-        return user.id();
+    public Uni<String> getUserId(@NotNull String login) {
+        return repository.findByLogin(login)
+                         .onItem().ifNull()
+                         .failWith(new UserNotFoundException(login))
+                         .map(User::id);
     }
 
-    public boolean check(String login) {
-        return repository.findByLogin(login) != null;
-    }
-
-    public User updateRepositories(User user, List<Repository> repos) {
+    public Uni<User> updateRepositories(User user, List<Repository> repos) {
         if (repos == null || repos.isEmpty()) {
             Log.warn("Received null repository list for user: " + user.login());
-            return user;
+            return Uni.createFrom().item(user);
         }
 
         List<String> ids = repos.stream().map(Repository::id).toList();
@@ -89,17 +86,16 @@ public class UserService {
         return updateRepositoriesFromIds(user, ids);
     }
 
-    public User updateRepositoriesFromIds(User user, List<String> repoIds) {
+    public Uni<User> updateRepositoriesFromIds(User user, List<String> repoIds) {
         if (repoIds == null || repoIds.isEmpty()) {
-            return user;  // No changes needed
+            return Uni.createFrom().item(user);  // No changes needed
         }
 
-        Set<String> uniqueIds = new HashSet<>(
-                user.repositories());  // Start with existing repos
+        Set<String> uniqueIds = new HashSet<>(user.repositories());  // Start with existing repos
         uniqueIds.addAll(repoIds);  // Add new ones
 
         if (uniqueIds.size() == user.repositories().size()) {
-            return user;  // No new unique repos were added
+            return Uni.createFrom().item(user);  // No new unique repos were added
         }
 
         user.repositories().clear();
@@ -108,17 +104,15 @@ public class UserService {
         return repository.update(user);
     }
 
-    public List<Repository> getUserRepositories(String login) {
-        User user = repository.findByLogin(login);
-        if (user == null) {
-            throw new UserNotFoundException(login);
-        }
-
-        List<String> repoIds = user.repositories();
-        return repositoryService.getRepositories(repoIds);
+    public Uni<List<Repository>> getUserRepositories(String login) {
+        return repository.findByLogin(login)
+                         .onItem().ifNull()
+                         .failWith(new UserNotFoundException(login))
+                         .onItem().ifNotNull()
+                         .transform(user -> repositoryService.getRepositories(user.repositories()));
     }
 
-    public void deleteUser(String login) {
-        repository.deleteByLogin(login);
+    public Uni<Void> deleteUser(String login) {
+        return repository.deleteByLogin(login);
     }
 }
