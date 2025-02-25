@@ -1,23 +1,25 @@
 package com.stergion.githubbackend.domain.users;
 
+import io.smallrye.mutiny.Uni;
+
 import java.util.List;
 
 public interface UserRepository {
-    User persist(User user);
+    Uni<User> persist(User user);
 
-    List<User> persist(List<User> users);
+    Uni<Void> persist(List<User> users);
 
-    User update(User user);
+    Uni<User> update(User user);
 
-    List<User> update(List<User> users);
+    Uni<Void> update(List<User> users);
 
-    void delete(User user);
+    Uni<Void> delete(User user);
 
-    void deleteByLogin(String login);
+    Uni<Void> deleteByLogin(String login);
 
-    User findByLogin(String login);
+    Uni<User> findByLogin(String login);
 
-    List<User> findByEmail(String email);
+    Uni<List<User>> findByEmail(String email);
 
-    User findByGitHubId(String id);
+    Uni<User> findByGitHubId(String id);
 }
