@@ -2,6 +2,7 @@ package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
 import com.stergion.githubbackend.domain.users.User;
 import com.stergion.githubbackend.domain.users.UserRepository;
+import io.smallrye.mutiny.Uni;
 
 import java.util.List;
 
@@ -16,66 +17,61 @@ public class UserRepositoryAdapterMongo implements UserRepository {
     }
 
     @Override
-    public User persist(User user) {
+    public Uni<User> persist(User user) {
         UserEntity userEntity = mapper.toEntity(user);
-        repository.persist(userEntity);
-        return mapper.toDomain(userEntity);
+        return repository.persist(userEntity)
+                         .map(mapper::toDomain);
     }
 
     @Override
-    public List<User> persist(List<User> users) {
+    public Uni<Void> persist(List<User> users) {
+        List<UserEntity> userEntities = users.stream()
+                                             .map(mapper::toEntity)
+                                             .toList();
+
+        return repository.persist(userEntities);
+    }
+
+    @Override
+    public Uni<User> update(User user) {
+        UserEntity userEntity = mapper.toEntity(user);
+        return repository.update(userEntity)
+                         .map(mapper::toDomain);
+    }
+
+    @Override
+    public Uni<Void> update(List<User> users) {
         List<UserEntity> userEntities = users.stream().map(mapper::toEntity).toList();
-        repository.persist(userEntities);
-        return userEntities.stream()
-                           .map(mapper::toDomain)
-                           .toList();
+        return repository.update(userEntities);
     }
 
     @Override
-    public User update(User user) {
+    public Uni<Void> delete(User user) {
         UserEntity userEntity = mapper.toEntity(user);
-        repository.update(userEntity);
-        return mapper.toDomain(userEntity);
+        return repository.delete(userEntity);
     }
 
     @Override
-    public List<User> update(List<User> users) {
-        List<UserEntity> userEntities = users.stream().map(mapper::toEntity).toList();
-        repository.update(userEntities);
-        return userEntities.stream()
-                           .map(mapper::toDomain)
-                           .toList();
+    public Uni<Void> deleteByLogin(String login) {
+        return repository.deleteByLogin(login)
+                         .replaceWithVoid();
     }
 
     @Override
-    public void delete(User user) {
-        UserEntity userEntity = mapper.toEntity(user);
-        repository.delete(userEntity);
+    public Uni<User> findByLogin(String login) {
+        return repository.findByLogin(login)
+                         .map(mapper::toDomain);
     }
 
     @Override
-    public void deleteByLogin(String login) {
-        repository.deleteByLogin(login);
+    public Uni<List<User>> findByEmail(String email) {
+        return repository.findByEmail(email)
+                         .map(mapper::toDomain);
     }
 
     @Override
-    public User findByLogin(String login) {
-        UserEntity userEntity = repository.findByLogin(login);
-        return mapper.toDomain(userEntity);
-    }
-
-    @Override
-    public List<User> findByEmail(String email) {
-        List<UserEntity> userEntities = repository.findByEmail(email);
-
-        return userEntities.stream()
-                           .map(mapper::toDomain)
-                           .toList();
-    }
-
-    @Override
-    public User findByGitHubId(String id) {
-        var userEntity = repository.findByGitHubId(id);
-        return mapper.toDomain(userEntity);
+    public Uni<User> findByGitHubId(String id) {
+        return repository.findByGitHubId(id)
+                         .map(mapper::toDomain);
     }
 }
