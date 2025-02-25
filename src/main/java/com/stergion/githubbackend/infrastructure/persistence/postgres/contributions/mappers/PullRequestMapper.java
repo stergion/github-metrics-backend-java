@@ -2,7 +2,9 @@ package com.stergion.githubbackend.infrastructure.persistence.postgres.contribut
 
 import com.stergion.githubbackend.common.mappers.MapStructConfig;
 import com.stergion.githubbackend.domain.contirbutions.models.PullRequest;
+import com.stergion.githubbackend.domain.utils.types.Github;
 import com.stergion.githubbackend.infrastructure.persistence.postgres.contributions.entities.PullRequestEntity;
+import com.stergion.githubbackend.infrastructure.persistence.postgres.utils.types.ClosingIssuesReference;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -22,4 +24,8 @@ public interface PullRequestMapper {
     PullRequestEntity toEntity(PullRequest commit);
 
     List<PullRequestEntity> toEntity(List<PullRequest> commits);
+
+    default ClosingIssuesReference mapClosingIssuesReference(Github gh) {
+        return new ClosingIssuesReference(gh.id(), gh.url());
+    }
 }
