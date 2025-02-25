@@ -1,8 +1,11 @@
 package com.stergion.githubbackend.infrastructure.persistence.mongo.users;
 
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
-import io.quarkus.mongodb.panache.common.PanacheUpdate;
+import io.quarkus.mongodb.panache.common.reactive.ReactivePanacheUpdate;
+import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
 import io.quarkus.panache.common.Parameters;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.LocalDateTime;
@@ -11,19 +14,25 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class UserRepositoryMongo implements PanacheMongoRepository<UserEntity> {
+public class UserRepositoryMongo implements ReactivePanacheMongoRepository<UserEntity> {
 
-    private void setTimestamps(UserEntity user) {
+    private Uni<UserEntity> setTimestamps(UserEntity user) {
         if (user.id == null) {  // New user
             user.createdAt = LocalDateTime.now();
             user.updatedAt = user.createdAt;
+            return Uni.createFrom().item(user);
         } else {  // Existing user
-            UserEntity originalUser = findById(user.id);
-            if (originalUser == null) {
-                throw new RuntimeException("Could not find original user.");
-            }
-            user.createdAt = originalUser.createdAt;
-            user.updatedAt = LocalDateTime.now();
+            return findById(user.id)
+                    .onItem()
+                    .ifNotNull()
+                    .transform(originalUser -> {
+                        user.createdAt = originalUser.createdAt;
+                        user.updatedAt = LocalDateTime.now();
+                        return user;
+                    })
+                    .onItem()
+                    .ifNull()
+                    .failWith(new RuntimeException("Could not find original user."));
         }
     }
 
@@ -32,102 +41,111 @@ public class UserRepositoryMongo implements PanacheMongoRepository<UserEntity> {
     }
 
     @Override
-    public void persist(UserEntity user) {
-        setTimestamps(user);
-        PanacheMongoRepository.super.persist(user);
+    public Uni<UserEntity> persist(UserEntity user) {
+        return setTimestamps(user).chain(ReactivePanacheMongoRepository.super::persist);
     }
 
     @Override
-    public void persist(Stream<UserEntity> users) {
-        users = users.peek(this::setTimestamps);
-        PanacheMongoRepository.super.persist(users);
+    public Uni<Void> persist(Stream<UserEntity> users) {
+        var userList = users.toList();
+        return this.persist(userList);
     }
 
     @Override
-    public void persist(Iterable<UserEntity> users) {
-        processUsersForPersistOrUpdate(users);
-        PanacheMongoRepository.super.persist(users);
+    public Uni<Void> persist(Iterable<UserEntity> users) {
+        return Multi.createFrom()
+                    .iterable(users)
+                    .onItem()
+                    .transformToUniAndConcatenate(this::setTimestamps)
+                    .collect().asList()
+                    .chain(ReactivePanacheMongoRepository.super::persist);
     }
 
     @Override
-    public void persistOrUpdate(UserEntity user) {
-        setTimestamps(user);
-        PanacheMongoRepository.super.persistOrUpdate(user);
+    public Uni<UserEntity> persistOrUpdate(UserEntity user) {
+        return setTimestamps(user).chain(ReactivePanacheMongoRepository.super::persistOrUpdate);
     }
 
     @Override
-    public void persistOrUpdate(Iterable<UserEntity> users) {
-        processUsersForPersistOrUpdate(users);
-        PanacheMongoRepository.super.persistOrUpdate(users);
+    public Uni<Void> persistOrUpdate(Iterable<UserEntity> users) {
+        return Multi.createFrom()
+                    .iterable(users)
+                    .onItem()
+                    .transformToUniAndConcatenate(this::setTimestamps)
+                    .collect().asList()
+                    .chain(ReactivePanacheMongoRepository.super::persistOrUpdate);
     }
 
     @Override
-    public void persistOrUpdate(Stream<UserEntity> users) {
-        users = users.peek(this::setTimestamps);
-        PanacheMongoRepository.super.persistOrUpdate(users);
+    public Uni<Void> persistOrUpdate(Stream<UserEntity> users) {
+        var userList = users.toList();
+        return this.persistOrUpdate(userList);
     }
 
     @Override
-    public void persistOrUpdate(UserEntity firstEntity, UserEntity... entities) {
+    public Uni<Void> persistOrUpdate(UserEntity firstEntity, UserEntity... entities) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
     @Override
-    public void update(UserEntity user) {
-        setTimestamps(user);
-        PanacheMongoRepository.super.update(user);
+    public Uni<UserEntity> update(UserEntity user) {
+        return setTimestamps(user).chain(ReactivePanacheMongoRepository.super::update);
     }
 
     @Override
-    public void update(Iterable<UserEntity> users) {
-        processUsersForPersistOrUpdate(users);
-        PanacheMongoRepository.super.update(users);
+    public Uni<Void> update(Iterable<UserEntity> users) {
+        return Multi.createFrom()
+                    .iterable(users)
+                    .onItem()
+                    .transformToUniAndConcatenate(this::setTimestamps)
+                    .collect().asList()
+                .chain(ReactivePanacheMongoRepository.super::update);
     }
 
     @Override
-    public void update(Stream<UserEntity> users) {
-        users = users.peek(this::setTimestamps);
-        PanacheMongoRepository.super.update(users);
+    public Uni<Void> update(Stream<UserEntity> users) {
+        var userList = users.toList();
+        return this.update(userList);
     }
 
     @Override
-    public void update(UserEntity firstEntity, UserEntity... entities) {
+    public Uni<Void> update(UserEntity firstEntity, UserEntity... entities) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
     @Override
-    public PanacheUpdate update(String query, Object... params) {
+    public ReactivePanacheUpdate update(String query, Object... params) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
     @Override
-    public PanacheUpdate update(String query, Map<String, Object> params) {
+    public ReactivePanacheUpdate update(String query, Map<String, Object> params) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
     @Override
-    public PanacheUpdate update(String query, Parameters params) {
+    public ReactivePanacheUpdate update(String query, Parameters params) {
         throw new UnsupportedOperationException(
                 "Raw updates not supported to protect data integrity");
     }
 
-    public UserEntity findByLogin(String login) {
+    public Uni<UserEntity> findByLogin(String login) {
         return find("login", login).firstResult();
     }
 
-    public List<UserEntity> findByEmail(String email) {
+    public Uni<List<UserEntity>> findByEmail(String email) {
         return list("email", email);
     }
 
-    public UserEntity findByGitHubId(String githubId) {
+    public Uni<UserEntity> findByGitHubId(String githubId) {
         return find("github.id", githubId).firstResult();
     }
 
-    public void deleteByLogin(String login) {
-        delete("login", login);
+    public Uni<Long> deleteByLogin(String login) {
+        return delete("login", login);
     }
 }

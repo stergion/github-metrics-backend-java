@@ -4,10 +4,7 @@ import com.stergion.githubbackend.infrastructure.persistence.mongo.utils.types.G
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -30,7 +27,7 @@ class UserRepositoryMongoTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll();
+        userRepository.deleteAll().await().indefinitely();
         testUser = createTestUser(null);
     }
 
@@ -41,11 +38,11 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should persist and retrieve user by ID")
         void persistAndFindById() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
             assertNotNull(testUser.id, "User ID should be generated");
 
-            UserEntity found = userRepository.findById(testUser.id);
+            UserEntity found = userRepository.findById(testUser.id).await().indefinitely();
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -57,24 +54,24 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should delete user by ID")
         void deleteById() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
             ObjectId userId = testUser.id;
 
-            userRepository.deleteById(userId);
+            userRepository.deleteById(userId).await().indefinitely();
 
-            assertNull(userRepository.findById(userId), "User should be deleted");
+            assertNull(userRepository.findById(userId).await().indefinitely(), "User should be deleted");
         }
 
         @Test
         @DisplayName("Should update existing user")
         void updateUser() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
             testUser.name = "Updated Name";
             testUser.email = "updated@email.com";
-            userRepository.update(testUser);
+            userRepository.update(testUser).await().indefinitely();
 
-            UserEntity updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id).await().indefinitely();
             assertEquals("Updated Name", updated.name, "Name should be updated");
             assertEquals("updated@email.com", updated.email, "Email should be updated");
         }
@@ -87,9 +84,9 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should find user by GitHub ID")
         void findByGitHubId() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
-            UserEntity found = userRepository.findByGitHubId(testUser.github.id);
+            UserEntity found = userRepository.findByGitHubId(testUser.github.id).await().indefinitely();
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -99,9 +96,9 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should find user by login")
         void findByLogin() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
-            UserEntity found = userRepository.findByLogin(testUser.login);
+            UserEntity found = userRepository.findByLogin(testUser.login).await().indefinitely();
             assertNotNull(found, "Found user should not be null");
             assertEquals(testUser.id, found.id);
             assertEquals(testUser.login, found.login);
@@ -117,10 +114,10 @@ class UserRepositoryMongoTest {
             user2.name = "Test User 2";
             // Keep the same email for both users
 
-            userRepository.persist(user1);
-            userRepository.persist(user2);
+            userRepository.persist(user1).await().indefinitely();
+            userRepository.persist(user2).await().indefinitely();
 
-            List<UserEntity> found = userRepository.findByEmail(user1.email);
+            List<UserEntity> found = userRepository.findByEmail(user1.email).await().indefinitely();
 
             assertNotNull(found, "Found users should not be null");
             assertEquals(2, found.size(), "Should find both users with the same email");
@@ -140,13 +137,13 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should add repository to user's repositories")
         void addRepository() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
             ObjectId newRepoId = new ObjectId();
 
             testUser.repositories.add(newRepoId);
-            userRepository.update(testUser);
+            userRepository.update(testUser).await().indefinitely();
 
-            UserEntity updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id).await().indefinitely();
             assertTrue(updated.repositories.contains(newRepoId),
                     "User's repositories should contain the new repository ID");
         }
@@ -156,12 +153,12 @@ class UserRepositoryMongoTest {
         void removeRepository() {
             ObjectId repoId = new ObjectId();
             testUser.repositories = List.of(repoId);
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
             testUser.repositories = List.of();
-            userRepository.update(testUser);
+            userRepository.update(testUser).await().indefinitely();
 
-            UserEntity updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id).await().indefinitely();
             assertFalse(updated.repositories.contains(repoId),
                     "User's repositories should not contain the removed repository ID");
         }
@@ -180,9 +177,9 @@ class UserRepositoryMongoTest {
             userWithNulls.websiteURL = null;
             userWithNulls.avatarURL = null;
 
-            userRepository.persist(userWithNulls);
+            userRepository.persist(userWithNulls).await().indefinitely();
 
-            UserEntity found = userRepository.findById(userWithNulls.id);
+            UserEntity found = userRepository.findById(userWithNulls.id).await().indefinitely();
             assertNotNull(found, "Found user should not be null");
             assertNull(found.bio, "Bio should be null");
             assertNull(found.twitterHandle, "Twitter handle should be null");
@@ -200,9 +197,9 @@ class UserRepositoryMongoTest {
                 user.repositories.add(new ObjectId());
             }
 
-            userRepository.persist(user);
+            userRepository.persist(user).await().indefinitely();
 
-            UserEntity found = userRepository.findById(user.id);
+            UserEntity found = userRepository.findById(user.id).await().indefinitely();
             assertEquals(repoCount, found.repositories.size(),
                     "Should find correct number of repositories");
         }
@@ -215,7 +212,7 @@ class UserRepositoryMongoTest {
         @Test
         @DisplayName("Should update user profile information")
         void updateUserProfile() {
-            userRepository.persist(testUser);
+            userRepository.persist(testUser).await().indefinitely();
 
             // Update profile information
             testUser.bio = "Updated bio";
@@ -224,9 +221,9 @@ class UserRepositoryMongoTest {
             testUser.avatarURL = URI.create("https://new-avatar-url.com");
             testUser.updatedAt = LocalDateTime.now();
 
-            userRepository.update(testUser);
+            userRepository.update(testUser).await().indefinitely();
 
-            UserEntity updated = userRepository.findById(testUser.id);
+            UserEntity updated = userRepository.findById(testUser.id).await().indefinitely();
             assertEquals("Updated bio", updated.bio, "Bio should be updated");
             assertEquals("new_handle", updated.twitterHandle, "Twitter handle should be updated");
             assertEquals(URI.create("https://newwebsite.com"), updated.websiteURL,
@@ -248,9 +245,9 @@ class UserRepositoryMongoTest {
             void shouldSetBothDatesOnPersist() {
                 testUser.createdAt = null;
                 testUser.updatedAt = null;
-                userRepository.persist(testUser);
+                userRepository.persist(testUser).await().indefinitely();
 
-                UserEntity persisted = userRepository.findById(testUser.id);
+                UserEntity persisted = userRepository.findById(testUser.id).await().indefinitely();
                 assertNotNull(persisted.createdAt, "Creation date should be automatically set");
                 assertNotNull(persisted.updatedAt, "Update date should be automatically set");
                 assertTrue(
@@ -270,9 +267,9 @@ class UserRepositoryMongoTest {
                 user2.createdAt = null;
                 user2.login = "test-user-2";
 
-                userRepository.persist(List.of(user1, user2));
+                userRepository.persist(List.of(user1, user2)).await().indefinitely();
 
-                List<UserEntity> persisted = userRepository.listAll();
+                List<UserEntity> persisted = userRepository.listAll().await().indefinitely();
                 assertEquals(2, persisted.size(), "Should persist both users");
                 persisted.forEach(user -> {
                     assertNotNull(user.createdAt, "Creation date should be set for all users");
@@ -287,9 +284,9 @@ class UserRepositoryMongoTest {
             @DisplayName("Should handle persistOrUpdate for new entity")
             void shouldHandlePersistOrUpdateForNew() {
                 testUser.createdAt = null;
-                userRepository.persistOrUpdate(testUser);
+                userRepository.persistOrUpdate(testUser).await().indefinitely();
 
-                UserEntity persisted = userRepository.findById(testUser.id);
+                UserEntity persisted = userRepository.findById(testUser.id).await().indefinitely();
                 assertNotNull(persisted.createdAt, "Creation date should be set for new entity");
                 assertTrue(
                         Duration.between(LocalDateTime.now(), persisted.createdAt).getSeconds() < 5,
@@ -301,7 +298,7 @@ class UserRepositoryMongoTest {
             @DisplayName("Should handle persistOrUpdate for existing entity")
             void shouldHandlePersistOrUpdateForExisting() {
                 // First persist
-                userRepository.persist(testUser);
+                userRepository.persist(testUser).await().indefinitely();
                 LocalDateTime originalCreationDate = testUser.createdAt;
                 LocalDateTime originalUpdateDate = testUser.updatedAt;
 
@@ -315,9 +312,9 @@ class UserRepositoryMongoTest {
                 // Then try to update
                 testUser.name = "Updated Name";
                 testUser.createdAt = LocalDateTime.now().plusDays(1); // Try to modify creation date
-                userRepository.persistOrUpdate(testUser);
+                userRepository.persistOrUpdate(testUser).await().indefinitely();
 
-                UserEntity updated = userRepository.findById(testUser.id);
+                UserEntity updated = userRepository.findById(testUser.id).await().indefinitely();
                 assertTrue(
                         Duration.between(originalCreationDate, updated.createdAt).getSeconds() < 5,
                         "Creation date should be preserved for existing entity"
@@ -334,22 +331,22 @@ class UserRepositoryMongoTest {
             @DisplayName("Should handle batch persistOrUpdate")
             void shouldHandleBatchPersistOrUpdate() {
                 // Create one existing and one new user
-                userRepository.persist(testUser);
+                userRepository.persist(testUser).await().indefinitely();
                 LocalDateTime originalDate = testUser.createdAt;
 
                 UserEntity newUser = createTestUser(null);
                 newUser.login = "test-user-2";
                 newUser.createdAt = null;
 
-                userRepository.persistOrUpdate(List.of(testUser, newUser));
+                userRepository.persistOrUpdate(List.of(testUser, newUser)).await().indefinitely();
 
-                UserEntity existingUpdated = userRepository.findById(testUser.id);
+                UserEntity existingUpdated = userRepository.findById(testUser.id).await().indefinitely();
                 assertTrue(
                         Duration.between(originalDate, existingUpdated.createdAt).getSeconds() < 5,
                         "Should preserve creation date for existing user"
                           );
 
-                UserEntity newPersisted = userRepository.findByLogin("test-user-2");
+                UserEntity newPersisted = userRepository.findByLogin("test-user-2").await().indefinitely();
                 assertNotNull(newPersisted.createdAt,
                         "Should set creation date for new user");
                 assertTrue(
